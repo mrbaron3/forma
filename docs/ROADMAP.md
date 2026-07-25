@@ -136,17 +136,17 @@ DF-003 + DF-004 ─▶ DF-009 conformance
 
 DF-002、DF-004、DF-006は同時着手できる。
 
-| Key | Work | Depends on | Completion evidence |
-|---|---|---|---|
-| DF-001 | Canonical bundle digest | contract draft | **完了**: source/artifact/token/bundle fixture検証 |
-| DF-002 | Revision／decision state machine | DF-001 | stale approval／supersede test |
-| DF-003 | Local repository and CLI | DF-002 | restart recovery E2E |
-| DF-004 | Review projection | contract RC | purpose／effort／attention／trace表示 |
-| DF-005 | Human decision UI | DF-004 | request-changes→new revision→approve |
-| DF-006 | AuthoringBackend port | contract RC | mock backend contract test |
-| DF-007 | Provider adapters | DF-006 | malformed／mutation fail-closed |
-| DF-008 | CLI／HTTP distribution | DF-003, DF-005 | black-box parity E2E |
-| DF-009 | Implementation conformance | DF-003, DF-004 | drift reason fixture |
+| Key | Issue | Work | Depends on | Completion evidence |
+|---|---|---|---|---|
+| DF-001 | 完了 | Canonical bundle digest | contract draft | source/artifact/token/bundle fixture検証 |
+| DF-002 | [#8](https://github.com/mrbaron3/designflow/issues/8) | Revision／decision state machine | DF-001 | stale approval／supersede test |
+| DF-003 | [#3](https://github.com/mrbaron3/designflow/issues/3) | Local repository and CLI | DF-002 | restart recovery E2E |
+| DF-004 | [#9](https://github.com/mrbaron3/designflow/issues/9) | Review projection | contract RC | purpose／effort／attention／trace表示 |
+| DF-005 | [#2](https://github.com/mrbaron3/designflow/issues/2) | Human decision UI | DF-004 | request-changes→new revision→approve |
+| DF-006 | [#4](https://github.com/mrbaron3/designflow/issues/4) | AuthoringBackend port | contract RC | mock backend contract test |
+| DF-007 | [#5](https://github.com/mrbaron3/designflow/issues/5) | Provider adapters | DF-006 | malformed／mutation fail-closed |
+| DF-008 | [#6](https://github.com/mrbaron3/designflow/issues/6) | CLI／HTTP distribution | DF-003, DF-005 | black-box parity E2E |
+| DF-009 | [#7](https://github.com/mrbaron3/designflow/issues/7) | Implementation conformance | DF-003, DF-004 | drift reason fixture |
 
 ## 未決事項
 

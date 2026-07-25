@@ -7,6 +7,7 @@
 製品名・repository名を`Designflow`／`designflow`へ統一した。Phase 0 Contract bootstrapは完了し、
 公開contract draft、North Star、設計原則、architecture、roadmap、ADR、contract検証scriptがある。
 remoteはprivateの`https://github.com/mrbaron3/designflow`、固定境界は`contract-v1.0.0-rc.1`。
+tracking Epicは[#1](https://github.com/mrbaron3/designflow/issues/1)。
 
 このrepositoryはDesignflow自身のtaskだけを所有する。特定consumerのadapter、Issue、API設計、
 Dashboard実装を待たず、固定contract releaseに対して単独で進める。
