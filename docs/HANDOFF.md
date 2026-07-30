@@ -1,6 +1,6 @@
 # Handoff
 
-最終更新: 2026-07-25
+最終更新: 2026-07-30
 
 ## 現在地
 
@@ -8,6 +8,12 @@
 公開contract draft、North Star、設計原則、architecture、roadmap、ADR、contract検証scriptがある。
 remoteはprivateの`https://github.com/mrbaron3/designflow`、固定境界は`contract-v1.0.0-rc.1`。
 tracking Epicは[#1](https://github.com/mrbaron3/designflow/issues/1)。
+
+2026-07-30、利用想定をhero scenarioとして固定した
+（[ADR-0005](decisions/ADR-0005-hero-scenario-mock-first-preview.md)、
+[#11](https://github.com/mrbaron3/designflow/issues/11)）: 新サービス基盤の一括設計・人間は承認者・
+モック先行preview。優先経路はDF-006→DF-007→preview renderer（受け皿DF-004／DF-005）、
+conformance（DF-009）は将来scope。
 
 このrepositoryはDesignflow自身のtaskだけを所有する。特定consumerのadapter、Issue、API設計、
 Dashboard実装を待たず、固定contract releaseに対して単独で進める。
@@ -20,6 +26,8 @@ Dashboard実装を待たず、固定contract releaseに対して単独で進め�
 - Human Design Decisionをrevision digestへ束縛する。
 - DB共有、dual-write、cross-repository Issue dependencyを禁止する。
 - `ExperienceContract`はartifact名、`Designflow`は製品名とする。
+- hero scenarioは一括基盤設計＋モック先行preview。governance artifactはrequiredを維持したまま
+  authoring agentが全量著述し、人間へ著述コストを求めない（ADR-0005）。
 
 ## 再開点
 

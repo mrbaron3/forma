@@ -6,6 +6,11 @@
 adapter、Issue、API設計、dogfood実装を所有しない。外部consumerは固定されたcontract releaseとfixtureだけを
 入力にして、Designflowの実装完了を待たずに並行開発できる。
 
+力点はhero scenario（新サービス基盤の一括設計とモック先行preview —
+[ADR-0005](decisions/ADR-0005-hero-scenario-mock-first-preview.md)）に置き、
+DF-006→DF-007→preview renderer（受け皿はDF-004／DF-005）を優先経路とする。
+conformance（DF-009／Phase 5）は将来scopeとしてroadmapに残すが、v0完了条件に含めない。
+
 ## 並行開発境界
 
 - 公開境界: `contracts/v1`、example bundle、negative fixture、contract release tag
@@ -60,7 +65,7 @@ Exit:
 目的: raw JSONを開かず設計を理解・比較・判断できる。
 
 - purpose／flow／effort／attention view
-- annotated wireframeまたはsafe HTML preview
+- 視覚モックとして成立するsafe HTML preview（annotated wireframeは補助表示であり、単独ではexitを満たさない）
 - token／component／pattern delta
 - capability requirements
 - requirement trace
@@ -69,6 +74,7 @@ Exit:
 
 Exit:
 
+- reviewerがモックpreviewを第一確認面として「どのようなデザインになるか」を判断できる
 - reviewerが1画面から判断根拠と変更差分を確認
 - decisionがrevision digestへ束縛
 - keyboard／focus／status announcementを含むWCAG 2.2 AA相当のreview UI
@@ -106,9 +112,10 @@ Exit:
 - consumer repositoryなしでE2Eを実行可能
 - packageまたはrelease artifactからcontractとfixtureを取得可能
 
-## Phase 5 — Conformance and reuse
+## Phase 5 — Conformance and reuse（将来scope — v0完了条件に含めない）
 
-目的: 設計を作って終わらず、任意の実装をApproved Bundleへ照合できる。
+目的: 設計を作って終わらず、任意の実装をApproved Bundleへ照合できる。hero scenario（ADR-0005）の
+確定により本Phaseはv0の力点から外すが、North Starの価値としてroadmapに保持する。
 
 - token resolver／drift lint
 - component／state coverage

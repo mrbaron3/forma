@@ -5,6 +5,18 @@
 束縛される。人間は理解可能なPreviewと差分を確認して承認または差戻しでき、承認済みrevisionだけが
 開発へ渡る。
 
+## 利用想定（hero scenario）
+
+主たる利用は、新サービスを作るときに必要となる基盤 — Design System（token／componentの土台）と
+主要画面のモック一式 — を一度まとめて設計する単発バッチである。featureごとの常設設計ゲートでは
+ない（継続利用と実装後conformanceは将来scopeとして保持する）。
+
+人間の席は承認者である。第一に確認するのはモック状態のpreview —「どのようなデザインになるか」—
+であり、approve、または具体的な要望・やり方の指示を添えたrequest-changesを返す。人間は自分では
+描かない。governance artifact（Effort Budget・Placement Rationale・Attention Hierarchy・
+Capability Requirements）はcontractのrequiredを維持したままauthoring agentが全量著述し、人間へ
+著述コストを求めない（[ADR-0005](decisions/ADR-0005-hero-scenario-mock-first-preview.md)）。
+
 ## 守る価値
 
 1. **Purpose** — 各ページは主目的、成功状態、対象外を持つ。
@@ -17,6 +29,8 @@
 
 ## 成功の定義
 
+- 新サービスの基盤（Design System＋主要画面のモック一式）を1回のDesign Requestバッチで生成し、
+  人間がモックpreviewを第一確認面として承認できる。
 - standalone CLIまたはReview UIだけでDesign Request→Proposal→Human Decision→Approved Bundleが完結する。
 - 同じ入力・Design System snapshot・contract versionから、検証可能で比較可能な成果物が得られる。
 - 承認後の変更は新revisionとなり、旧承認を再利用できない。
