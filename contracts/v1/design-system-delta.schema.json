@@ -56,7 +56,7 @@
           "path": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^(?!/)(?!.*\\.\\./).+$"
+            "pattern": "^(?!/)(?![A-Za-z]:)(?!.*[\\\\:])(?!.*//)(?!.*/$)(?!\\.{1,2}(?:/|$))(?!.*/\\.{1,2}(?:/|$)).+$"
           },
           "digest": {
             "$ref": "urn:designflow:schema:v1:common#/$defs/sha256"
@@ -85,7 +85,7 @@
     "ambiguities": {
       "type": "array",
       "items": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/ambiguity"
+        "$ref": "urn:designflow:schema:v1:common#/$defs/nonBlockingAmbiguity"
       }
     }
   },

@@ -11,13 +11,37 @@ const releaseRoot = path.resolve(
   "../contracts/contract-v1.0.0-rc.2"
 );
 const digest = `sha256:${"a".repeat(64)}`;
+const releaseInventory = [
+  [
+    "author-invocation.schema.json",
+    "urn:designflow:schema:contract-v1.0.0-rc.2:author-invocation"
+  ],
+  [
+    "authoring-ambiguity-report.schema.json",
+    "urn:designflow:schema:contract-v1.0.0-rc.2:authoring-ambiguity-report"
+  ],
+  [
+    "authoring-context-snapshot.schema.json",
+    "urn:designflow:schema:contract-v1.0.0-rc.2:authoring-context-snapshot"
+  ],
+  [
+    "common.schema.json",
+    "urn:designflow:schema:contract-v1.0.0-rc.2:common"
+  ],
+  [
+    "design-bundle-manifest.schema.json",
+    "urn:designflow:schema:contract-v1.0.0-rc.2:design-bundle-manifest"
+  ]
+];
 
 function releaseValidators() {
   const files = fs.readdirSync(releaseRoot)
     .filter((name) => name.endsWith(".schema.json"))
     .sort();
+  assert.deepEqual(files, releaseInventory.map(([name]) => name));
   const schemas = files.map((name) =>
     JSON.parse(fs.readFileSync(path.join(releaseRoot, name), "utf8")));
+  assert.deepEqual(schemas.map((schema) => schema.$id), releaseInventory.map(([, id]) => id));
   const refs = [];
   const visit = (value) => {
     if (Array.isArray(value)) {
@@ -136,4 +160,26 @@ test("[PR-INTENT] rc.2 loads locally and closes every published document", () =>
       }
     }
   ), false);
+  for (const path of [
+    "..",
+    "dir/..",
+    "../secret",
+    "..\\secret",
+    "dir\\..\\secret",
+    "C:\\secret",
+    "C:/secret",
+    "\\\\server\\share",
+    "/etc/passwd"
+  ]) {
+    assert.equal(validate(
+      "urn:designflow:schema:contract-v1.0.0-rc.2:design-bundle-manifest",
+      {
+        ...manifest,
+        artifacts: {
+          ...manifest.artifacts,
+          experience: { ...artifact, path }
+        }
+      }
+    ), false, path);
+  }
 });

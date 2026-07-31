@@ -12,6 +12,24 @@ const experience = read("experience-contract.example.json");
 const failureSchema = "urn:designflow:schema:v1:authoring-port#/$defs/failure";
 const fixtureDirectory = new URL("./fixtures/", import.meta.url);
 
+function authoredProvenance(backend = createMockAuthoringBackend()) {
+  const result = backend.authorExperience({
+    request,
+    snapshot: structuredClone(snapshot),
+    invocationKey: "invocation.provenance"
+  });
+  assert.equal(result.ok, true);
+  const artifacts = { experience: result.artifact };
+  const record = backend.provenanceFor(result.artifact, snapshot);
+  const manifest = {
+    authorInvocationRefs: [record],
+    artifacts: {
+      experience: { digest: record.outputDigest }
+    }
+  };
+  return { artifacts, manifest };
+}
+
 test("[PR-INTENT] three synchronous operations are deterministic and artifact-scoped", () => {
   const backend = createMockAuthoringBackend();
   const operations = {
@@ -49,14 +67,23 @@ test("[PR-INTENT] every file-backed mock fixture reproduces one declared outcome
   for (const name of names) {
     const fixture = JSON.parse(fs.readFileSync(new URL(name, fixtureDirectory), "utf8"));
     assert.equal(fixture.fixture, name.replace(/\.json$/, ""), name);
-    const input = {
-      request,
-      snapshot: structuredClone(snapshot),
-      invocationKey: `invocation.fixture.${fixture.fixture}`,
-      ...(fixture.operation === "deriveCapabilities" ? { experience } : {})
-    };
-    const result = createMockAuthoringBackend({ fixture: fixture.fixture })
-      [fixture.operation](input);
+    const backend = createMockAuthoringBackend({ fixture: fixture.fixture });
+    let result;
+    if (fixture.operation === "validateProvenance") {
+      const { artifacts, manifest } = authoredProvenance(backend);
+      const error = validateProvenance(artifacts, manifest, snapshot);
+      result = error === null
+        ? { ok: true }
+        : { ok: false, kind: "provenance-invalid" };
+    } else {
+      const input = {
+        request,
+        snapshot: structuredClone(snapshot),
+        invocationKey: `invocation.fixture.${fixture.fixture}`,
+        ...(fixture.operation === "deriveCapabilities" ? { experience } : {})
+      };
+      result = backend[fixture.operation](input);
+    }
     assert.equal(result.ok, fixture.ok, name);
     if (!fixture.ok) assert.equal(result.kind, fixture.expectedKind, name);
   }
@@ -66,7 +93,6 @@ test("[PR-INTENT] closed failures never expose partial artifacts and match their
   const cases = [
     ["invalid-schema-required", "schema-invalid"],
     ["invalid-trace-element-region", "trace-broken"],
-    ["invalid-provenance-output", "provenance-invalid"],
     ["invalid-mutation-token", "source-mutation"],
     ["ambiguity-blocking", "ambiguous"],
     ["provider-unavailable", "provider-unavailable"]
@@ -79,6 +105,43 @@ test("[PR-INTENT] closed failures never expose partial artifacts and match their
     assert.equal(result.kind, kind);
     assert.equal("artifact" in result, false);
     assert.equal(validateSchema(failureSchema, result), null);
+  }
+});
+
+test("[PR-INTENT] success results reject blocking artifact ambiguities", () => {
+  const backend = createMockAuthoringBackend();
+  const cases = [
+    [
+      "authorExperience",
+      "authorExperienceResult",
+      { request, snapshot, invocationKey: "invocation.blocking.experience" }
+    ],
+    [
+      "authorDesignSystemDelta",
+      "authorDesignSystemDeltaResult",
+      { request, snapshot, invocationKey: "invocation.blocking.delta" }
+    ],
+    [
+      "deriveCapabilities",
+      "deriveCapabilitiesResult",
+      { request, snapshot, invocationKey: "invocation.blocking.capabilities", experience }
+    ]
+  ];
+  for (const [operation, resultDefinition, input] of cases) {
+    const result = backend[operation]({
+      ...input,
+      snapshot: structuredClone(input.snapshot)
+    });
+    assert.equal(result.ok, true);
+    result.artifact.ambiguities = [{
+      id: "ambiguity.blocking",
+      question: "Required outcome?",
+      blocks: true
+    }];
+    assert.notEqual(validateSchema(
+      `urn:designflow:schema:v1:authoring-port#/$defs/${resultDefinition}`,
+      result
+    ), null);
   }
 });
 
@@ -166,6 +229,64 @@ test("[PR-INTENT] provenance validation permits non-authored manifest artifacts"
   };
   const manifest = read("design-bundle-manifest.example.json");
   assert.equal(validateProvenance(artifacts, manifest, snapshot), null);
+});
+
+test("[PR-INTENT] provenance recomputes input and output digests instead of trusting records", () => {
+  const valid = authoredProvenance();
+  assert.equal(validateProvenance(valid.artifacts, valid.manifest, snapshot), null);
+
+  const inputMismatch = structuredClone(valid.manifest);
+  inputMismatch.authorInvocationRefs[0].inputContextDigest =
+    `sha256:${"e".repeat(64)}`;
+  assert.match(
+    validateProvenance(valid.artifacts, inputMismatch, snapshot),
+    /provenance digest mismatch/
+  );
+
+  const outputMismatch = structuredClone(valid.manifest);
+  outputMismatch.authorInvocationRefs[0].outputDigest =
+    `sha256:${"f".repeat(64)}`;
+  outputMismatch.artifacts.experience.digest =
+    outputMismatch.authorInvocationRefs[0].outputDigest;
+  assert.match(
+    validateProvenance(valid.artifacts, outputMismatch, snapshot),
+    /provenance digest mismatch/
+  );
+});
+
+test("[PR-INTENT] bundle paths are normalized portable relatives", () => {
+  const schemaId = "urn:designflow:schema:v1:common#/$defs/artifactRef";
+  const artifactRef = {
+    path: "artifacts/example.json",
+    digest: `sha256:${"a".repeat(64)}`,
+    mediaType: "application/json",
+    schemaRef: "urn:designflow:schema:v1:experience-contract"
+  };
+  assert.equal(validateSchema(schemaId, artifactRef), null);
+
+  const invalidPaths = [
+    "..",
+    "dir/..",
+    "../secret",
+    "..\\secret",
+    "dir\\..\\secret",
+    "C:\\secret",
+    "C:/secret",
+    "\\\\server\\share",
+    "/etc/passwd",
+    "./artifact.json",
+    "dir/./artifact.json"
+  ];
+  for (const path of invalidPaths) {
+    assert.notEqual(validateSchema(schemaId, { ...artifactRef, path }), null, path);
+    const delta = read("design-system-delta.example.json");
+    delta.tokenDocuments[0].path = path;
+    assert.notEqual(
+      validateSchema("urn:designflow:schema:v1:design-system-delta", delta),
+      null,
+      path
+    );
+  }
 });
 
 test("[PR-INTENT] provenance validation fails closed for malformed artifact values", () => {

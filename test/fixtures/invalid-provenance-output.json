@@ -1,1 +1,1 @@
-{"fixture":"invalid-provenance-output","operation":"authorExperience","ok":false,"expectedKind":"provenance-invalid","violation":"output digest does not match"}
+{"fixture":"invalid-provenance-output","operation":"validateProvenance","ok":false,"expectedKind":"provenance-invalid","violation":"output digest does not match"}

@@ -104,7 +104,7 @@
     "ambiguities": {
       "type": "array",
       "items": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/ambiguity"
+        "$ref": "urn:designflow:schema:v1:common#/$defs/nonBlockingAmbiguity"
       }
     }
   },

@@ -4,3 +4,11 @@ rc.1を変更せず、authoring context、blocking ambiguity report、provenance
 追加する固定release。
 このdirectory内のschemaだけで新規contractの参照を解決できる。`contracts/v1/` は開発中の
 参照先であり、このreleaseの配布物ではない。
+
+固定inventoryは `common`、`author-invocation`、`authoring-context-snapshot`、
+`authoring-ambiguity-report`、`design-bundle-manifest` の5 schemaである。同期
+`authoring-port` は実装とともに反復中の `contracts/v1/` contractであり、この固定releaseには
+含めない。
+
+manifestのartifact pathは `/` 区切りの正規化済み相対pathである。consumerはbundle rootへ
+解決した正規化pathがroot配下に残ることを確認してからfilesystemへ渡す。

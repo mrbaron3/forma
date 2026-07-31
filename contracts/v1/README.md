@@ -31,6 +31,12 @@
 正確なbytesとSHA-256計算は[CANONICALIZATION.md](CANONICALIZATION.md)を正本とする。
 `examples/`のdigest値はconsumerがruntime非依存に検証する規範fixtureである。
 
+## Artifact path
+
+`artifactRef.path` とtoken documentの `path` は `/` 区切りの正規化済み相対pathである。
+consumerはbundle rootへ解決した正規化pathがroot配下に残ることを確認してからfilesystemへ
+渡す。platform固有のseparator、absolute path、`.`／`..` segmentは受理しない。
+
 ## Examples
 
 `examples/`は1つのDashboard設計revisionを構成する。`npm test`は各schemaだけでなく、ファイル間の

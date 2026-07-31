@@ -103,7 +103,7 @@ function applyFixture(target, artifact, fixture, request, snapshot) {
       }
       return null;
     case "invalid-provenance-output":
-      return failure("provenance-invalid", "fixture output digest does not match");
+      return null;
     case "invalid-mutation-token":
       snapshot.designSystem.tokenDocuments[0].digest = `sha256:${"f".repeat(64)}`;
       return null;
@@ -177,7 +177,9 @@ export function createMockAuthoringBackend({ fixture = "valid" } = {}) {
         profileRevision: "contract-v1.0.0-rc.2",
         inputContextDigest: snapshotDigest(snapshot),
         instructionDigest: digest({ fixture }),
-        outputDigest: digest(artifact),
+        outputDigest: fixture === "invalid-provenance-output"
+          ? `sha256:${"f".repeat(64)}`
+          : digest(artifact),
         ...overrides
       };
     }
