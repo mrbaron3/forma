@@ -175,6 +175,22 @@ test("[PR-INTENT] rc.2 loads locally and closes every published document", () =>
     ), false);
   }
   for (const path of [
+    "artifact.json",
+    "dir/file.json",
+    "dir.name/file-name_1.json"
+  ]) {
+    assert.equal(validate(
+      "urn:designflow:schema:contract-v1.0.0-rc.2:design-bundle-manifest",
+      {
+        ...manifest,
+        artifacts: {
+          ...manifest.artifacts,
+          experience: { ...artifact, path }
+        }
+      }
+    ), true, path);
+  }
+  for (const path of [
     "..",
     "dir/..",
     "../secret",
@@ -183,7 +199,11 @@ test("[PR-INTENT] rc.2 loads locally and closes every published document", () =>
     "C:\\secret",
     "C:/secret",
     "\\\\server\\share",
-    "/etc/passwd"
+    "/etc/passwd",
+    "dir//artifact.json",
+    "dir/",
+    "dir:name/artifact.json",
+    "dir/artifact:name.json"
   ]) {
     assert.equal(validate(
       "urn:designflow:schema:contract-v1.0.0-rc.2:design-bundle-manifest",

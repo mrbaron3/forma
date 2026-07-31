@@ -12,6 +12,10 @@ const experience = read("experience-contract.example.json");
 const failureSchema = "urn:designflow:schema:v1:authoring-port#/$defs/failure";
 const fixtureDirectory = new URL("./fixtures/", import.meta.url);
 
+function valueAtPath(value, dottedPath) {
+  return dottedPath.split(".").reduce((current, segment) => current?.[segment], value);
+}
+
 function authoredProvenance(backend = createMockAuthoringBackend()) {
   const result = backend.authorExperience({
     request,
@@ -76,7 +80,7 @@ test("[PR-INTENT] every file-backed mock fixture reproduces one declared outcome
       const error = validateProvenance(artifacts, manifest, snapshot);
       result = error === null
         ? { ok: true }
-        : { ok: false, kind: "provenance-invalid" };
+        : { ok: false, kind: "provenance-invalid", detail: error };
     } else {
       const input = {
         request,
@@ -88,6 +92,12 @@ test("[PR-INTENT] every file-backed mock fixture reproduces one declared outcome
     }
     assert.equal(result.ok, fixture.ok, name);
     if (!fixture.ok) assert.equal(result.kind, fixture.expectedKind, name);
+    assert.ok(fixture.expectedEvidence, `${name}: expectedEvidence is required`);
+    assert.deepEqual(
+      valueAtPath(result, fixture.expectedEvidence.path),
+      fixture.expectedEvidence.value,
+      name
+    );
   }
 });
 
@@ -221,6 +231,27 @@ test("[PR-INTENT] deriveCapabilities rejects an input without its contracted exp
   });
   assert.equal(result.ok, false);
   assert.equal(result.kind, "schema-invalid");
+});
+
+test("[PR-INTENT] deriveCapabilities rejects an Experience from another Design Request", () => {
+  const unrelatedExperience = structuredClone(experience);
+  unrelatedExperience.requestId = "request.unrelated";
+  assert.equal(
+    validateSchema("urn:designflow:schema:v1:experience-contract", unrelatedExperience),
+    null
+  );
+  const result = createMockAuthoringBackend().deriveCapabilities({
+    request,
+    snapshot: structuredClone(snapshot),
+    invocationKey: "invocation.unrelated-experience",
+    experience: unrelatedExperience
+  });
+  assert.deepEqual(result, {
+    ok: false,
+    kind: "trace-broken",
+    detail: "experience requestId does not match the Design Request"
+  });
+  assert.equal(validateSchema(failureSchema, result), null);
 });
 
 test("[PR-INTENT] every operation rejects a malformed Design Request without an artifact", () => {
@@ -357,7 +388,20 @@ test("[PR-INTENT] bundle paths are normalized portable relatives", () => {
     mediaType: "application/json",
     schemaRef: "urn:designflow:schema:v1:experience-contract"
   };
-  assert.equal(validateSchema(schemaId, artifactRef), null);
+  for (const path of [
+    "artifact.json",
+    "dir/file.json",
+    "dir.name/file-name_1.json"
+  ]) {
+    assert.equal(validateSchema(schemaId, { ...artifactRef, path }), null, path);
+    const delta = read("design-system-delta.example.json");
+    delta.tokenDocuments[0].path = path;
+    assert.equal(
+      validateSchema("urn:designflow:schema:v1:design-system-delta", delta),
+      null,
+      path
+    );
+  }
 
   const invalidPaths = [
     "..",
@@ -370,7 +414,11 @@ test("[PR-INTENT] bundle paths are normalized portable relatives", () => {
     "\\\\server\\share",
     "/etc/passwd",
     "./artifact.json",
-    "dir/./artifact.json"
+    "dir/./artifact.json",
+    "dir//artifact.json",
+    "dir/",
+    "dir:name/artifact.json",
+    "dir/artifact:name.json"
   ];
   for (const path of invalidPaths) {
     assert.notEqual(validateSchema(schemaId, { ...artifactRef, path }), null, path);

@@ -7,8 +7,9 @@
 
 著述境界は `authorExperience`、`authorDesignSystemDelta`、`deriveCapabilities` の同期operationとする。
 共通入力は固定された `AuthoringContextSnapshot` 値とし、`deriveCapabilities` だけは
-interaction traceの正本となる `ExperienceContract` も明示的に受け取る。各operationは成功または
-閉じた失敗kindを返す。
+interaction traceの正本となる `ExperienceContract` も明示的に受け取る。その
+`experience.requestId` は同じ入力の `request.requestId` と一致しなければならず、異なるlineageは
+`trace-broken` として閉じる。各operationは成功または閉じた失敗kindを返す。
 provider provenance は成果物から分離し、bundle manifestの `authorInvocationRefs` で
 `invocationKey` をkeyとするclosed objectとして対応付ける。objectは1件以上を必須とし、
 value側にkeyを重複保持しないため、同じ `invocationKey` の複数recordは表現できない。

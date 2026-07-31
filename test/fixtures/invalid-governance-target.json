@@ -1,1 +1,1 @@
-{"fixture":"invalid-governance-target","operation":"authorDesignSystemDelta","ok":false,"expectedKind":"source-mutation","violation":"extend targets a shared component namespace"}
+{"fixture":"invalid-governance-target","operation":"authorDesignSystemDelta","ok":false,"expectedKind":"source-mutation","violation":"extend targets a shared component namespace","expectedEvidence":{"path":"detail","value":{"policy":"design-system-governance","action":"extend","targetId":"component.repository-status-card","reason":"feature-namespace-required"}}}

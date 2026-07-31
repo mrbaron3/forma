@@ -134,6 +134,13 @@ export function createMockAuthoringBackend({ fixture = "valid" } = {}) {
       const before = structuredClone(input.snapshot);
       const snapshotError = validateSnapshot(input.request, before);
       if (snapshotError) return snapshotError;
+      if (target === "capabilityRequirements" &&
+        input.experience.requestId !== input.request.requestId) {
+        return failure(
+          "trace-broken",
+          "experience requestId does not match the Design Request"
+        );
+      }
       // Fixtures model a source observed after invocation. Keep the caller-owned
       // snapshot immutable just as a real read-only port input must remain.
       const after = structuredClone(input.snapshot);

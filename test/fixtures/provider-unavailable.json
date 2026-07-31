@@ -1,1 +1,1 @@
-{"fixture":"provider-unavailable","operation":"authorExperience","ok":false,"expectedKind":"provider-unavailable","violation":"mock provider is unavailable"}
+{"fixture":"provider-unavailable","operation":"authorExperience","ok":false,"expectedKind":"provider-unavailable","violation":"mock provider is unavailable","expectedEvidence":{"path":"detail","value":"mock provider is unavailable"}}

@@ -1,1 +1,1 @@
-{"fixture":"invalid-trace-element-task","operation":"authorExperience","ok":false,"expectedKind":"trace-broken","violation":"element refers to an unknown task"}
+{"fixture":"invalid-trace-element-task","operation":"authorExperience","ok":false,"expectedKind":"trace-broken","violation":"element refers to an unknown task","expectedEvidence":{"path":"detail","value":"element task trace is broken"}}

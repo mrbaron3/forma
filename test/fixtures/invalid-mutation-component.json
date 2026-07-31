@@ -1,1 +1,1 @@
-{"fixture":"invalid-mutation-component","operation":"authorExperience","ok":false,"expectedKind":"source-mutation","violation":"one component entry changes"}
+{"fixture":"invalid-mutation-component","operation":"authorExperience","ok":false,"expectedKind":"source-mutation","violation":"one component entry changes","expectedEvidence":{"path":"detail.mutatedRefs","value":[{"collection":"components","id":"component.alert"}]}}

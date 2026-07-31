@@ -19,9 +19,11 @@ API contract修正では、manifestにpreviewやtokenなどauthoring対象外の
 呼出し元のread-only snapshotを変更せず、source refの差分をexternal id単位で報告する。
 current-headレビューでは、snapshot digestを内容から再計算するprovenance検証、kind別に閉じた
 failure detail、`[PR-INTENT]`へ直接束縛したAPI testを追加した。1 file = 1 violationの
-fixtureは期待結果付き実行ベクトルとして全件をtestから消費する。
+fixtureはkindだけでなく固有のerror evidenceまで持つ実行ベクトルとして全件をtestから消費する。
 rc.2は完全なmanifest schemaとrelease-local参照だけでcompileするtestを持つ。
 `deriveCapabilities` は明示された `experience` だけをinteraction traceの入力に使う。
+[#16](https://github.com/mrbaron3/designflow/issues/16)として、その `requestId` がDesign Requestと
+一致しない別lineageのExperienceも `trace-broken` として拒否する。
 snapshotのaddressable collectionではentry ID（source refは `externalId`）を一意に保ち、
 `validateSnapshotEntryIds` が内容の異なる重複も `schema-invalid` として拒否する。
 [#15](https://github.com/mrbaron3/designflow/issues/15)としてmanifest provenanceを

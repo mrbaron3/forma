@@ -1,1 +1,1 @@
-{"fixture":"ambiguity-non-blocking","operation":"authorExperience","ok":true,"violation":"non-blocking ambiguity is recorded"}
+{"fixture":"ambiguity-non-blocking","operation":"authorExperience","ok":true,"violation":"non-blocking ambiguity is recorded","expectedEvidence":{"path":"artifact.ambiguities","value":[{"id":"ambiguity.success-threshold","question":"成功指標の閾値は何ですか？","blocks":false}]}}

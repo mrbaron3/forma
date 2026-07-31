@@ -1,1 +1,1 @@
-{"fixture":"valid","operation":"authorExperience","ok":true,"violation":null}
+{"fixture":"valid","operation":"authorExperience","ok":true,"violation":null,"expectedEvidence":{"path":"artifact.ambiguities","value":[]}}

@@ -110,17 +110,29 @@ export function validateTrace(target, artifact, request, related = {}) {
     const taskIds = new Set(artifact.tasks.map((x) => x.id));
     const regionIds = new Set(artifact.regions.map((x) => x.id));
     const elementIds = new Set(artifact.elements.map((x) => x.id));
-    if (artifact.pagePurposes.some((x) => !refsExist(x.sourceRequirementIds, requirementIds)) ||
-      artifact.tasks.some((x) => !purposeIds.has(x.pagePurposeId) ||
-        !refsExist(x.sourceRequirementIds, requirementIds)) ||
-      artifact.flows.some((x) => !taskIds.has(x.taskId)) ||
-      artifact.effortBudgets.some((x) => !taskIds.has(x.taskId)) ||
-      artifact.regions.some((x) => !purposeIds.has(x.pagePurposeId) ||
-        !refsExist(x.supportsTaskIds, taskIds)) ||
-      artifact.elements.some((x) => !regionIds.has(x.regionId) || !x.supportsTaskIds?.length ||
+    if (artifact.pagePurposes.some((x) =>
+      !refsExist(x.sourceRequirementIds, requirementIds))) {
+      return "page purpose requirement trace is broken";
+    }
+    if (artifact.tasks.some((x) => !purposeIds.has(x.pagePurposeId) ||
+      !refsExist(x.sourceRequirementIds, requirementIds))) {
+      return "task purpose or requirement trace is broken";
+    }
+    if (artifact.flows.some((x) => !taskIds.has(x.taskId))) return "flow task trace is broken";
+    if (artifact.effortBudgets.some((x) => !taskIds.has(x.taskId))) {
+      return "effort budget task trace is broken";
+    }
+    if (artifact.regions.some((x) => !purposeIds.has(x.pagePurposeId) ||
+      !refsExist(x.supportsTaskIds, taskIds))) return "region purpose or task trace is broken";
+    if (artifact.elements.some((x) => !regionIds.has(x.regionId))) {
+      return "element region trace is broken";
+    }
+    if (artifact.elements.some((x) => !x.supportsTaskIds?.length ||
+      !refsExist(x.supportsTaskIds, taskIds))) return "element task trace is broken";
+    if (artifact.elements.some((x) =>
       !refsExist(x.supportsPurposeIds, purposeIds) ||
-      !refsExist(x.supportsTaskIds, taskIds) || !refsExist(x.sourceRequirementIds, requirementIds))) {
-      return "element, region, task, or requirement trace is broken";
+      !refsExist(x.sourceRequirementIds, requirementIds))) {
+      return "element purpose or requirement trace is broken";
     }
     if (artifact.attentionHierarchies.some((x) => !purposeIds.has(x.pagePurposeId) ||
       x.levels.some((level) => !refsExist(level.regionIds, regionIds) ||
