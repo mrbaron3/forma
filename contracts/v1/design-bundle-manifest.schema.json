@@ -83,7 +83,7 @@
     "authorInvocationRefs": {
       "type": "array",
       "items": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/externalRef"
+        "$ref": "urn:designflow:schema:v1:author-invocation"
       }
     },
     "bundleDigest": {

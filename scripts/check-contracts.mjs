@@ -109,6 +109,10 @@ const examples = {
     "urn:designflow:schema:v1:design-bundle-manifest",
   "human-design-decision.example.json":
     "urn:designflow:schema:v1:human-design-decision",
+  "authoring-context-snapshot.example.json":
+    "urn:designflow:schema:v1:authoring-context-snapshot",
+  "authoring-ambiguity-report.example.json":
+    "urn:designflow:schema:v1:authoring-ambiguity-report",
 };
 
 const documents = {};
@@ -135,6 +139,8 @@ const capabilityRequirements =
   documents["capability-requirements.example.json"];
 const bundleManifest = documents["design-bundle-manifest.example.json"];
 const humanDecision = documents["human-design-decision.example.json"];
+const authoringSnapshot =
+  documents["authoring-context-snapshot.example.json"];
 
 const requirementIds = new Set(
   designRequest.requirements.map((item) => item.id),
@@ -341,6 +347,28 @@ assert(
   bundleManifest.sourceDigest === sha256(canonicalJson(designRequest)),
   "bundle manifest: sourceDigest differs from canonical Design Request",
 );
+
+const snapshotDigestInput = { ...authoringSnapshot };
+delete snapshotDigestInput.snapshotDigest;
+assert(
+  authoringSnapshot.snapshotDigest === sha256(canonicalJson(snapshotDigestInput)),
+  "authoring context snapshot: snapshotDigest differs from canonical snapshot content",
+);
+
+const requestedContextRefs = new Set(
+  [...designRequest.contextRefs, designRequest.existingDesignSystemRef]
+    .filter(Boolean)
+    .map((ref) => canonicalJson(ref)),
+);
+for (const ref of [
+  ...authoringSnapshot.sourceRefs.map((entry) => entry.ref),
+  authoringSnapshot.designSystem.ref,
+].filter(Boolean)) {
+  assert(
+    requestedContextRefs.has(canonicalJson(ref)),
+    "authoring context snapshot: ref is outside Design Request context",
+  );
+}
 
 for (const [artifactId, artifact] of Object.entries(bundleManifest.artifacts)) {
   const artifactPath = path.resolve(repositoryRoot, artifact.path);

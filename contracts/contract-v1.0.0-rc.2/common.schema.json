@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:designflow:schema:contract-v1.0.0-rc.2:common",
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "externalRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "externalId"],
+      "properties": {
+        "provider": { "$ref": "#/$defs/nonEmptyString" },
+        "externalId": { "$ref": "#/$defs/nonEmptyString" },
+        "uri": { "type": "string", "format": "uri" },
+        "revision": { "type": "string" },
+        "digest": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "ambiguity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question", "blocks"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "question": { "$ref": "#/$defs/nonEmptyString" },
+        "blocks": { "type": "boolean" }
+      }
+    }
+  }
+}

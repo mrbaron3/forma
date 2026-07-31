@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0",
+  "requestId": "design-dashboard-001",
+  "invocationKey": "author-experience-dashboard-001",
+  "targetArtifact": "experience",
+  "ambiguities": [
+    {
+      "id": "ambiguity-success-threshold",
+      "question": "異常検出から詳細確認までの許容時間は何秒か",
+      "blocks": true
+    }
+  ]
+}

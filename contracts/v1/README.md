@@ -13,6 +13,9 @@
 | `capability-requirements.schema.json` | interactionから導出したbackend能力要求 |
 | `design-bundle-manifest.schema.json` | immutable revisionのartifact一覧とdigest |
 | `human-design-decision.schema.json` | revision digestへ束縛された人間判断 |
+| `authoring-context-snapshot.schema.json` | read-onlyな著述context snapshot |
+| `authoring-ambiguity-report.schema.json` | blocking ambiguityの構造化report |
+| `author-invocation.schema.json` | manifestに置く著述provenance |
 
 ## Versioning
 

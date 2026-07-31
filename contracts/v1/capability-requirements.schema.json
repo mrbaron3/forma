@@ -4,10 +4,13 @@
   "title": "Backend Capability Requirements v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "requestId", "revisionId", "capabilities", "ambiguities"],
+  "required": ["schemaVersion", "invocationKey", "requestId", "revisionId", "capabilities", "ambiguities"],
   "properties": {
     "schemaVersion": {
       "const": "1.0"
+    },
+    "invocationKey": {
+      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
     },
     "requestId": {
       "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
@@ -24,7 +27,7 @@
     "ambiguities": {
       "type": "array",
       "items": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+        "$ref": "urn:designflow:schema:v1:common#/$defs/ambiguity"
       }
     }
   },
@@ -132,4 +135,3 @@
     }
   }
 }
-

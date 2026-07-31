@@ -3,6 +3,16 @@
   "$id": "urn:designflow:schema:v1:common",
   "title": "Experience Contract common definitions",
   "$defs": {
+    "ambiguity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question", "blocks"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "question": { "$ref": "#/$defs/nonEmptyString" },
+        "blocks": { "type": "boolean" }
+      }
+    },
     "identifier": {
       "type": "string",
       "minLength": 1,
@@ -127,4 +137,3 @@
     }
   }
 }
-

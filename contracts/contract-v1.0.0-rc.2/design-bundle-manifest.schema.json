@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:designflow:schema:contract-v1.0.0-rc.2:design-bundle-manifest",
+  "title": "Design Bundle Manifest contract-v1.0.0-rc.2 provenance overlay",
+  "type": "object",
+  "required": ["schemaVersion", "artifacts", "authorInvocationRefs"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "artifacts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["digest"],
+        "properties": {
+          "digest": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/sha256" }
+        }
+      }
+    },
+    "authorInvocationRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:author-invocation" }
+    }
+  }
+}

@@ -3,7 +3,7 @@
   "decisionId": "design-decision-001",
   "requestId": "design-dashboard-001",
   "revisionId": "design-revision-001",
-  "bundleDigest": "sha256:df3e1fd9de05cd602a626aa77faa23d930e31a86cecbb3777a76bd6bdeb9dc97",
+  "bundleDigest": "sha256:63e16046da610405d5a9c43a53a4e11e2fe278806add7628915bb6ea9c4f8a81",
   "verdict": "approve",
   "rationale": "主目的、Effort Budget、異常優先のAttention Hierarchy、retry前の原因確認、API能力要求が妥当",
   "decidedBy": {

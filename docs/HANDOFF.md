@@ -1,8 +1,23 @@
 # Handoff
 
-最終更新: 2026-07-30
+最終更新: 2026-07-31
 
 ## 現在地
+
+ISSUE-0001として同期 `AuthoringBackend` portと決定論的mockを追加した。rc.2では
+`AuthoringContextSnapshot`、`AuthoringAmbiguityReport`、manifest provenanceを公開し、schema／trace／
+provenance／source mutationをrevision化前に閉じて拒否する。判断は
+[ADR-0008](decisions/ADR-0008-synchronous-authoring-port.md)を正本とする。
+
+レビュー修正では、公開artifact全体（`invocationKey` と共通形式の `ambiguities` を含む）を
+field削除なしでschema検証する。不正なDesign Requestも例外ではなく `schema-invalid` に閉じ、
+snapshot entry全体の変化、artifact側invocation key重複、manifestとの集合不一致、および
+experience内参照切れを検出する。rc.2の新規schemaは固定release directory内で参照解決できる。
+claim時のbounded grader profileを維持するため `npm test` はcontract checkerのままとし、
+API testは `npm run test:api` で独立実行する。
+API contract修正では、manifestにpreviewやtokenなどauthoring対象外のartifactが併存しても、
+著述したartifactとprovenance recordの集合だけを過不足なく照合する。またmutation fixtureは
+呼出し元のread-only snapshotを変更せず、source refの差分をexternal id単位で報告する。
 
 製品名・repository名を`Designflow`／`designflow`へ統一した。Phase 0 Contract bootstrapは完了し、
 公開contract draft、North Star、設計原則、architecture、roadmap、ADR、contract検証scriptがある。
@@ -31,7 +46,7 @@ Dashboard実装を待たず、固定contract releaseに対して単独で進め�
 
 ## 再開点
 
-1. `contract-v1.0.0-rc.1`の存在と`npm test`を確認する。
+1. `contract-v1.0.0-rc.2`の追加契約と`npm test`を確認する。
 2. `docs/ROADMAP.md`の独立task DAGを読む。
 3. DF-002、DF-004、DF-006から最大3件を並行着手する。
 4. consumer固有要求を見つけた場合、このrepositoryへ実装せず公開contractで表現可能かだけを判断する。

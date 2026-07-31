@@ -15,13 +15,13 @@
   "artifacts": {
     "experience": {
       "path": "contracts/v1/examples/experience-contract.example.json",
-      "digest": "sha256:f1e4da783b860c91e477850921d0272b87e4e34c2806c3759b7d4bd18c16c732",
+      "digest": "sha256:568a18c1c5132f859bf41f54d1ce85e37c3cc9aba29bc297a01d555d65177bc1",
       "mediaType": "application/json",
       "schemaRef": "urn:designflow:schema:v1:experience-contract"
     },
     "designSystemDelta": {
       "path": "contracts/v1/examples/design-system-delta.example.json",
-      "digest": "sha256:b3974e57a7f49b6443ad21bea9a0347741cc361fc5730ddbeba09d87f0fe6687",
+      "digest": "sha256:e526e7803e355fa89022253d3832f581f40febccaa5980bf54fdde46210e7b22",
       "mediaType": "application/json",
       "schemaRef": "urn:designflow:schema:v1:design-system-delta"
     },
@@ -33,7 +33,7 @@
     },
     "capabilityRequirements": {
       "path": "contracts/v1/examples/capability-requirements.example.json",
-      "digest": "sha256:db452301b6ee642ce5988d0975e32509faac514d0502bb14d45d0653eabea164",
+      "digest": "sha256:aff73c6d9710d6c0a258aaeaeb7cb42d0ddc499bf306b7111c218f2377349ed8",
       "mediaType": "application/json",
       "schemaRef": "urn:designflow:schema:v1:capability-requirements"
     },
@@ -46,11 +46,33 @@
   },
   "authorInvocationRefs": [
     {
-      "provider": "mock",
-      "externalId": "authoring-invocation-001",
-      "revision": "1"
+      "invocationKey": "author-experience-dashboard-001",
+      "provider": "designflow-mock",
+      "toolOrModel": "deterministic-fixture",
+      "profileRevision": "contract-v1.0.0-rc.2",
+      "inputContextDigest": "sha256:bf713b943e178f677165dd2de7e7f38cfd7cef9376a641e8ca9823482312a4ba",
+      "instructionDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "outputDigest": "sha256:568a18c1c5132f859bf41f54d1ce85e37c3cc9aba29bc297a01d555d65177bc1"
+    },
+    {
+      "invocationKey": "author-design-system-dashboard-001",
+      "provider": "designflow-mock",
+      "toolOrModel": "deterministic-fixture",
+      "profileRevision": "contract-v1.0.0-rc.2",
+      "inputContextDigest": "sha256:bf713b943e178f677165dd2de7e7f38cfd7cef9376a641e8ca9823482312a4ba",
+      "instructionDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "outputDigest": "sha256:e526e7803e355fa89022253d3832f581f40febccaa5980bf54fdde46210e7b22"
+    },
+    {
+      "invocationKey": "derive-capabilities-dashboard-001",
+      "provider": "designflow-mock",
+      "toolOrModel": "deterministic-fixture",
+      "profileRevision": "contract-v1.0.0-rc.2",
+      "inputContextDigest": "sha256:bf713b943e178f677165dd2de7e7f38cfd7cef9376a641e8ca9823482312a4ba",
+      "instructionDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "outputDigest": "sha256:aff73c6d9710d6c0a258aaeaeb7cb42d0ddc499bf306b7111c218f2377349ed8"
     }
   ],
-  "bundleDigest": "sha256:df3e1fd9de05cd602a626aa77faa23d930e31a86cecbb3777a76bd6bdeb9dc97",
+  "bundleDigest": "sha256:63e16046da610405d5a9c43a53a4e11e2fe278806add7628915bb6ea9c4f8a81",
   "createdAt": "2026-07-25T03:30:00.000Z"
 }

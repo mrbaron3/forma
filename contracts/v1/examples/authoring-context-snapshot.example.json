@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0",
+  "snapshotId": "snapshot-dashboard-001",
+  "snapshotDigest": "sha256:bf713b943e178f677165dd2de7e7f38cfd7cef9376a641e8ca9823482312a4ba",
+  "designSystem": {
+    "ref": {
+      "provider": "git",
+      "externalId": "control-plane-design-system",
+      "uri": "https://example.com/acme/design-system",
+      "revision": "main",
+      "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "tokenDocuments": [
+      {
+        "id": "tokens/base.json",
+        "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "value": { "tokens": { "color.status.failed": { "$type": "color", "$value": "#b42318" } } }
+      }
+    ],
+    "components": [
+      {
+        "id": "component.alert",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "value": { "name": "Alert" }
+      }
+    ],
+    "patterns": [
+      {
+        "id": "pattern.disclosure",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "value": { "name": "Disclosure" }
+      }
+    ]
+  },
+  "sourceRefs": [
+    {
+      "ref": {
+        "provider": "git",
+        "externalId": "control-plane-requirements",
+        "uri": "https://example.com/acme/control-plane/requirements",
+        "revision": "main"
+      },
+      "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  ],
+  "capturedAt": "2026-07-31T00:00:00.000Z"
+}

@@ -4,8 +4,13 @@
   "private": true,
   "type": "module",
   "description": "Language-neutral contracts and validation for Designflow.",
+  "exports": {
+    "./authoring": "./src/authoring/index.js"
+  },
   "scripts": {
-    "test": "node scripts/check-contracts.mjs"
+    "test": "node scripts/check-contracts.mjs",
+    "test:api": "node --test test/*.test.js",
+    "test:all": "npm test && npm run test:api"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
