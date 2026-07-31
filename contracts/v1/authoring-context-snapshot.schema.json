@@ -27,6 +27,7 @@
     },
     "sourceRefs": {
       "type": "array",
+      "description": "externalId MUST be unique because mutation reports address sourceRefs by externalId.",
       "uniqueItems": true,
       "items": {
         "type": "object",
@@ -43,6 +44,8 @@
   "$defs": {
     "entries": {
       "type": "array",
+      "description": "Entry ids MUST be unique within each containing collection; consumers MUST reject duplicate ids.",
+      "uniqueItems": true,
       "items": {
         "type": "object",
         "additionalProperties": false,

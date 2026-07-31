@@ -25,11 +25,35 @@ export function validateSchema(schemaId, value) {
   return validate(value) ? null : ajv.errorsText(validate.errors, { separator: "\n" });
 }
 
+export function validateSnapshotEntryIds(snapshot) {
+  const collections = [
+    ["tokenDocuments", snapshot?.designSystem?.tokenDocuments, (entry) => entry?.id],
+    ["components", snapshot?.designSystem?.components, (entry) => entry?.id],
+    ["patterns", snapshot?.designSystem?.patterns, (entry) => entry?.id],
+    ["sourceRefs", snapshot?.sourceRefs, (entry) => entry?.ref?.externalId]
+  ];
+  for (const [collection, entries, identity] of collections) {
+    if (!Array.isArray(entries)) return `${collection} must be an array`;
+    const seen = new Set();
+    for (const entry of entries) {
+      const id = identity(entry);
+      if (typeof id !== "string" || id.length === 0) {
+        return `${collection} entry has no addressable id`;
+      }
+      if (seen.has(id)) return `${collection} has duplicate id "${id}"`;
+      seen.add(id);
+    }
+  }
+  return null;
+}
+
 export function validateSnapshot(request, snapshot) {
   const requestError = validateSchema("urn:designflow:schema:v1:design-request", request);
   if (requestError) return { ok: false, kind: "schema-invalid", detail: requestError };
   const schemaError = validateSchema("urn:designflow:schema:v1:authoring-context-snapshot", snapshot);
   if (schemaError) return { ok: false, kind: "schema-invalid", detail: schemaError };
+  const identityError = validateSnapshotEntryIds(snapshot);
+  if (identityError) return { ok: false, kind: "schema-invalid", detail: identityError };
   const actual = snapshotDigest(snapshot);
   if (actual !== snapshot.snapshotDigest) {
     return mutationFailure(snapshot.snapshotDigest, actual, [], "snapshot-structure");

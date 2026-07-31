@@ -12,3 +12,7 @@ rc.1を変更せず、authoring context、blocking ambiguity report、provenance
 
 manifestのartifact pathは `/` 区切りの正規化済み相対pathである。consumerはbundle rootへ
 解決した正規化pathがroot配下に残ることを確認してからfilesystemへ渡す。
+
+snapshotの `tokenDocuments`、`components`、`patterns` は各collection内で `id` が一意、
+`sourceRefs` は `ref.externalId` が一意である。JSON Schemaの `uniqueItems` だけでは
+異なる内容を持つ同一IDを検出できないため、consumerは意味論的一意性も検証して重複を拒否する。

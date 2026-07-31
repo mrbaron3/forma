@@ -22,6 +22,8 @@ failure detail、`[PR-INTENT]`へ直接束縛したAPI testを追加した。1 f
 fixtureは期待結果付き実行ベクトルとして全件をtestから消費する。
 rc.2は完全なmanifest schemaとrelease-local参照だけでcompileするtestを持つ。
 `deriveCapabilities` は明示された `experience` だけをinteraction traceの入力に使う。
+snapshotのaddressable collectionではentry ID（source refは `externalId`）を一意に保ち、
+`validateSnapshotEntryIds` が内容の異なる重複も `schema-invalid` として拒否する。
 [#14](https://github.com/mrbaron3/designflow/issues/14)としてbundle pathをplatform-neutralな
 正規化済み相対pathに限定し、consumer側のroot内resolve確認も公開contract文書へ固定した。
 

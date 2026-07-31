@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
 import {
-  createMockAuthoringBackend, validateProvenance, validateSchema
+  createMockAuthoringBackend, snapshotDigest, validateProvenance, validateSchema
 } from "../src/authoring/index.js";
 
 const read = (name) => JSON.parse(fs.readFileSync(new URL(`../contracts/v1/examples/${name}`, import.meta.url)));
@@ -221,6 +221,53 @@ test("[PR-INTENT] deriveCapabilities rejects an input without its contracted exp
   assert.equal(result.kind, "schema-invalid");
 });
 
+test("[PR-INTENT] every operation rejects a malformed Design Request without an artifact", () => {
+  const malformedRequest = structuredClone(request);
+  delete malformedRequest.requestId;
+  const cases = [
+    ["authorExperience", {}],
+    ["authorDesignSystemDelta", {}],
+    ["deriveCapabilities", { experience }]
+  ];
+  for (const [operation, dependency] of cases) {
+    const result = createMockAuthoringBackend()[operation]({
+      request: malformedRequest,
+      snapshot: structuredClone(snapshot),
+      invocationKey: `invocation.invalid-request.${operation}`,
+      ...dependency
+    });
+    assert.equal(result.ok, false);
+    assert.equal(result.kind, "schema-invalid");
+    assert.equal("artifact" in result, false);
+    assert.equal(validateSchema(failureSchema, result), null);
+  }
+});
+
+test("[PR-INTENT] snapshot entry identities are unique in every addressable collection", () => {
+  const collections = ["tokenDocuments", "components", "patterns", "sourceRefs"];
+  for (const collection of collections) {
+    const duplicated = structuredClone(snapshot);
+    if (collection === "sourceRefs") {
+      const duplicate = structuredClone(duplicated.sourceRefs[0]);
+      duplicate.digest = `sha256:${"f".repeat(64)}`;
+      duplicated.sourceRefs.push(duplicate);
+    } else {
+      const duplicate = structuredClone(duplicated.designSystem[collection][0]);
+      duplicate.digest = `sha256:${"f".repeat(64)}`;
+      duplicated.designSystem[collection].push(duplicate);
+    }
+    duplicated.snapshotDigest = snapshotDigest(duplicated);
+    const result = createMockAuthoringBackend().authorExperience({
+      request,
+      snapshot: duplicated,
+      invocationKey: `invocation.duplicate.${collection}`
+    });
+    assert.equal(result.ok, false, collection);
+    assert.equal(result.kind, "schema-invalid", collection);
+    assert.match(result.detail, new RegExp(`${collection} has duplicate id`), collection);
+  }
+});
+
 test("[PR-INTENT] provenance validation permits non-authored manifest artifacts", () => {
   const artifacts = {
     experience: read("experience-contract.example.json"),
@@ -252,6 +299,39 @@ test("[PR-INTENT] provenance recomputes input and output digests instead of trus
     validateProvenance(valid.artifacts, outputMismatch, snapshot),
     /provenance digest mismatch/
   );
+});
+
+test("[PR-INTENT] provenance requires an exact unique record-to-artifact set", () => {
+  const valid = authoredProvenance();
+  const missingRecord = structuredClone(valid.manifest);
+  missingRecord.authorInvocationRefs = [];
+
+  const extraRecord = structuredClone(valid.manifest);
+  extraRecord.authorInvocationRefs.push({
+    ...extraRecord.authorInvocationRefs[0],
+    invocationKey: "invocation.extra"
+  });
+
+  const duplicateRecord = structuredClone(valid.manifest);
+  duplicateRecord.authorInvocationRefs.push(
+    structuredClone(duplicateRecord.authorInvocationRefs[0])
+  );
+
+  const duplicateArtifacts = structuredClone(valid.artifacts);
+  duplicateArtifacts.experienceCopy = structuredClone(duplicateArtifacts.experience);
+  const duplicateArtifactManifest = structuredClone(valid.manifest);
+  duplicateArtifactManifest.artifacts.experienceCopy =
+    structuredClone(duplicateArtifactManifest.artifacts.experience);
+
+  const cases = [
+    [valid.artifacts, missingRecord],
+    [valid.artifacts, extraRecord],
+    [valid.artifacts, duplicateRecord],
+    [duplicateArtifacts, duplicateArtifactManifest]
+  ];
+  for (const [artifacts, manifest] of cases) {
+    assert.notEqual(validateProvenance(artifacts, manifest, snapshot), null);
+  }
 });
 
 test("[PR-INTENT] bundle paths are normalized portable relatives", () => {

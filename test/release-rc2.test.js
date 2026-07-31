@@ -5,6 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
+import { validateSnapshotEntryIds } from "../src/authoring/index.js";
 
 const releaseRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -181,5 +182,26 @@ test("[PR-INTENT] rc.2 loads locally and closes every published document", () =>
         }
       }
     ), false, path);
+  }
+  for (const collection of ["tokenDocuments", "components", "patterns", "sourceRefs"]) {
+    const duplicateSnapshot = structuredClone(snapshot);
+    const entry = collection === "sourceRefs"
+      ? {
+          ref: { provider: "fixture", externalId: "duplicate.entry" },
+          digest
+        }
+      : { id: "duplicate.entry", digest, value: {} };
+    const conflicting = structuredClone(entry);
+    conflicting.digest = `sha256:${"b".repeat(64)}`;
+    if (collection === "sourceRefs") {
+      duplicateSnapshot.sourceRefs = [entry, conflicting];
+    } else {
+      duplicateSnapshot.designSystem[collection] = [entry, conflicting];
+    }
+    assert.match(
+      validateSnapshotEntryIds(duplicateSnapshot),
+      new RegExp(`${collection} has duplicate id`),
+      collection
+    );
   }
 });

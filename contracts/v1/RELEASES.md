@@ -11,6 +11,9 @@ input／instruction／output digest は manifest の `authorInvocationRefs` で�
 
 同期authoring portは `contracts/v1/` で反復する。失敗は `kind` ごとのdiscriminated union、
 `deriveCapabilities` は検証対象の `experience` を明示的なinputとする。
+snapshotの `tokenDocuments`、`components`、`patterns` は各collection内で `id` が一意、
+`sourceRefs` は `ref.externalId` が一意でなければならない。JSON Schemaの構造検証に加えて
+consumerはこの意味論的一意性を検証し、重複を `schema-invalid` として拒否する。
 
 `contract-v1.0.0-rc.1` の既存 schema は変更していない。rc.2 の追加契約は additive schema として
 この directory に公開する。
