@@ -8,7 +8,7 @@
     "./authoring": "./src/authoring/index.js"
   },
   "scripts": {
-    "test": "npm run test:contracts && npm run test:api",
+    "test": "node scripts/check-all.mjs",
     "test:contracts": "node scripts/check-contracts.mjs",
     "test:api": "node --test test/*.test.js",
     "test:all": "npm test"
