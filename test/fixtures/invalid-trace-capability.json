@@ -1,0 +1,1 @@
+{"fixture":"invalid-trace-capability","operation":"deriveCapabilities","ok":false,"expectedKind":"trace-broken","violation":"capability refers to an unknown interaction","expectedEvidence":{"path":"detail","value":"capability trace is broken"}}

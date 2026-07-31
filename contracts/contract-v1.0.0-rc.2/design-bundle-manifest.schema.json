@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:designflow:schema:v1:design-bundle-manifest",
-  "title": "Design Bundle Manifest v1",
+  "$id": "urn:designflow:schema:contract-v1.0.0-rc.2:design-bundle-manifest",
+  "title": "Design Bundle Manifest contract-v1.0.0-rc.2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -18,22 +18,20 @@
     "createdAt"
   ],
   "properties": {
-    "schemaVersion": {
-      "const": "1.0"
-    },
+    "schemaVersion": { "const": "1.0" },
     "bundleId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/identifier"
     },
     "requestId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/identifier"
     },
     "revisionId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/identifier"
     },
     "previousRevisionId": {
       "anyOf": [
         {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+          "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/identifier"
         },
         {
           "type": "null"
@@ -41,12 +39,12 @@
       ]
     },
     "sourceDigest": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/sha256"
+      "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/sha256"
     },
     "designSystemBaseRevision": {
       "anyOf": [
         {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/externalRef"
+          "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/externalRef"
         },
         {
           "type": "null"
@@ -64,19 +62,19 @@
       ],
       "properties": {
         "experience": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/artifactRef"
+          "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/artifactRef"
         },
         "designSystemDelta": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/artifactRef"
+          "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/artifactRef"
         },
         "designTokens": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/artifactRef"
+          "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/artifactRef"
         },
         "capabilityRequirements": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/artifactRef"
+          "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/artifactRef"
         },
         "preview": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/artifactRef"
+          "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/artifactRef"
         }
       }
     },
@@ -85,14 +83,14 @@
       "description": "Closed provenance map keyed by each authored artifact's unique invocationKey.",
       "minProperties": 1,
       "propertyNames": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+        "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/identifier"
       },
       "additionalProperties": {
-        "$ref": "urn:designflow:schema:v1:author-invocation"
+        "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:author-invocation"
       }
     },
     "bundleDigest": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/sha256"
+      "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/sha256"
     },
     "createdAt": {
       "type": "string",

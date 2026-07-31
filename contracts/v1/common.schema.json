@@ -3,6 +3,26 @@
   "$id": "urn:designflow:schema:v1:common",
   "title": "Experience Contract common definitions",
   "$defs": {
+    "ambiguity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question", "blocks"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "question": { "$ref": "#/$defs/nonEmptyString" },
+        "blocks": { "type": "boolean" }
+      }
+    },
+    "nonBlockingAmbiguity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question", "blocks"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "question": { "$ref": "#/$defs/nonEmptyString" },
+        "blocks": { "const": false }
+      }
+    },
     "identifier": {
       "type": "string",
       "minLength": 1,
@@ -96,7 +116,7 @@
         "path": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^(?!/)(?!.*\\.\\./).+$"
+          "pattern": "^(?!/)(?![A-Za-z]:)(?!.*[\\\\:])(?!.*//)(?!.*/$)(?!\\.{1,2}(?:/|$))(?!.*/\\.{1,2}(?:/|$)).+$"
         },
         "digest": {
           "$ref": "#/$defs/sha256"
@@ -127,4 +147,3 @@
     }
   }
 }
-

@@ -1,0 +1,1 @@
+{"fixture":"invalid-schema-type","operation":"authorExperience","ok":false,"expectedKind":"schema-invalid","violation":"requestId has the wrong type","expectedEvidence":{"path":"detail","value":"data/requestId must be string"}}

@@ -1,0 +1,1 @@
+{"fixture":"invalid-provenance-output","operation":"validateProvenance","ok":false,"expectedKind":"provenance-invalid","violation":"output digest does not match","expectedEvidence":{"path":"detail","value":"provenance digest mismatch for experience"}}

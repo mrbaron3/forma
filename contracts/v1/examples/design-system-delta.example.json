@@ -1,5 +1,6 @@
 {
   "schemaVersion": "1.0",
+  "invocationKey": "author-design-system-dashboard-001",
   "requestId": "design-dashboard-001",
   "revisionId": "design-revision-001",
   "baseRevisionRef": {
@@ -109,5 +110,6 @@
         "REQ-DASH-003"
       ]
     }
-  ]
+  ],
+  "ambiguities": []
 }

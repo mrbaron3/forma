@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:designflow:schema:contract-v1.0.0-rc.2:authoring-context-snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "snapshotId", "snapshotDigest", "designSystem", "sourceRefs", "capturedAt"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "snapshotId": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/identifier" },
+    "snapshotDigest": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/sha256" },
+    "designSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "tokenDocuments", "components", "patterns"],
+      "properties": {
+        "ref": {
+          "anyOf": [
+            { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/externalRef" },
+            { "type": "null" }
+          ]
+        },
+        "tokenDocuments": { "$ref": "#/$defs/entries" },
+        "components": { "$ref": "#/$defs/entries" },
+        "patterns": { "$ref": "#/$defs/entries" }
+      }
+    },
+    "sourceRefs": {
+      "type": "array",
+      "description": "externalId MUST be unique because mutation reports address sourceRefs by externalId.",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ref", "digest"],
+        "properties": {
+          "ref": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/externalRef" },
+          "digest": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/sha256" }
+        }
+      }
+    },
+    "capturedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "entries": {
+      "type": "array",
+      "description": "Entry ids MUST be unique within each containing collection; consumers MUST reject duplicate ids.",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "digest", "value"],
+        "properties": {
+          "id": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/nonEmptyString" },
+          "digest": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/sha256" },
+          "value": true
+        }
+      }
+    }
+  }
+}

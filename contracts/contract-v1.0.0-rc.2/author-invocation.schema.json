@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:designflow:schema:contract-v1.0.0-rc.2:author-invocation",
+  "description": "Provenance value stored under its invocationKey in design-bundle-manifest.authorInvocationRefs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["provider", "toolOrModel", "profileRevision", "inputContextDigest", "instructionDigest", "outputDigest"],
+  "properties": {
+    "provider": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/nonEmptyString" },
+    "toolOrModel": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/nonEmptyString" },
+    "orchestrator": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/nonEmptyString" },
+    "profileRevision": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/nonEmptyString" },
+    "inputContextDigest": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/sha256" },
+    "instructionDigest": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/sha256" },
+    "outputDigest": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/sha256" }
+  }
+}

@@ -1,12 +1,41 @@
 # Handoff
 
-最終更新: 2026-07-30
+最終更新: 2026-07-31
 
 ## 現在地
 
+ISSUE-0001として同期 `AuthoringBackend` portと決定論的mockを追加した。rc.2では
+`AuthoringContextSnapshot`、`AuthoringAmbiguityReport`、manifest provenanceを公開し、schema／trace／
+provenance／source mutationをrevision化前に閉じて拒否する。判断は
+[ADR-0008](decisions/ADR-0008-synchronous-authoring-port.md)を正本とする。
+
+レビュー修正では、公開artifact全体（`invocationKey` と共通形式の `ambiguities` を含む）を
+field削除なしでschema検証する。不正なDesign Requestも例外ではなく `schema-invalid` に閉じ、
+snapshot entry全体の変化、artifact側invocation key重複、manifestとの集合不一致、および
+experience内参照切れを検出する。rc.2の新規schemaは固定release directory内で参照解決できる。
+標準 `npm test` はcontract checkerとAPI testの両方を実行する。
+API contract修正では、manifestにpreviewやtokenなどauthoring対象外のartifactが併存しても、
+著述したartifactとprovenance recordの集合だけを過不足なく照合する。またmutation fixtureは
+呼出し元のread-only snapshotを変更せず、source refの差分をexternal id単位で報告する。
+current-headレビューでは、snapshot digestを内容から再計算するprovenance検証、kind別に閉じた
+failure detail、`[PR-INTENT]`へ直接束縛したAPI testを追加した。1 file = 1 violationの
+fixtureはkindだけでなく固有のerror evidenceまで持つ実行ベクトルとして全件をtestから消費する。
+rc.2は完全なmanifest schemaとrelease-local参照だけでcompileするtestを持つ。
+`deriveCapabilities` は明示された `experience` だけをinteraction traceの入力に使う。
+[#16](https://github.com/mrbaron3/designflow/issues/16)として、その `requestId` がDesign Requestと
+一致しない別lineageのExperienceも `trace-broken` として拒否する。
+snapshotのaddressable collectionではentry ID（source refは `externalId`）を一意に保ち、
+`validateSnapshotEntryIds` が内容の異なる重複も `schema-invalid` として拒否する。
+[#15](https://github.com/mrbaron3/designflow/issues/15)としてmanifest provenanceを
+`invocationKey` keyed objectにし、1件以上をschemaで必須化してruntime helperに依存せず
+欠落と重複をcontract境界で閉じる。
+[#14](https://github.com/mrbaron3/designflow/issues/14)としてbundle pathをplatform-neutralな
+正規化済み相対pathに限定し、consumer側のroot内resolve確認も公開contract文書へ固定した。
+
 製品名・repository名を`Designflow`／`designflow`へ統一した。Phase 0 Contract bootstrapは完了し、
 公開contract draft、North Star、設計原則、architecture、roadmap、ADR、contract検証scriptがある。
-remoteはprivateの`https://github.com/mrbaron3/designflow`、固定境界は`contract-v1.0.0-rc.1`。
+remoteはprivateの`https://github.com/mrbaron3/designflow`、現在の固定境界は
+`contract-v1.0.0-rc.2`（rc.1は不変）。
 tracking Epicは[#1](https://github.com/mrbaron3/designflow/issues/1)。
 
 2026-07-30、利用想定をhero scenarioとして固定した
@@ -31,7 +60,7 @@ Dashboard実装を待たず、固定contract releaseに対して単独で進め�
 
 ## 再開点
 
-1. `contract-v1.0.0-rc.1`の存在と`npm test`を確認する。
+1. `contract-v1.0.0-rc.2`の追加契約と`npm test`を確認する。
 2. `docs/ROADMAP.md`の独立task DAGを読む。
 3. DF-002、DF-004、DF-006から最大3件を並行着手する。
 4. consumer固有要求を見つけた場合、このrepositoryへ実装せず公開contractで表現可能かだけを判断する。

@@ -1,0 +1,1 @@
+{"fixture":"ambiguity-blocking","operation":"authorExperience","ok":false,"expectedKind":"ambiguous","violation":"blocking ambiguity prevents an artifact","expectedEvidence":{"path":"detail.ambiguities","value":[{"id":"ambiguity.required-outcome","question":"成功状態として必須の結果は何ですか？","blocks":true}]}}

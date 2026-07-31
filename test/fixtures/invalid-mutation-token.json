@@ -1,0 +1,1 @@
+{"fixture":"invalid-mutation-token","operation":"authorExperience","ok":false,"expectedKind":"source-mutation","violation":"one token document entry changes","expectedEvidence":{"path":"detail.mutatedRefs","value":[{"collection":"tokenDocuments","id":"tokens/base.json"}]}}
