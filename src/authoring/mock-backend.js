@@ -172,7 +172,6 @@ export function createMockAuthoringBackend({ fixture = "valid" } = {}) {
     deriveCapabilities: (input) => author("capabilityRequirements", input),
     provenanceFor(artifact, snapshot, overrides = {}) {
       return {
-        invocationKey: artifact.invocationKey,
         provider: "designflow-mock", toolOrModel: "deterministic-fixture",
         profileRevision: "contract-v1.0.0-rc.2",
         inputContextDigest: snapshotDigest(snapshot),

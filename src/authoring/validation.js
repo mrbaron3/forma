@@ -147,12 +147,12 @@ export function validateProvenance(artifacts, manifest, snapshot) {
     return "authoring context snapshot digest mismatch";
   }
   const records = manifest?.authorInvocationRefs;
-  if (!Array.isArray(records)) return "manifest has no authorInvocationRefs";
+  if (!records || typeof records !== "object" || Array.isArray(records) ||
+    Object.keys(records).length === 0) return "manifest has no authorInvocationRefs";
   if (!artifacts || typeof artifacts !== "object" || Array.isArray(artifacts)) {
     return "artifacts must be an object";
   }
-  const keys = records.map((record) => record.invocationKey);
-  if (new Set(keys).size !== keys.length) return "invocationKey is not unique";
+  const keys = Object.keys(records);
   const artifactEntries = Object.entries(artifacts);
   if (artifactEntries.some(([, artifact]) =>
     !artifact || typeof artifact !== "object" || Array.isArray(artifact) ||
@@ -168,13 +168,13 @@ export function validateProvenance(artifacts, manifest, snapshot) {
     artifactEntries.some(([name]) => !manifest.artifacts[name])) {
     return "manifest has no entry for an authored artifact";
   }
-  for (const record of records) {
+  for (const record of Object.values(records)) {
     if (validateSchema("urn:designflow:schema:v1:author-invocation", record)) return "author invocation record is invalid";
     if (record.orchestrator === record.provider) return "orchestrator must be omitted when it is the provider";
   }
   for (const [name, artifact] of artifactEntries) {
-    const record = records.find((entry) => entry.invocationKey === artifact.invocationKey);
-    if (!record || records.filter((entry) => entry.invocationKey === artifact.invocationKey).length !== 1) return `provenance mismatch for ${name}`;
+    const record = records[artifact.invocationKey];
+    if (!record) return `provenance mismatch for ${name}`;
     if (record.inputContextDigest !== actualSnapshotDigest ||
       record.outputDigest !== digest(artifact)) return `provenance digest mismatch for ${name}`;
     if (manifest.artifacts?.[name]?.digest !== record.outputDigest) return `manifest artifact digest mismatch for ${name}`;

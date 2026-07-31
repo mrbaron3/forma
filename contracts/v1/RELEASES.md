@@ -5,6 +5,8 @@
 `AuthoringContextSnapshot v1`、`AuthoringAmbiguityReport v1`、著述 provenance record を追加した。
 成果物は呼出し前に確定した `invocationKey` のみを保持し、provider、tool/model、profile と
 input／instruction／output digest は manifest の `authorInvocationRefs` で管理する。
+`authorInvocationRefs` は `invocationKey` をkeyとする1件以上のobjectであり、同じkeyの
+provenance重複をデータモデル上表現できない。
 固定releaseのinventoryは `common`、`author-invocation`、`authoring-context-snapshot`、
 `authoring-ambiguity-report`、`design-bundle-manifest` の5 schemaである。既存fieldを保持した
 完全なmanifest schemaを収録する。

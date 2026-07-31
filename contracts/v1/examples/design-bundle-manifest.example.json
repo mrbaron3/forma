@@ -44,9 +44,8 @@
       "schemaRef": "none"
     }
   },
-  "authorInvocationRefs": [
-    {
-      "invocationKey": "author-experience-dashboard-001",
+  "authorInvocationRefs": {
+    "author-experience-dashboard-001": {
       "provider": "designflow-mock",
       "toolOrModel": "deterministic-fixture",
       "profileRevision": "contract-v1.0.0-rc.2",
@@ -54,8 +53,7 @@
       "instructionDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "outputDigest": "sha256:568a18c1c5132f859bf41f54d1ce85e37c3cc9aba29bc297a01d555d65177bc1"
     },
-    {
-      "invocationKey": "author-design-system-dashboard-001",
+    "author-design-system-dashboard-001": {
       "provider": "designflow-mock",
       "toolOrModel": "deterministic-fixture",
       "profileRevision": "contract-v1.0.0-rc.2",
@@ -63,8 +61,7 @@
       "instructionDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
       "outputDigest": "sha256:e526e7803e355fa89022253d3832f581f40febccaa5980bf54fdde46210e7b22"
     },
-    {
-      "invocationKey": "derive-capabilities-dashboard-001",
+    "derive-capabilities-dashboard-001": {
       "provider": "designflow-mock",
       "toolOrModel": "deterministic-fixture",
       "profileRevision": "contract-v1.0.0-rc.2",
@@ -72,7 +69,7 @@
       "instructionDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
       "outputDigest": "sha256:aff73c6d9710d6c0a258aaeaeb7cb42d0ddc499bf306b7111c218f2377349ed8"
     }
-  ],
-  "bundleDigest": "sha256:63e16046da610405d5a9c43a53a4e11e2fe278806add7628915bb6ea9c4f8a81",
+  },
+  "bundleDigest": "sha256:86cb4a0608d5accd4120657a22f73e5ab1e4cef8a4d8ab8cd2b0fedbe7d0885b",
   "createdAt": "2026-07-25T03:30:00.000Z"
 }

@@ -10,6 +10,9 @@ rc.1を変更せず、authoring context、blocking ambiguity report、provenance
 `authoring-port` は実装とともに反復中の `contracts/v1/` contractであり、この固定releaseには
 含めない。
 
+manifestの `authorInvocationRefs` は `invocationKey` をkeyとする1件以上のclosed objectである。
+provenance valueはkeyを重複保持せず、同じinvocationの重複recordを構造上表現できない。
+
 manifestのartifact pathは `/` 区切りの正規化済み相対pathである。consumerはbundle rootへ
 解決した正規化pathがroot配下に残ることを確認してからfilesystemへ渡す。
 

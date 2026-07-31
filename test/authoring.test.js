@@ -22,7 +22,9 @@ function authoredProvenance(backend = createMockAuthoringBackend()) {
   const artifacts = { experience: result.artifact };
   const record = backend.provenanceFor(result.artifact, snapshot);
   const manifest = {
-    authorInvocationRefs: [record],
+    authorInvocationRefs: {
+      [result.artifact.invocationKey]: record
+    },
     artifacts: {
       experience: { digest: record.outputDigest }
     }
@@ -281,9 +283,10 @@ test("[PR-INTENT] provenance validation permits non-authored manifest artifacts"
 test("[PR-INTENT] provenance recomputes input and output digests instead of trusting records", () => {
   const valid = authoredProvenance();
   assert.equal(validateProvenance(valid.artifacts, valid.manifest, snapshot), null);
+  const invocationKey = valid.artifacts.experience.invocationKey;
 
   const inputMismatch = structuredClone(valid.manifest);
-  inputMismatch.authorInvocationRefs[0].inputContextDigest =
+  inputMismatch.authorInvocationRefs[invocationKey].inputContextDigest =
     `sha256:${"e".repeat(64)}`;
   assert.match(
     validateProvenance(valid.artifacts, inputMismatch, snapshot),
@@ -291,31 +294,44 @@ test("[PR-INTENT] provenance recomputes input and output digests instead of trus
   );
 
   const outputMismatch = structuredClone(valid.manifest);
-  outputMismatch.authorInvocationRefs[0].outputDigest =
+  outputMismatch.authorInvocationRefs[invocationKey].outputDigest =
     `sha256:${"f".repeat(64)}`;
   outputMismatch.artifacts.experience.digest =
-    outputMismatch.authorInvocationRefs[0].outputDigest;
+    outputMismatch.authorInvocationRefs[invocationKey].outputDigest;
   assert.match(
     validateProvenance(valid.artifacts, outputMismatch, snapshot),
     /provenance digest mismatch/
   );
 });
 
-test("[PR-INTENT] provenance requires an exact unique record-to-artifact set", () => {
+test("[PR-INTENT] manifest schema requires a non-empty invocation-keyed provenance map", () => {
+  const schemaId = "urn:designflow:schema:v1:design-bundle-manifest";
+  const manifest = read("design-bundle-manifest.example.json");
+  assert.equal(validateSchema(schemaId, manifest), null);
+  const [invocationKey, record] = Object.entries(manifest.authorInvocationRefs)[0];
+  const invalid = [
+    [],
+    {},
+    [record],
+    { "invalid key": record },
+    { [invocationKey]: { ...record, invocationKey } }
+  ];
+  for (const authorInvocationRefs of invalid) {
+    assert.notEqual(
+      validateSchema(schemaId, { ...manifest, authorInvocationRefs }),
+      null
+    );
+  }
+});
+
+test("[PR-INTENT] provenance requires an exact record-to-artifact set", () => {
   const valid = authoredProvenance();
   const missingRecord = structuredClone(valid.manifest);
-  missingRecord.authorInvocationRefs = [];
+  missingRecord.authorInvocationRefs = {};
 
   const extraRecord = structuredClone(valid.manifest);
-  extraRecord.authorInvocationRefs.push({
-    ...extraRecord.authorInvocationRefs[0],
-    invocationKey: "invocation.extra"
-  });
-
-  const duplicateRecord = structuredClone(valid.manifest);
-  duplicateRecord.authorInvocationRefs.push(
-    structuredClone(duplicateRecord.authorInvocationRefs[0])
-  );
+  extraRecord.authorInvocationRefs["invocation.extra"] =
+    structuredClone(Object.values(extraRecord.authorInvocationRefs)[0]);
 
   const duplicateArtifacts = structuredClone(valid.artifacts);
   duplicateArtifacts.experienceCopy = structuredClone(duplicateArtifacts.experience);
@@ -326,7 +342,6 @@ test("[PR-INTENT] provenance requires an exact unique record-to-artifact set", (
   const cases = [
     [valid.artifacts, missingRecord],
     [valid.artifacts, extraRecord],
-    [valid.artifacts, duplicateRecord],
     [duplicateArtifacts, duplicateArtifactManifest]
   ];
   for (const [artifacts, manifest] of cases) {
@@ -384,7 +399,7 @@ test("[PR-INTENT] provenance rejects a tampered snapshot with matching forged di
   const tampered = structuredClone(snapshot);
   tampered.sourceRefs[0].digest = `sha256:${"f".repeat(64)}`;
   tampered.snapshotDigest = `sha256:${"e".repeat(64)}`;
-  for (const record of manifest.authorInvocationRefs) {
+  for (const record of Object.values(manifest.authorInvocationRefs)) {
     record.inputContextDigest = tampered.snapshotDigest;
   }
   const generatedRecord = createMockAuthoringBackend()

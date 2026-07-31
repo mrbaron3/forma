@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:designflow:schema:contract-v1.0.0-rc.2:author-invocation",
+  "description": "Provenance value stored under its invocationKey in design-bundle-manifest.authorInvocationRefs.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["invocationKey", "provider", "toolOrModel", "profileRevision", "inputContextDigest", "instructionDigest", "outputDigest"],
+  "required": ["provider", "toolOrModel", "profileRevision", "inputContextDigest", "instructionDigest", "outputDigest"],
   "properties": {
-    "invocationKey": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/identifier" },
     "provider": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/nonEmptyString" },
     "toolOrModel": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/nonEmptyString" },
     "orchestrator": { "$ref": "urn:designflow:schema:contract-v1.0.0-rc.2:common#/$defs/nonEmptyString" },

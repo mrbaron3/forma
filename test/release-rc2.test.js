@@ -76,8 +76,8 @@ function releaseValidators() {
 
 test("[PR-INTENT] rc.2 loads locally and closes every published document", () => {
   const validate = releaseValidators();
+  const invocationKey = "invocation.release";
   const invocation = {
-    invocationKey: "invocation.release",
     provider: "designflow-mock",
     toolOrModel: "deterministic-fixture",
     profileRevision: "contract-v1.0.0-rc.2",
@@ -88,7 +88,7 @@ test("[PR-INTENT] rc.2 loads locally and closes every published document", () =>
   const ambiguity = {
     schemaVersion: "1.0",
     requestId: "request.release",
-    invocationKey: invocation.invocationKey,
+    invocationKey,
     targetArtifact: "experience",
     ambiguities: [{
       id: "ambiguity.required-outcome",
@@ -129,7 +129,9 @@ test("[PR-INTENT] rc.2 loads locally and closes every published document", () =>
       capabilityRequirements: artifact,
       preview: artifact
     },
-    authorInvocationRefs: [invocation],
+    authorInvocationRefs: {
+      [invocationKey]: invocation
+    },
     bundleDigest: digest,
     createdAt: "2026-07-31T00:00:00.000Z"
   };
@@ -161,6 +163,17 @@ test("[PR-INTENT] rc.2 loads locally and closes every published document", () =>
       }
     }
   ), false);
+  for (const authorInvocationRefs of [
+    {},
+    [invocation],
+    { "invalid key": invocation },
+    { [invocationKey]: { ...invocation, invocationKey } }
+  ]) {
+    assert.equal(validate(
+      "urn:designflow:schema:contract-v1.0.0-rc.2:design-bundle-manifest",
+      { ...manifest, authorInvocationRefs }
+    ), false);
+  }
   for (const path of [
     "..",
     "dir/..",

@@ -81,8 +81,13 @@
       }
     },
     "authorInvocationRefs": {
-      "type": "array",
-      "items": {
+      "type": "object",
+      "description": "Closed provenance map keyed by each authored artifact's unique invocationKey.",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      },
+      "additionalProperties": {
         "$ref": "urn:designflow:schema:v1:author-invocation"
       }
     },

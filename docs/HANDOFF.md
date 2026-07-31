@@ -24,6 +24,9 @@ rc.2は完全なmanifest schemaとrelease-local参照だけでcompileするtest�
 `deriveCapabilities` は明示された `experience` だけをinteraction traceの入力に使う。
 snapshotのaddressable collectionではentry ID（source refは `externalId`）を一意に保ち、
 `validateSnapshotEntryIds` が内容の異なる重複も `schema-invalid` として拒否する。
+[#15](https://github.com/mrbaron3/designflow/issues/15)としてmanifest provenanceを
+`invocationKey` keyed objectにし、1件以上をschemaで必須化してruntime helperに依存せず
+欠落と重複をcontract境界で閉じる。
 [#14](https://github.com/mrbaron3/designflow/issues/14)としてbundle pathをplatform-neutralな
 正規化済み相対pathに限定し、consumer側のroot内resolve確認も公開contract文書へ固定した。
 
