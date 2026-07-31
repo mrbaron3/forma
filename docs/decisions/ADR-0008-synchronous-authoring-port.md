@@ -8,6 +8,8 @@
 著述境界は `authorExperience`、`authorDesignSystemDelta`、`deriveCapabilities` の同期operationとする。
 入力は固定された `AuthoringContextSnapshot` 値に限定し、成功または閉じた失敗kindを返す。
 provider provenance は成果物から分離し、bundle manifest で `invocationKey` により対応付ける。
+失敗の `detail` はkindごとのdiscriminated unionとし、snapshotはschema検証後に内容からdigestを
+再計算してprovenance recordへ束縛する。
 
 ## 理由
 

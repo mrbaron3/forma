@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { digest } from "./canonical-json.js";
+import { digest, snapshotDigest } from "./canonical-json.js";
 import {
   artifactSchemas, compareSnapshots, validateSchema, validateSnapshot, validateTrace
 } from "./validation.js";
@@ -24,6 +24,15 @@ function failure(kind, detail) {
   return { ok: false, kind, detail };
 }
 
+function governanceMutation(decision, reason) {
+  return failure("source-mutation", {
+    policy: "design-system-governance",
+    action: decision.action,
+    targetId: decision.targetId,
+    reason
+  });
+}
+
 function ambiguity(request, invocationKey, target) {
   return {
     schemaVersion: "1.0", requestId: request.requestId, invocationKey, targetArtifact: target,
@@ -40,14 +49,14 @@ function governDelta(artifact, snapshot) {
     if (!decision.action) return failure("trace-broken", "every design-system change requires a governance action");
     if ((decision.action === "extend" || decision.action === "create") &&
       !decision.targetId.startsWith("feature.")) {
-      return failure("source-mutation", "extend and create must use a feature namespace");
+      return governanceMutation(decision, "feature-namespace-required");
     }
     if (decision.action !== "reuse" && base.has(decision.targetId)) {
-      return failure("source-mutation", "a shared DTCG path cannot be redefined");
+      return governanceMutation(decision, "shared-token-redefinition");
     }
     if (decision.action !== "reuse" && [...base.values()].some((value) =>
       JSON.stringify(value) === JSON.stringify(decision.value))) {
-      return failure("source-mutation", "a base token value cannot be duplicated under another path");
+      return governanceMutation(decision, "base-token-value-duplication");
     }
   }
   return null;
@@ -79,6 +88,12 @@ function applyFixture(target, artifact, fixture, request, snapshot) {
       return null;
     case "invalid-trace-capability":
       if (target === "capabilityRequirements") artifact.capabilities[0].sourceInteractionIds = ["missing-step"];
+      return null;
+    case "invalid-governance-target":
+      if (target === "designSystemDelta") {
+        artifact.decisions.find((decision) => decision.action === "extend").targetId =
+          "component.repository-status-card";
+      }
       return null;
     case "invalid-provenance-output":
       return failure("provenance-invalid", "fixture output digest does not match");
@@ -155,7 +170,7 @@ export function createMockAuthoringBackend({ fixture = "valid" } = {}) {
         invocationKey: artifact.invocationKey,
         provider: "designflow-mock", toolOrModel: "deterministic-fixture",
         profileRevision: "contract-v1.0.0-rc.2",
-        inputContextDigest: snapshot.snapshotDigest,
+        inputContextDigest: snapshotDigest(snapshot),
         instructionDigest: digest({ fixture }),
         outputDigest: digest(artifact),
         ...overrides

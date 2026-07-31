@@ -16,6 +16,7 @@
 | `authoring-context-snapshot.schema.json` | read-onlyな著述context snapshot |
 | `authoring-ambiguity-report.schema.json` | blocking ambiguityの構造化report |
 | `author-invocation.schema.json` | manifestに置く著述provenance |
+| `authoring-port.schema.json` | 同期著述operationのinput／success／kind別failure |
 
 ## Versioning
 

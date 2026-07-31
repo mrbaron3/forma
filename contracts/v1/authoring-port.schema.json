@@ -13,24 +13,133 @@
         "invocationKey": { "$ref": "urn:designflow:schema:v1:common#/$defs/identifier" }
       }
     },
-    "failure": {
+    "entryMutationReport": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["ok", "kind", "detail"],
+      "required": ["expectedDigest", "actualDigest", "mutatedRefs", "scope"],
       "properties": {
-        "ok": { "const": false },
-        "kind": {
-          "enum": [
-            "schema-invalid",
-            "trace-broken",
-            "provenance-invalid",
-            "source-mutation",
-            "ambiguous",
-            "provider-unavailable"
-          ]
+        "expectedDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
+        "actualDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
+        "mutatedRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["collection", "id"],
+            "properties": {
+              "collection": {
+                "enum": ["tokenDocuments", "components", "patterns", "sourceRefs"]
+              },
+              "id": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+            }
+          }
         },
-        "detail": true
+        "scope": { "const": "entries" }
       }
+    },
+    "structureMutationReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expectedDigest", "actualDigest", "mutatedRefs", "scope"],
+      "properties": {
+        "expectedDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
+        "actualDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
+        "mutatedRefs": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "scope": { "const": "snapshot-structure" }
+      }
+    },
+    "governanceMutationReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "action", "targetId", "reason"],
+      "properties": {
+        "policy": { "const": "design-system-governance" },
+        "action": { "enum": ["extend", "create"] },
+        "targetId": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" },
+        "reason": {
+          "enum": [
+            "feature-namespace-required",
+            "shared-token-redefinition",
+            "base-token-value-duplication"
+          ]
+        }
+      }
+    },
+    "sourceMutationReport": {
+      "oneOf": [
+        { "$ref": "#/$defs/entryMutationReport" },
+        { "$ref": "#/$defs/structureMutationReport" },
+        { "$ref": "#/$defs/governanceMutationReport" }
+      ]
+    },
+    "failure": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "schema-invalid" },
+            "detail": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "trace-broken" },
+            "detail": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "provenance-invalid" },
+            "detail": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "source-mutation" },
+            "detail": { "$ref": "#/$defs/sourceMutationReport" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "ambiguous" },
+            "detail": { "$ref": "urn:designflow:schema:v1:authoring-ambiguity-report" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "provider-unavailable" },
+            "detail": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+          }
+        }
+      ]
     },
     "authorExperienceResult": {
       "oneOf": [

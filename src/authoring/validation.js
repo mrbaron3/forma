@@ -111,6 +111,17 @@ export function validateTrace(target, artifact, request, related = {}) {
 }
 
 export function validateProvenance(artifacts, manifest, snapshot) {
+  const snapshotSchemaError = validateSchema(
+    "urn:designflow:schema:v1:authoring-context-snapshot",
+    snapshot
+  );
+  if (snapshotSchemaError) {
+    return `authoring context snapshot is invalid: ${snapshotSchemaError}`;
+  }
+  const actualSnapshotDigest = snapshotDigest(snapshot);
+  if (actualSnapshotDigest !== snapshot.snapshotDigest) {
+    return "authoring context snapshot digest mismatch";
+  }
   const records = manifest?.authorInvocationRefs;
   if (!Array.isArray(records)) return "manifest has no authorInvocationRefs";
   if (!artifacts || typeof artifacts !== "object" || Array.isArray(artifacts)) {
@@ -140,7 +151,8 @@ export function validateProvenance(artifacts, manifest, snapshot) {
   for (const [name, artifact] of artifactEntries) {
     const record = records.find((entry) => entry.invocationKey === artifact.invocationKey);
     if (!record || records.filter((entry) => entry.invocationKey === artifact.invocationKey).length !== 1) return `provenance mismatch for ${name}`;
-    if (record.inputContextDigest !== snapshot.snapshotDigest || record.outputDigest !== digest(artifact)) return `provenance digest mismatch for ${name}`;
+    if (record.inputContextDigest !== actualSnapshotDigest ||
+      record.outputDigest !== digest(artifact)) return `provenance digest mismatch for ${name}`;
     if (manifest.artifacts?.[name]?.digest !== record.outputDigest) return `manifest artifact digest mismatch for ${name}`;
   }
   return null;

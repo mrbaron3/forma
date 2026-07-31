@@ -18,6 +18,8 @@ API testは `npm run test:api` で独立実行する。
 API contract修正では、manifestにpreviewやtokenなどauthoring対象外のartifactが併存しても、
 著述したartifactとprovenance recordの集合だけを過不足なく照合する。またmutation fixtureは
 呼出し元のread-only snapshotを変更せず、source refの差分をexternal id単位で報告する。
+current-headレビューでは、snapshot digestを内容から再計算するprovenance検証、kind別に閉じた
+failure detail、`[PR-INTENT]`へ直接束縛したAPI testを追加し、未使用fixture fileを除去した。
 
 製品名・repository名を`Designflow`／`designflow`へ統一した。Phase 0 Contract bootstrapは完了し、
 公開contract draft、North Star、設計原則、architecture、roadmap、ADR、contract検証scriptがある。
