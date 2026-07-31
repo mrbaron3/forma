@@ -1,0 +1,1 @@
+{"fixture":"ambiguity-blocking","operation":"authorExperience","ok":false,"expectedKind":"ambiguous","violation":"blocking ambiguity prevents an artifact"}

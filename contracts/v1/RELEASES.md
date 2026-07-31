@@ -7,6 +7,8 @@
 input／instruction／output digest は manifest の `authorInvocationRefs` で管理する。
 同期authoring portの失敗は `kind` ごとのdiscriminated unionとし、曖昧性reportと
 source mutation reportを閉じた構造で公開する。
+`deriveCapabilities` は検証対象の `experience` を明示的なinputとし、固定release directoryには
+既存fieldを保持した完全なmanifest schemaを収録する。
 
 `contract-v1.0.0-rc.1` の既存 schema は変更していない。rc.2 の追加契約は additive schema として
 この directory に公開する。

@@ -13,17 +13,20 @@ provenance／source mutationをrevision化前に閉じて拒否する。判断�
 field削除なしでschema検証する。不正なDesign Requestも例外ではなく `schema-invalid` に閉じ、
 snapshot entry全体の変化、artifact側invocation key重複、manifestとの集合不一致、および
 experience内参照切れを検出する。rc.2の新規schemaは固定release directory内で参照解決できる。
-claim時のbounded grader profileを維持するため `npm test` はcontract checkerのままとし、
-API testは `npm run test:api` で独立実行する。
+標準 `npm test` はcontract checkerとAPI testの両方を実行する。
 API contract修正では、manifestにpreviewやtokenなどauthoring対象外のartifactが併存しても、
 著述したartifactとprovenance recordの集合だけを過不足なく照合する。またmutation fixtureは
 呼出し元のread-only snapshotを変更せず、source refの差分をexternal id単位で報告する。
 current-headレビューでは、snapshot digestを内容から再計算するprovenance検証、kind別に閉じた
-failure detail、`[PR-INTENT]`へ直接束縛したAPI testを追加し、未使用fixture fileを除去した。
+failure detail、`[PR-INTENT]`へ直接束縛したAPI testを追加した。1 file = 1 violationの
+fixtureは期待結果付き実行ベクトルとして全件をtestから消費する。
+rc.2は完全なmanifest schemaとrelease-local参照だけでcompileするtestを持つ。
+`deriveCapabilities` は明示された `experience` だけをinteraction traceの入力に使う。
 
 製品名・repository名を`Designflow`／`designflow`へ統一した。Phase 0 Contract bootstrapは完了し、
 公開contract draft、North Star、設計原則、architecture、roadmap、ADR、contract検証scriptがある。
-remoteはprivateの`https://github.com/mrbaron3/designflow`、固定境界は`contract-v1.0.0-rc.1`。
+remoteはprivateの`https://github.com/mrbaron3/designflow`、現在の固定境界は
+`contract-v1.0.0-rc.2`（rc.1は不変）。
 tracking Epicは[#1](https://github.com/mrbaron3/designflow/issues/1)。
 
 2026-07-30、利用想定をhero scenarioとして固定した

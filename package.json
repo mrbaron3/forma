@@ -8,9 +8,10 @@
     "./authoring": "./src/authoring/index.js"
   },
   "scripts": {
-    "test": "node scripts/check-contracts.mjs",
+    "test": "npm run test:contracts && npm run test:api",
+    "test:contracts": "node scripts/check-contracts.mjs",
     "test:api": "node --test test/*.test.js",
-    "test:all": "npm test && npm run test:api"
+    "test:all": "npm test"
   },
   "devDependencies": {
     "ajv": "^8.17.1",

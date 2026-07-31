@@ -1,0 +1,1 @@
+{"fixture":"invalid-schema-required","operation":"authorExperience","ok":false,"expectedKind":"schema-invalid","violation":"required schema field is absent"}

@@ -1,0 +1,1 @@
+{"fixture":"invalid-mutation-source","operation":"authorExperience","ok":false,"expectedKind":"source-mutation","violation":"one source ref entry changes"}

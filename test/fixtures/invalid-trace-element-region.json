@@ -1,0 +1,1 @@
+{"fixture":"invalid-trace-element-region","operation":"authorExperience","ok":false,"expectedKind":"trace-broken","violation":"element refers to an unknown region"}

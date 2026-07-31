@@ -20,8 +20,23 @@
         "provider": { "$ref": "#/$defs/nonEmptyString" },
         "externalId": { "$ref": "#/$defs/nonEmptyString" },
         "uri": { "type": "string", "format": "uri" },
-        "revision": { "type": "string" },
+        "revision": { "type": "string", "minLength": 1 },
         "digest": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "digest", "mediaType", "schemaRef"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*\\.\\./).+$"
+        },
+        "digest": { "$ref": "#/$defs/sha256" },
+        "mediaType": { "$ref": "#/$defs/nonEmptyString" },
+        "schemaRef": { "$ref": "#/$defs/nonEmptyString" }
       }
     },
     "ambiguity": {

@@ -19,6 +19,13 @@ const templates = {
   designSystemDelta: () => read("design-system-delta.example.json"),
   capabilityRequirements: () => read("capability-requirements.example.json")
 };
+const inputSchemas = Object.freeze({
+  experience: "urn:designflow:schema:v1:authoring-port#/$defs/authorExperienceInput",
+  designSystemDelta:
+    "urn:designflow:schema:v1:authoring-port#/$defs/authorDesignSystemDeltaInput",
+  capabilityRequirements:
+    "urn:designflow:schema:v1:authoring-port#/$defs/deriveCapabilitiesInput"
+});
 function failure(kind, detail) {
   if (!AUTHORING_FAILURE_KINDS.includes(kind)) throw new TypeError(`Unknown authoring failure kind: ${kind}`);
   return { ok: false, kind, detail };
@@ -84,7 +91,7 @@ function applyFixture(target, artifact, fixture, request, snapshot) {
       if (target === "experience") artifact.elements[0].regionId = "missing-region";
       return null;
     case "invalid-trace-element-task":
-      if (target === "experience") artifact.elements[0].supportsTaskIds = [];
+      if (target === "experience") artifact.elements[0].supportsTaskIds = ["missing-task"];
       return null;
     case "invalid-trace-capability":
       if (target === "capabilityRequirements") artifact.capabilities[0].sourceInteractionIds = ["missing-step"];
@@ -116,17 +123,14 @@ function applyFixture(target, artifact, fixture, request, snapshot) {
 
 /**
  * Deterministic synchronous AuthoringBackend port.
- * Each operation accepts only JSON values: { request, snapshot, invocationKey,
- * fixture?, relatedArtifacts? }. No repository or database handle is accepted.
+ * Each operation accepts only its closed JSON contract. No repository,
+ * database handle, mock fixture control, or undeclared artifact is accepted.
  */
 export function createMockAuthoringBackend({ fixture = "valid" } = {}) {
   function author(target, input) {
     try {
-      if (!input || typeof input !== "object" || Array.isArray(input) ||
-        typeof input.invocationKey !== "string" ||
-        !/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(input.invocationKey)) {
-        return failure("schema-invalid", "invocationKey must be fixed before authoring");
-      }
+      const inputError = validateSchema(inputSchemas[target], input);
+      if (inputError) return failure("schema-invalid", inputError);
       const before = structuredClone(input.snapshot);
       const snapshotError = validateSnapshot(input.request, before);
       if (snapshotError) return snapshotError;
@@ -142,14 +146,15 @@ export function createMockAuthoringBackend({ fixture = "valid" } = {}) {
           if (decision.action !== "reuse") decision.targetId = `feature.${decision.targetId}`;
         }
       }
-      const selectedFixture = input.fixture ?? fixture;
-      const immediate = applyFixture(target, artifact, selectedFixture, input.request, after);
+      const immediate = applyFixture(target, artifact, fixture, input.request, after);
       if (immediate) return immediate;
       const mutation = compareSnapshots(before, after);
       if (mutation) return mutation;
       const schemaError = validateSchema(artifactSchemas[target], artifact);
       if (schemaError) return failure("schema-invalid", schemaError);
-      const related = input.relatedArtifacts ?? { experience: templates.experience() };
+      const related = target === "capabilityRequirements"
+        ? { experience: input.experience }
+        : {};
       const traceError = validateTrace(target, artifact, input.request, related);
       if (traceError) return failure("trace-broken", traceError);
       if (target === "designSystemDelta") {

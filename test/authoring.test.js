@@ -8,17 +8,28 @@ import {
 const read = (name) => JSON.parse(fs.readFileSync(new URL(`../contracts/v1/examples/${name}`, import.meta.url)));
 const request = read("design-request.example.json");
 const snapshot = read("authoring-context-snapshot.example.json");
+const experience = read("experience-contract.example.json");
 const failureSchema = "urn:designflow:schema:v1:authoring-port#/$defs/failure";
+const fixtureDirectory = new URL("./fixtures/", import.meta.url);
 
 test("[PR-INTENT] three synchronous operations are deterministic and artifact-scoped", () => {
   const backend = createMockAuthoringBackend();
   const operations = {
-    authorExperience: "authorExperienceResult",
-    authorDesignSystemDelta: "authorDesignSystemDeltaResult",
-    deriveCapabilities: "deriveCapabilitiesResult"
+    authorExperience: ["authorExperienceInput", "authorExperienceResult"],
+    authorDesignSystemDelta: ["authorDesignSystemDeltaInput", "authorDesignSystemDeltaResult"],
+    deriveCapabilities: ["deriveCapabilitiesInput", "deriveCapabilitiesResult"]
   };
-  for (const [operation, resultDefinition] of Object.entries(operations)) {
-    const input = { request, snapshot: structuredClone(snapshot), invocationKey: `invocation.${operation}` };
+  for (const [operation, [inputDefinition, resultDefinition]] of Object.entries(operations)) {
+    const input = {
+      request,
+      snapshot: structuredClone(snapshot),
+      invocationKey: `invocation.${operation}`,
+      ...(operation === "deriveCapabilities" ? { experience } : {})
+    };
+    assert.equal(
+      validateSchema(`urn:designflow:schema:v1:authoring-port#/$defs/${inputDefinition}`, input),
+      null
+    );
     const first = backend[operation](input);
     const second = backend[operation]({ ...input, snapshot: structuredClone(snapshot) });
     assert.equal(first.ok, true);
@@ -30,8 +41,28 @@ test("[PR-INTENT] three synchronous operations are deterministic and artifact-sc
   }
 });
 
+test("[PR-INTENT] every file-backed mock fixture reproduces one declared outcome", () => {
+  const names = fs.readdirSync(fixtureDirectory)
+    .filter((name) => name.endsWith(".json"))
+    .sort();
+  assert.ok(names.length > 0);
+  for (const name of names) {
+    const fixture = JSON.parse(fs.readFileSync(new URL(name, fixtureDirectory), "utf8"));
+    assert.equal(fixture.fixture, name.replace(/\.json$/, ""), name);
+    const input = {
+      request,
+      snapshot: structuredClone(snapshot),
+      invocationKey: `invocation.fixture.${fixture.fixture}`,
+      ...(fixture.operation === "deriveCapabilities" ? { experience } : {})
+    };
+    const result = createMockAuthoringBackend({ fixture: fixture.fixture })
+      [fixture.operation](input);
+    assert.equal(result.ok, fixture.ok, name);
+    if (!fixture.ok) assert.equal(result.kind, fixture.expectedKind, name);
+  }
+});
+
 test("[PR-INTENT] closed failures never expose partial artifacts and match their kind-specific detail", () => {
-  const backend = createMockAuthoringBackend();
   const cases = [
     ["invalid-schema-required", "schema-invalid"],
     ["invalid-trace-element-region", "trace-broken"],
@@ -41,8 +72,8 @@ test("[PR-INTENT] closed failures never expose partial artifacts and match their
     ["provider-unavailable", "provider-unavailable"]
   ];
   for (const [fixture, kind] of cases) {
-    const result = backend.authorExperience({
-      request, snapshot: structuredClone(snapshot), invocationKey: `invocation.${fixture}`, fixture
+    const result = createMockAuthoringBackend({ fixture }).authorExperience({
+      request, snapshot: structuredClone(snapshot), invocationKey: `invocation.${fixture}`
     });
     assert.equal(result.ok, false);
     assert.equal(result.kind, kind);
@@ -54,7 +85,21 @@ test("[PR-INTENT] closed failures never expose partial artifacts and match their
 test("[PR-INTENT] failure kinds reject mismatched or incomplete detail payloads", () => {
   const invalid = [
     { ok: false, kind: "schema-invalid", detail: null },
-    { ok: false, kind: "ambiguous", detail: "not an ambiguity report" },
+    {
+      ok: false,
+      kind: "ambiguous",
+      detail: {
+        schemaVersion: "1.0",
+        requestId: request.requestId,
+        invocationKey: "invocation.non-blocking",
+        targetArtifact: "experience",
+        ambiguities: [{
+          id: "ambiguity.non-blocking",
+          question: "Optional preference?",
+          blocks: false
+        }]
+      }
+    },
     { ok: false, kind: "source-mutation", detail: "not a mutation report" },
     { ok: false, kind: "provider-unavailable", detail: { message: "wrong shape" } }
   ];
@@ -65,18 +110,18 @@ test("[PR-INTENT] failure kinds reject mismatched or incomplete detail payloads"
 
 test("[PR-INTENT] mutation reports only changed addressable entries", () => {
   const inputSnapshot = structuredClone(snapshot);
-  const result = createMockAuthoringBackend().authorExperience({
+  const result = createMockAuthoringBackend({ fixture: "invalid-mutation-component" })
+    .authorExperience({
     request, snapshot: inputSnapshot, invocationKey: "invocation.mutation",
-    fixture: "invalid-mutation-component"
   });
   assert.deepEqual(result.detail.mutatedRefs, [{ collection: "components", id: "component.alert" }]);
   assert.deepEqual(inputSnapshot, snapshot);
 });
 
 test("[PR-INTENT] source mutation is reported by addressable external id", () => {
-  const result = createMockAuthoringBackend().authorExperience({
+  const result = createMockAuthoringBackend({ fixture: "invalid-mutation-source" })
+    .authorExperience({
     request, snapshot: structuredClone(snapshot), invocationKey: "invocation.source-mutation",
-    fixture: "invalid-mutation-source"
   });
   assert.deepEqual(result.detail.mutatedRefs, [
     { collection: "sourceRefs", id: "control-plane-requirements" }
@@ -84,11 +129,11 @@ test("[PR-INTENT] source mutation is reported by addressable external id", () =>
 });
 
 test("[PR-INTENT] design-system governance mutation returns a closed structured report", () => {
-  const result = createMockAuthoringBackend().authorDesignSystemDelta({
+  const result = createMockAuthoringBackend({ fixture: "invalid-governance-target" })
+    .authorDesignSystemDelta({
     request,
     snapshot: structuredClone(snapshot),
-    invocationKey: "invocation.governance-mutation",
-    fixture: "invalid-governance-target"
+    invocationKey: "invocation.governance-mutation"
   });
   assert.deepEqual(result, {
     ok: false,
@@ -101,6 +146,16 @@ test("[PR-INTENT] design-system governance mutation returns a closed structured 
     }
   });
   assert.equal(validateSchema(failureSchema, result), null);
+});
+
+test("[PR-INTENT] deriveCapabilities rejects an input without its contracted experience", () => {
+  const result = createMockAuthoringBackend().deriveCapabilities({
+    request,
+    snapshot: structuredClone(snapshot),
+    invocationKey: "invocation.missing-experience"
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.kind, "schema-invalid");
 });
 
 test("[PR-INTENT] provenance validation permits non-authored manifest artifacts", () => {

@@ -1,0 +1,1 @@
+{"fixture":"invalid-governance-target","operation":"authorDesignSystemDelta","ok":false,"expectedKind":"source-mutation","violation":"extend targets a shared component namespace"}

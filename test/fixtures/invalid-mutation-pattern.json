@@ -1,0 +1,1 @@
+{"fixture":"invalid-mutation-pattern","operation":"authorExperience","ok":false,"expectedKind":"source-mutation","violation":"one pattern entry changes"}
