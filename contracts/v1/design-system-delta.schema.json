@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:designflow:schema:v1:design-system-delta",
+  "$id": "urn:forma:schema:v1:design-system-delta",
   "title": "Design System Delta v1",
   "type": "object",
   "additionalProperties": false,
@@ -21,18 +21,18 @@
       "const": "1.0"
     },
     "invocationKey": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
     },
     "requestId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
     },
     "revisionId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
     },
     "baseRevisionRef": {
       "anyOf": [
         {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/externalRef"
+          "$ref": "urn:forma:schema:v1:common#/$defs/externalRef"
         },
         {
           "type": "null"
@@ -59,13 +59,13 @@
             "pattern": "^(?!/)(?![A-Za-z]:)(?!.*[\\\\:])(?!.*//)(?!.*/$)(?!\\.{1,2}(?:/|$))(?!.*/\\.{1,2}(?:/|$)).+$"
           },
           "digest": {
-            "$ref": "urn:designflow:schema:v1:common#/$defs/sha256"
+            "$ref": "urn:forma:schema:v1:common#/$defs/sha256"
           },
           "format": {
             "const": "dtcg-2025.10"
           },
           "purpose": {
-            "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+            "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
           }
         }
       }
@@ -85,7 +85,7 @@
     "ambiguities": {
       "type": "array",
       "items": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/nonBlockingAmbiguity"
+        "$ref": "urn:forma:schema:v1:common#/$defs/nonBlockingAmbiguity"
       }
     }
   },
@@ -96,7 +96,7 @@
       "required": ["id", "action", "targetType", "targetId", "rationale", "sourceRequirementIds"],
       "properties": {
         "id": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+          "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
         },
         "action": {
           "enum": ["reuse", "extend", "create", "feature-local"]
@@ -105,10 +105,10 @@
           "enum": ["token", "component", "pattern"]
         },
         "targetId": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+          "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
         },
         "rationale": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "sourceRequirementIds": {
           "$ref": "#/$defs/idList"
@@ -135,16 +135,16 @@
       ],
       "properties": {
         "id": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+          "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
         },
         "action": {
           "enum": ["reuse", "extend", "create", "feature-local"]
         },
         "name": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "purpose": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "variants": {
           "$ref": "#/$defs/stringList"
@@ -156,14 +156,14 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+            "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
           }
         },
         "keyboardBehavior": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "focusBehavior": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "responsiveRules": {
           "$ref": "#/$defs/stringList"
@@ -175,7 +175,7 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+            "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
           }
         },
         "sourceRequirementIds": {
@@ -196,16 +196,16 @@
       ],
       "properties": {
         "id": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+          "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
         },
         "action": {
           "enum": ["reuse", "extend", "create", "feature-local"]
         },
         "name": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "purpose": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "compositionRules": {
           "$ref": "#/$defs/stringList"
@@ -220,7 +220,7 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+        "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
       }
     },
     "stringList": {
@@ -228,7 +228,7 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+        "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
       }
     }
   }

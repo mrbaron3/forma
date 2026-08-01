@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:designflow:schema:v1:capability-requirements",
+  "$id": "urn:forma:schema:v1:capability-requirements",
   "title": "Backend Capability Requirements v1",
   "type": "object",
   "additionalProperties": false,
@@ -10,13 +10,13 @@
       "const": "1.0"
     },
     "invocationKey": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
     },
     "requestId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
     },
     "revisionId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
     },
     "capabilities": {
       "type": "array",
@@ -27,7 +27,7 @@
     "ambiguities": {
       "type": "array",
       "items": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/nonBlockingAmbiguity"
+        "$ref": "urn:forma:schema:v1:common#/$defs/nonBlockingAmbiguity"
       }
     }
   },
@@ -56,13 +56,13 @@
       ],
       "properties": {
         "id": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+          "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
         },
         "kind": {
           "enum": ["query", "command", "event"]
         },
         "userIntent": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "sourceInteractionIds": {
           "$ref": "#/$defs/idList"
@@ -71,10 +71,10 @@
           "$ref": "#/$defs/idList"
         },
         "inputDescription": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "successOutcome": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "failureSemantics": {
           "type": "array",
@@ -85,43 +85,43 @@
             "required": ["condition", "userVisibleOutcome", "recoverability"],
             "properties": {
               "condition": {
-                "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+                "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
               },
               "userVisibleOutcome": {
-                "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+                "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
               },
               "recoverability": {
-                "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+                "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
               }
             }
           }
         },
         "authorization": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "latencyExpectation": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "freshnessExpectation": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "concurrencySemantics": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "idempotencySemantics": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "retrySemantics": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "cancellationSemantics": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "paginationSemantics": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         },
         "auditSemantics": {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+          "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
         }
       }
     },
@@ -130,7 +130,7 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": {
-        "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+        "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
       }
     }
   }

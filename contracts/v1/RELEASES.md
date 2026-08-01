@@ -1,5 +1,12 @@
 # Contract releases
 
+## 開発中v1 namespace
+
+2026-08-01の製品名変更（[ADR-0009](../../docs/decisions/ADR-0009-name-forma.md)）により、
+`contracts/v1/`のschema namespaceは`urn:forma:schema:v1:*`とする。
+固定releaseは書き換えず、`contract-v1.0.0-rc.2`以前の`urn:designflow:schema:*`を維持する。
+次の固定境界は新しいRCとして公開し、旧namespaceとactive namespaceを暗黙に混在させない。
+
 ## contract-v1.0.0-rc.2
 
 `AuthoringContextSnapshot v1`、`AuthoringAmbiguityReport v1`、著述 provenance record を追加した。

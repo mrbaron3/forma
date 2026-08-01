@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-/** RFC 8785 compatible for the JSON values accepted by Designflow contracts. */
+/** RFC 8785 compatible for the JSON values accepted by Forma contracts. */
 export function canonicalJson(value) {
   if (value === null || typeof value === "boolean" || typeof value === "string") {
     return JSON.stringify(value);
