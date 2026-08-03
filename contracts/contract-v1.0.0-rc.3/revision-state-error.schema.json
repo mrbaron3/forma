@@ -1,0 +1,3 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"urn:forma:schema:v1:revision-state-error","title":"Revision state error v1","type":"object","additionalProperties":false,"required":["schemaVersion","code","message","details"],"properties":{"schemaVersion":{"const":"1.0"},"code":{"enum":["invalid-transition","conflict","not-found","integrity-error"]},"message":{"type":"string","minLength":1},"details":{"type":"object","additionalProperties":true}}
+}

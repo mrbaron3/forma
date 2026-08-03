@@ -1,0 +1,7 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"urn:forma:schema:v1:approval-validity","title":"Derived approval validity v1","oneOf":[
+    {"type":"object","additionalProperties":false,"required":["status"],"properties":{"status":{"const":"missing"}}},
+    {"type":"object","additionalProperties":false,"required":["status","decisionId"],"properties":{"status":{"const":"valid"},"decisionId":{"$ref":"urn:designflow:schema:v1:common#/$defs/identifier"}}},
+    {"type":"object","additionalProperties":false,"required":["status","decisionId","reason"],"properties":{"status":{"const":"stale"},"decisionId":{"$ref":"urn:designflow:schema:v1:common#/$defs/identifier"},"reason":{"enum":["request-mismatch","revision-mismatch","bundle-mismatch","revision-superseded"]}}}
+  ]
+}

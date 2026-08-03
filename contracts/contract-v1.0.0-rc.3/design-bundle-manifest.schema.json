@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forma:schema:v1:design-bundle-manifest",
+  "title": "Design Bundle Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "bundleId",
+    "requestId",
+    "revisionId",
+    "previousRevisionId",
+    "sourceDigest",
+    "designSystemBaseRevision",
+    "artifacts",
+    "authorInvocationRefs",
+    "bundleDigest",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "bundleId": {
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
+    },
+    "requestId": {
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
+    },
+    "revisionId": {
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
+    },
+    "previousRevisionId": {
+      "anyOf": [
+        {
+          "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "sourceDigest": {
+      "$ref": "urn:forma:schema:v1:common#/$defs/sha256"
+    },
+    "designSystemBaseRevision": {
+      "anyOf": [
+        {
+          "$ref": "urn:forma:schema:v1:common#/$defs/externalRef"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "experience",
+        "designSystemDelta",
+        "capabilityRequirements",
+        "preview"
+      ],
+      "properties": {
+        "experience": {
+          "$ref": "urn:forma:schema:v1:common#/$defs/artifactRef"
+        },
+        "designSystemDelta": {
+          "$ref": "urn:forma:schema:v1:common#/$defs/artifactRef"
+        },
+        "designTokens": {
+          "$ref": "urn:forma:schema:v1:common#/$defs/artifactRef"
+        },
+        "capabilityRequirements": {
+          "$ref": "urn:forma:schema:v1:common#/$defs/artifactRef"
+        },
+        "preview": {
+          "$ref": "urn:forma:schema:v1:common#/$defs/artifactRef"
+        }
+      }
+    },
+    "authorInvocationRefs": {
+      "type": "object",
+      "description": "Closed provenance map keyed by each authored artifact's unique invocationKey.",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
+      },
+      "additionalProperties": {
+        "$ref": "urn:forma:schema:v1:author-invocation"
+      }
+    },
+    "bundleDigest": {
+      "$ref": "urn:forma:schema:v1:common#/$defs/sha256"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

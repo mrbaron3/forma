@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"urn:forma:schema:v1:design-revision-state","title":"Design revision state v1","type":"object","additionalProperties":false,
+  "required":["schemaVersion","revisionId","requestId","previousRevisionId","state","manifest","materialFingerprint","createdAt"],
+  "properties":{"schemaVersion":{"const":"1.0"},"revisionId":{"$ref":"urn:forma:schema:v1:common#/$defs/identifier"},"requestId":{"$ref":"urn:forma:schema:v1:common#/$defs/identifier"},"previousRevisionId":{"anyOf":[{"$ref":"urn:forma:schema:v1:common#/$defs/identifier"},{"type":"null"}]},"state":{"enum":["draft","proposed","approved","changes-requested","rejected","superseded"]},"manifest":{"$ref":"urn:forma:schema:v1:design-bundle-manifest"},"materialFingerprint":{"$ref":"urn:forma:schema:v1:common#/$defs/sha256"},"createdAt":{"type":"string","format":"date-time"}}
+}
