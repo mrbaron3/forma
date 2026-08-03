@@ -2,7 +2,7 @@
 
 ## System boundary
 
-Designflowは、Design Requestを受け、設計を著述・検証・preview化し、人間判断を経て
+Formaは、Design Requestを受け、設計を著述・検証・preview化し、人間判断を経て
 Approved Design Bundleを公開する独立systemである。
 
 ```text
@@ -74,12 +74,12 @@ accessibility、visual evidence、capability contractの差を報告する。
 目標形:
 
 ```text
-designflow propose --request request.json
-designflow serve
-designflow status <request-id>
-designflow decide <revision-id> --verdict ...
-designflow export <revision-id>
-designflow verify --bundle ... --implementation ...
+forma propose --request request.json
+forma serve
+forma status <request-id>
+forma decide <revision-id> --verdict ...
+forma export <revision-id>
+forma verify --bundle ... --implementation ...
 ```
 
 ### Service port

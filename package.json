@@ -1,9 +1,9 @@
 {
-  "name": "designflow",
+  "name": "forma",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Language-neutral contracts and validation for Designflow.",
+  "description": "Language-neutral contracts and validation for Forma.",
   "exports": {
     "./authoring": "./src/authoring/index.js"
   },

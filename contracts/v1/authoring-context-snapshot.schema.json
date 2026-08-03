@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:designflow:schema:v1:authoring-context-snapshot",
+  "$id": "urn:forma:schema:v1:authoring-context-snapshot",
   "title": "AuthoringContextSnapshot v1",
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion", "snapshotId", "snapshotDigest", "designSystem", "sourceRefs", "capturedAt"],
   "properties": {
     "schemaVersion": { "const": "1.0" },
-    "snapshotId": { "$ref": "urn:designflow:schema:v1:common#/$defs/identifier" },
-    "snapshotDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
+    "snapshotId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+    "snapshotDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
     "designSystem": {
       "type": "object",
       "additionalProperties": false,
@@ -16,7 +16,7 @@
       "properties": {
         "ref": {
           "anyOf": [
-            { "$ref": "urn:designflow:schema:v1:common#/$defs/externalRef" },
+            { "$ref": "urn:forma:schema:v1:common#/$defs/externalRef" },
             { "type": "null" }
           ]
         },
@@ -34,8 +34,8 @@
         "additionalProperties": false,
         "required": ["ref", "digest"],
         "properties": {
-          "ref": { "$ref": "urn:designflow:schema:v1:common#/$defs/externalRef" },
-          "digest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" }
+          "ref": { "$ref": "urn:forma:schema:v1:common#/$defs/externalRef" },
+          "digest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" }
         }
       }
     },
@@ -51,8 +51,8 @@
         "additionalProperties": false,
         "required": ["id", "digest", "value"],
         "properties": {
-          "id": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" },
-          "digest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
+          "id": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" },
+          "digest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
           "value": true
         }
       }

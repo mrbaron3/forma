@@ -1,6 +1,6 @@
 # Handoff
 
-最終更新: 2026-07-31
+最終更新: 2026-08-01
 
 ## 現在地
 
@@ -22,29 +22,33 @@ failure detail、`[PR-INTENT]`へ直接束縛したAPI testを追加した。1 f
 fixtureはkindだけでなく固有のerror evidenceまで持つ実行ベクトルとして全件をtestから消費する。
 rc.2は完全なmanifest schemaとrelease-local参照だけでcompileするtestを持つ。
 `deriveCapabilities` は明示された `experience` だけをinteraction traceの入力に使う。
-[#16](https://github.com/mrbaron3/designflow/issues/16)として、その `requestId` がDesign Requestと
+[#16](https://github.com/mrbaron3/forma/issues/16)として、その `requestId` がDesign Requestと
 一致しない別lineageのExperienceも `trace-broken` として拒否する。
 snapshotのaddressable collectionではentry ID（source refは `externalId`）を一意に保ち、
 `validateSnapshotEntryIds` が内容の異なる重複も `schema-invalid` として拒否する。
-[#15](https://github.com/mrbaron3/designflow/issues/15)としてmanifest provenanceを
+[#15](https://github.com/mrbaron3/forma/issues/15)としてmanifest provenanceを
 `invocationKey` keyed objectにし、1件以上をschemaで必須化してruntime helperに依存せず
 欠落と重複をcontract境界で閉じる。
-[#14](https://github.com/mrbaron3/designflow/issues/14)としてbundle pathをplatform-neutralな
+[#14](https://github.com/mrbaron3/forma/issues/14)としてbundle pathをplatform-neutralな
 正規化済み相対pathに限定し、consumer側のroot内resolve確認も公開contract文書へ固定した。
 
-製品名・repository名を`Designflow`／`designflow`へ統一した。Phase 0 Contract bootstrapは完了し、
+2026-08-01、製品名・repository名を`Forma`／`forma`へ変更した
+（[ADR-0009](decisions/ADR-0009-name-forma.md)）。現行schema namespaceは
+`urn:forma:schema:*`とし、固定release `contract-v1.0.0-rc.2`以前の
+`urn:designflow:schema:*`はimmutableな履歴として維持する。既存の`DF-NNN` task keyも維持し、
+新規taskには`FM-NNN`を使う。Phase 0 Contract bootstrapは完了し、
 公開contract draft、North Star、設計原則、architecture、roadmap、ADR、contract検証scriptがある。
-remoteはprivateの`https://github.com/mrbaron3/designflow`、現在の固定境界は
+remoteはpublicの`https://github.com/mrbaron3/forma`、現在の固定境界は
 `contract-v1.0.0-rc.2`（rc.1は不変）。
-tracking Epicは[#1](https://github.com/mrbaron3/designflow/issues/1)。
+tracking Epicは[#1](https://github.com/mrbaron3/forma/issues/1)。
 
 2026-07-30、利用想定をhero scenarioとして固定した
 （[ADR-0005](decisions/ADR-0005-hero-scenario-mock-first-preview.md)、
-[#11](https://github.com/mrbaron3/designflow/issues/11)）: 新サービス基盤の一括設計・人間は承認者・
+[#11](https://github.com/mrbaron3/forma/issues/11)）: 新サービス基盤の一括設計・人間は承認者・
 モック先行preview。優先経路はDF-006→DF-007→preview renderer（受け皿DF-004／DF-005）、
 conformance（DF-009）は将来scope。
 
-このrepositoryはDesignflow自身のtaskだけを所有する。特定consumerのadapter、Issue、API設計、
+このrepositoryはForma自身のtaskだけを所有する。特定consumerのadapter、Issue、API設計、
 Dashboard実装を待たず、固定contract releaseに対して単独で進める。
 
 ## 確定した判断
@@ -54,7 +58,9 @@ Dashboard実装を待たず、固定contract releaseに対して単独で進め�
 - UXはBackend Capability Requirementを著述し、具体API設計はconsumer側へ残す。
 - Human Design Decisionをrevision digestへ束縛する。
 - DB共有、dual-write、cross-repository Issue dependencyを禁止する。
-- `ExperienceContract`はartifact名、`Designflow`は製品名とする。
+- `ExperienceContract`はartifact名、`Forma`は製品名とする。
+- 現行schema namespaceは`urn:forma:schema:*`。固定releaseの旧namespaceは変更しない（ADR-0009）。
+- 既存task keyは`DF-NNN`を維持し、新規taskには`FM-NNN`を使う。
 - hero scenarioは一括基盤設計＋モック先行preview。governance artifactはrequiredを維持したまま
   authoring agentが全量著述し、人間へ著述コストを求めない（ADR-0005）。
 
@@ -92,4 +98,4 @@ npm test
 - consumer adapter
 - consumer product dogfood
 
-これらのうちconsumer側の項目はDesignflowのblockerではない。
+これらのうちconsumer側の項目はFormaのblockerではない。

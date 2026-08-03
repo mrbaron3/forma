@@ -78,7 +78,7 @@ test("[PR-INTENT] rc.2 loads locally and closes every published document", () =>
   const validate = releaseValidators();
   const invocationKey = "invocation.release";
   const invocation = {
-    provider: "designflow-mock",
+    provider: "forma-mock",
     toolOrModel: "deterministic-fixture",
     profileRevision: "contract-v1.0.0-rc.2",
     inputContextDigest: digest,
@@ -113,7 +113,7 @@ test("[PR-INTENT] rc.2 loads locally and closes every published document", () =>
     path: "artifacts/example.json",
     digest,
     mediaType: "application/json",
-    schemaRef: "urn:designflow:schema:v1:experience-contract"
+    schemaRef: "urn:forma:schema:v1:experience-contract"
   };
   const manifest = {
     schemaVersion: "1.0",

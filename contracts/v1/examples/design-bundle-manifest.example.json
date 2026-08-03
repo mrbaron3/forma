@@ -17,13 +17,13 @@
       "path": "contracts/v1/examples/experience-contract.example.json",
       "digest": "sha256:568a18c1c5132f859bf41f54d1ce85e37c3cc9aba29bc297a01d555d65177bc1",
       "mediaType": "application/json",
-      "schemaRef": "urn:designflow:schema:v1:experience-contract"
+      "schemaRef": "urn:forma:schema:v1:experience-contract"
     },
     "designSystemDelta": {
       "path": "contracts/v1/examples/design-system-delta.example.json",
       "digest": "sha256:e526e7803e355fa89022253d3832f581f40febccaa5980bf54fdde46210e7b22",
       "mediaType": "application/json",
-      "schemaRef": "urn:designflow:schema:v1:design-system-delta"
+      "schemaRef": "urn:forma:schema:v1:design-system-delta"
     },
     "designTokens": {
       "path": "contracts/v1/examples/dashboard.tokens.json",
@@ -35,7 +35,7 @@
       "path": "contracts/v1/examples/capability-requirements.example.json",
       "digest": "sha256:aff73c6d9710d6c0a258aaeaeb7cb42d0ddc499bf306b7111c218f2377349ed8",
       "mediaType": "application/json",
-      "schemaRef": "urn:designflow:schema:v1:capability-requirements"
+      "schemaRef": "urn:forma:schema:v1:capability-requirements"
     },
     "preview": {
       "path": "contracts/v1/examples/preview.html",
@@ -46,7 +46,7 @@
   },
   "authorInvocationRefs": {
     "author-experience-dashboard-001": {
-      "provider": "designflow-mock",
+      "provider": "forma-mock",
       "toolOrModel": "deterministic-fixture",
       "profileRevision": "contract-v1.0.0-rc.2",
       "inputContextDigest": "sha256:bf713b943e178f677165dd2de7e7f38cfd7cef9376a641e8ca9823482312a4ba",
@@ -54,7 +54,7 @@
       "outputDigest": "sha256:568a18c1c5132f859bf41f54d1ce85e37c3cc9aba29bc297a01d555d65177bc1"
     },
     "author-design-system-dashboard-001": {
-      "provider": "designflow-mock",
+      "provider": "forma-mock",
       "toolOrModel": "deterministic-fixture",
       "profileRevision": "contract-v1.0.0-rc.2",
       "inputContextDigest": "sha256:bf713b943e178f677165dd2de7e7f38cfd7cef9376a641e8ca9823482312a4ba",
@@ -62,7 +62,7 @@
       "outputDigest": "sha256:e526e7803e355fa89022253d3832f581f40febccaa5980bf54fdde46210e7b22"
     },
     "derive-capabilities-dashboard-001": {
-      "provider": "designflow-mock",
+      "provider": "forma-mock",
       "toolOrModel": "deterministic-fixture",
       "profileRevision": "contract-v1.0.0-rc.2",
       "inputContextDigest": "sha256:bf713b943e178f677165dd2de7e7f38cfd7cef9376a641e8ca9823482312a4ba",
@@ -70,6 +70,6 @@
       "outputDigest": "sha256:aff73c6d9710d6c0a258aaeaeb7cb42d0ddc499bf306b7111c218f2377349ed8"
     }
   },
-  "bundleDigest": "sha256:86cb4a0608d5accd4120657a22f73e5ab1e4cef8a4d8ab8cd2b0fedbe7d0885b",
+  "bundleDigest": "sha256:9cab57feec6731810972ac213adc147ae9ef023d264b6f5567cfcebee7995fb7",
   "createdAt": "2026-07-25T03:30:00.000Z"
 }

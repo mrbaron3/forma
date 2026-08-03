@@ -98,21 +98,21 @@ for (const schema of schemas) {
 
 const examples = {
   "design-request.example.json":
-    "urn:designflow:schema:v1:design-request",
+    "urn:forma:schema:v1:design-request",
   "experience-contract.example.json":
-    "urn:designflow:schema:v1:experience-contract",
+    "urn:forma:schema:v1:experience-contract",
   "design-system-delta.example.json":
-    "urn:designflow:schema:v1:design-system-delta",
+    "urn:forma:schema:v1:design-system-delta",
   "capability-requirements.example.json":
-    "urn:designflow:schema:v1:capability-requirements",
+    "urn:forma:schema:v1:capability-requirements",
   "design-bundle-manifest.example.json":
-    "urn:designflow:schema:v1:design-bundle-manifest",
+    "urn:forma:schema:v1:design-bundle-manifest",
   "human-design-decision.example.json":
-    "urn:designflow:schema:v1:human-design-decision",
+    "urn:forma:schema:v1:human-design-decision",
   "authoring-context-snapshot.example.json":
-    "urn:designflow:schema:v1:authoring-context-snapshot",
+    "urn:forma:schema:v1:authoring-context-snapshot",
   "authoring-ambiguity-report.example.json":
-    "urn:designflow:schema:v1:authoring-ambiguity-report",
+    "urn:forma:schema:v1:authoring-ambiguity-report",
 };
 
 const documents = {};

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:designflow:schema:v1:human-design-decision",
+  "$id": "urn:forma:schema:v1:human-design-decision",
   "title": "Human Design Decision v1",
   "type": "object",
   "additionalProperties": false,
@@ -21,25 +21,25 @@
       "const": "1.0"
     },
     "decisionId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
     },
     "requestId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
     },
     "revisionId": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+      "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
     },
     "bundleDigest": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/sha256"
+      "$ref": "urn:forma:schema:v1:common#/$defs/sha256"
     },
     "verdict": {
       "enum": ["approve", "request-changes", "reject"]
     },
     "rationale": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString"
+      "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString"
     },
     "decidedBy": {
-      "$ref": "urn:designflow:schema:v1:common#/$defs/actor"
+      "$ref": "urn:forma:schema:v1:common#/$defs/actor"
     },
     "decidedAt": {
       "type": "string",
@@ -48,7 +48,7 @@
     "supersedesDecisionId": {
       "anyOf": [
         {
-          "$ref": "urn:designflow:schema:v1:common#/$defs/identifier"
+          "$ref": "urn:forma:schema:v1:common#/$defs/identifier"
         },
         {
           "type": "null"

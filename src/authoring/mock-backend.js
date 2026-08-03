@@ -20,11 +20,11 @@ const templates = {
   capabilityRequirements: () => read("capability-requirements.example.json")
 };
 const inputSchemas = Object.freeze({
-  experience: "urn:designflow:schema:v1:authoring-port#/$defs/authorExperienceInput",
+  experience: "urn:forma:schema:v1:authoring-port#/$defs/authorExperienceInput",
   designSystemDelta:
-    "urn:designflow:schema:v1:authoring-port#/$defs/authorDesignSystemDeltaInput",
+    "urn:forma:schema:v1:authoring-port#/$defs/authorDesignSystemDeltaInput",
   capabilityRequirements:
-    "urn:designflow:schema:v1:authoring-port#/$defs/deriveCapabilitiesInput"
+    "urn:forma:schema:v1:authoring-port#/$defs/deriveCapabilitiesInput"
 });
 function failure(kind, detail) {
   if (!AUTHORING_FAILURE_KINDS.includes(kind)) throw new TypeError(`Unknown authoring failure kind: ${kind}`);
@@ -179,7 +179,7 @@ export function createMockAuthoringBackend({ fixture = "valid" } = {}) {
     deriveCapabilities: (input) => author("capabilityRequirements", input),
     provenanceFor(artifact, snapshot, overrides = {}) {
       return {
-        provider: "designflow-mock", toolOrModel: "deterministic-fixture",
+        provider: "forma-mock", toolOrModel: "deterministic-fixture",
         profileRevision: "contract-v1.0.0-rc.2",
         inputContextDigest: snapshotDigest(snapshot),
         instructionDigest: digest({ fixture }),

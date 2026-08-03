@@ -1,6 +1,6 @@
 # Working agreement
 
-This repository owns the standalone Designflow product. It must remain usable without any
+This repository owns the standalone Forma product. It must remain usable without any
 particular consumer repository.
 
 ## Non-negotiable boundaries
@@ -19,7 +19,7 @@ particular consumer repository.
 - A live integration must have one authoritative writer. Never introduce database sharing or
   dual-write as a shortcut for integration.
 - Consumer adapters, consumer issue lifecycles, and consumer-specific dogfood tasks belong to the
-  consumer repository. Designflow tasks must not depend on a consumer issue or implementation.
+  consumer repository. Forma tasks must not depend on a consumer issue or implementation.
 
 ## Documentation and validation
 
