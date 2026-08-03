@@ -1,5 +1,69 @@
 {
-  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"urn:forma:schema:v1:design-revision-state","title":"Design revision state v1","type":"object","additionalProperties":false,
-  "required":["schemaVersion","revisionId","requestId","previousRevisionId","state","manifest","materialFingerprint","createdAt"],
-  "properties":{"schemaVersion":{"const":"1.0"},"revisionId":{"$ref":"urn:designflow:schema:v1:common#/$defs/identifier"},"requestId":{"$ref":"urn:designflow:schema:v1:common#/$defs/identifier"},"previousRevisionId":{"anyOf":[{"$ref":"urn:designflow:schema:v1:common#/$defs/identifier"},{"type":"null"}]},"state":{"enum":["draft","proposed","approved","changes-requested","rejected","superseded"]},"manifest":{"$ref":"urn:designflow:schema:v1:design-bundle-manifest"},"materialFingerprint":{"$ref":"urn:designflow:schema:v1:common#/$defs/sha256"},"createdAt":{"type":"string","format":"date-time"}}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forma:schema:v1:design-revision-state",
+  "title": "Design revision state v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "requestId",
+    "revisionId",
+    "previousRevisionId",
+    "status",
+    "materialFingerprint",
+    "bundleDigest",
+    "feedbackRefs",
+    "createdAt",
+    "stateChangedAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "requestId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+    "revisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+    "previousRevisionId": {
+      "anyOf": [
+        { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        { "type": "null" }
+      ]
+    },
+    "status": {
+      "enum": ["draft", "proposed", "approved", "changes-requested", "rejected", "superseded"]
+    },
+    "materialFingerprint": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+    "bundleDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+    "feedbackRefs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/feedbackRef" }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "stateChangedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "feedbackRef": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["decisionId", "sourceRevisionId", "disposition", "note"],
+          "properties": {
+            "decisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+            "sourceRevisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+            "disposition": { "const": "applied" },
+            "note": { "type": "null" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["decisionId", "sourceRevisionId", "disposition", "note"],
+          "properties": {
+            "decisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+            "sourceRevisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+            "disposition": { "enum": ["deferred", "declined"] },
+            "note": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
+          }
+        }
+      ]
+    }
+  }
 }

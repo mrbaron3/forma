@@ -17,6 +17,11 @@ active v1 inventoryとimmutable revision state contractを凍結した固定rele
 | `capability-requirements.schema.json` | interactionから導出したbackend能力要求 |
 | `design-bundle-manifest.schema.json` | immutable revisionのartifact一覧とdigest |
 | `human-design-decision.schema.json` | revision digestへ束縛された人間判断 |
+| `design-revision-state.schema.json` | immutable revisionのlifecycle stateとfeedback disposition参照 |
+| `approval-validity.schema.json` | approvalのmissing／valid／stale導出結果 |
+| `revision-state-command.schema.json` | pure revision state transitionのclosed command union |
+| `revision-state-snapshot.schema.json` | revision／decision監査履歴のcanonical snapshot |
+| `revision-state-error.schema.json` | no-write failureのclosed error record |
 | `authoring-context-snapshot.schema.json` | read-onlyな著述context snapshot |
 | `authoring-ambiguity-report.schema.json` | blocking ambiguityの構造化report |
 | `author-invocation.schema.json` | manifestのinvocationKey keyed mapに置く著述provenance value |

@@ -96,6 +96,12 @@ addFormats(ajv);
 for (const schema of schemas) {
   ajv.addSchema(schema);
 }
+for (const schema of schemas) {
+  assert(
+    ajv.getSchema(schema.$id),
+    `${schema.$id}: active v1 strict compile failed`,
+  );
+}
 
 const rc3Ajv = new Ajv2020({ allErrors: true, strict: true });
 addFormats(rc3Ajv);

@@ -12,15 +12,29 @@ databaseやissue lifecycleを公開契約へ持ち込むことはできない。
 
 ## Decision
 
-Designflowはrevision、decision、feedback dispositionを言語中立なJSON recordとして所有し、pureな
-`transition(snapshot, command)`でのみ状態を進める。承認は保存状態ではなくdecisionのrequest、revision、
-bundle digestへの束縛から`missing`、`valid`、`stale`を導出する。material fingerprintは著述内容だけから
-計算し、identity、時刻、URL、人間判断を含めない。snapshotはRFC 8785で正規化し、restore時にlineageと
-参照整合性を検証する。
+Formaはrevisionとdecisionを言語中立なJSON recordとして所有し、`operation` discriminatorを持つpureな
+`transition(snapshot, command)`でのみ状態を進める。revision stateはmanifestを埋め込まず、
+`requestId`、`revisionId`、`bundleDigest`で参照する。request-changesの採否は後継revisionの
+`feedbackRefs`へ各decision 1回だけ記録し、元decisionと元revisionを変更しない。
+request-changes decisionのsource revisionをsupersedeするdirect childがそのfeedback refを必ず持ち、
+後続revisionへの遅延記録や重複記録は許可しない。
+
+承認は保存状態ではなくdecisionのrequest、revision、bundle digestへの束縛から`missing`、`valid`、
+`stale`を導出する。material fingerprintは著述内容だけから計算し、identity、時刻、URL、人間判断を
+含めない。snapshotはrevision／decisionだけを持ち、RFC 8785で正規化する。restore時にID一意性、
+lineage、request scope、decisionのrevision／digest参照、feedback参照を検証する。
+
+pure commandは外部clockを受け取らない。revision作成時刻とsuccessorによるsupersede時刻はmanifestの
+`createdAt`、decisionによる状態変更時刻はdecisionの`decidedAt`を使う。`propose`は新しい時刻sourceを
+持たないため、既存の`stateChangedAt`を保持して決定論性を維持する。
+RFC 3339 timestampの順序は表記文字列ではなく同一instantへ正規化して比較し、同時刻はIDのUnicode
+code-point順で決める。fractionは任意精度のまま比較し、leap secondは次のUTC秒境界より前に置く。
+RFC 8785境界では文字列値とobject keyのunpaired surrogateを拒否する。
 
 永続store、transaction、repository port、process recovery、CLIはこの決定の対象外である。
 
 ## Consequences
 
-同じcommandの再生は決定論的になり、material change後も旧decisionを監査recordとして保持できる。
-integratorはsnapshotの保管方法を自由に選べるが、authoritative writerを一つに限定する必要がある。
+同じrevisionId／decisionIdとcanonical-equivalentなcommandの再生は決定論的になり、material change後も
+旧decisionを監査recordとして保持できる。integratorはsnapshotの保管方法を自由に選べるが、
+authoritative writerを一つに限定する必要がある。

@@ -7,6 +7,16 @@
 固定releaseは書き換えず、`contract-v1.0.0-rc.2`以前の`urn:designflow:schema:*`を維持する。
 次の固定境界は新しいRCとして公開し、旧namespaceとactive namespaceを暗黙に混在させない。
 
+## contract-v1.0.0-rc.3
+
+active v1 inventory全体を`urn:forma:schema:v1:*` namespaceでrelease-localに固定し、immutable revision
+state contractとして`design-revision-state`、`approval-validity`、`revision-state-command`、
+`revision-state-snapshot`、`revision-state-error`を追加した。revision stateはmanifestを埋め込まず、
+feedback dispositionは後継revisionの`feedbackRefs`へ保持する。commandは`operation` discriminator、
+snapshotはrevision／decision配列だけを公開する。
+
+rc.1／rc.2のfileと`urn:designflow:schema:*` namespaceは変更しない。
+
 ## contract-v1.0.0-rc.2
 
 `AuthoringContextSnapshot v1`、`AuthoringAmbiguityReport v1`、著述 provenance record を追加した。

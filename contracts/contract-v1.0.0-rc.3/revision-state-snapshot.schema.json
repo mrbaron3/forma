@@ -1,4 +1,14 @@
 {
-  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"urn:forma:schema:v1:revision-state-snapshot","title":"Revision state snapshot v1","type":"object","additionalProperties":false,"required":["schemaVersion","requestId","revisions","decisions","feedbackDispositions"],
-  "properties":{"schemaVersion":{"const":"1.0"},"requestId":{"$ref":"urn:forma:schema:v1:common#/$defs/identifier"},"revisions":{"type":"array","items":{"$ref":"urn:forma:schema:v1:design-revision-state"}},"decisions":{"type":"array","items":{"$ref":"urn:forma:schema:v1:human-design-decision"}},"feedbackDispositions":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["decisionId","revisionId","disposition"],"properties":{"decisionId":{"$ref":"urn:forma:schema:v1:common#/$defs/identifier"},"revisionId":{"$ref":"urn:forma:schema:v1:common#/$defs/identifier"},"disposition":{"enum":["applied","deferred","declined"]},"note":{"type":"string","minLength":1}},"allOf":[{"if":{"properties":{"disposition":{"enum":["deferred","declined"]}}},"then":{"required":["note"],"properties":{"note":{"type":"string","minLength":1}}}}]}}}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forma:schema:v1:revision-state-snapshot",
+  "title": "Revision state snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "requestId", "revisions", "decisions"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "requestId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+    "revisions": { "type": "array", "items": { "$ref": "urn:forma:schema:v1:design-revision-state" } },
+    "decisions": { "type": "array", "items": { "$ref": "urn:forma:schema:v1:human-design-decision" } }
+  }
 }

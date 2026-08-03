@@ -15,7 +15,7 @@
     "test:api": "node --test test/*.test.js",
     "test:all": "npm test"
   },
-  "devDependencies": {
+  "dependencies": {
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1"
   }

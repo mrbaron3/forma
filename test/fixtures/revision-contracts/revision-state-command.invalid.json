@@ -1,0 +1,6 @@
+{
+  "schemaVersion": "1.0",
+  "type": "propose-revision",
+  "requestId": "request.revision",
+  "revisionId": "revision.1"
+}
