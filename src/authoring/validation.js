@@ -14,9 +14,9 @@ for (const name of fs.readdirSync(contractDirectory).filter((name) => name.endsW
 }
 
 export const artifactSchemas = Object.freeze({
-  experience: "urn:designflow:schema:v1:experience-contract",
-  designSystemDelta: "urn:designflow:schema:v1:design-system-delta",
-  capabilityRequirements: "urn:designflow:schema:v1:capability-requirements"
+  experience: "urn:forma:schema:v1:experience-contract",
+  designSystemDelta: "urn:forma:schema:v1:design-system-delta",
+  capabilityRequirements: "urn:forma:schema:v1:capability-requirements"
 });
 
 export function validateSchema(schemaId, value) {
@@ -48,9 +48,9 @@ export function validateSnapshotEntryIds(snapshot) {
 }
 
 export function validateSnapshot(request, snapshot) {
-  const requestError = validateSchema("urn:designflow:schema:v1:design-request", request);
+  const requestError = validateSchema("urn:forma:schema:v1:design-request", request);
   if (requestError) return { ok: false, kind: "schema-invalid", detail: requestError };
-  const schemaError = validateSchema("urn:designflow:schema:v1:authoring-context-snapshot", snapshot);
+  const schemaError = validateSchema("urn:forma:schema:v1:authoring-context-snapshot", snapshot);
   if (schemaError) return { ok: false, kind: "schema-invalid", detail: schemaError };
   const identityError = validateSnapshotEntryIds(snapshot);
   if (identityError) return { ok: false, kind: "schema-invalid", detail: identityError };
@@ -148,7 +148,7 @@ export function validateTrace(target, artifact, request, related = {}) {
 
 export function validateProvenance(artifacts, manifest, snapshot) {
   const snapshotSchemaError = validateSchema(
-    "urn:designflow:schema:v1:authoring-context-snapshot",
+    "urn:forma:schema:v1:authoring-context-snapshot",
     snapshot
   );
   if (snapshotSchemaError) {
@@ -181,7 +181,7 @@ export function validateProvenance(artifacts, manifest, snapshot) {
     return "manifest has no entry for an authored artifact";
   }
   for (const record of Object.values(records)) {
-    if (validateSchema("urn:designflow:schema:v1:author-invocation", record)) return "author invocation record is invalid";
+    if (validateSchema("urn:forma:schema:v1:author-invocation", record)) return "author invocation record is invalid";
     if (record.orchestrator === record.provider) return "orchestrator must be omitted when it is the provider";
   }
   for (const [name, artifact] of artifactEntries) {

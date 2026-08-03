@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:designflow:schema:v1:authoring-port",
+  "$id": "urn:forma:schema:v1:authoring-port",
   "title": "AuthoringBackend synchronous port v1",
   "$defs": {
     "authorExperienceInput": {
@@ -8,9 +8,9 @@
       "additionalProperties": false,
       "required": ["request", "snapshot", "invocationKey"],
       "properties": {
-        "request": { "$ref": "urn:designflow:schema:v1:design-request" },
-        "snapshot": { "$ref": "urn:designflow:schema:v1:authoring-context-snapshot" },
-        "invocationKey": { "$ref": "urn:designflow:schema:v1:common#/$defs/identifier" }
+        "request": { "$ref": "urn:forma:schema:v1:design-request" },
+        "snapshot": { "$ref": "urn:forma:schema:v1:authoring-context-snapshot" },
+        "invocationKey": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" }
       }
     },
     "authorDesignSystemDeltaInput": {
@@ -18,9 +18,9 @@
       "additionalProperties": false,
       "required": ["request", "snapshot", "invocationKey"],
       "properties": {
-        "request": { "$ref": "urn:designflow:schema:v1:design-request" },
-        "snapshot": { "$ref": "urn:designflow:schema:v1:authoring-context-snapshot" },
-        "invocationKey": { "$ref": "urn:designflow:schema:v1:common#/$defs/identifier" }
+        "request": { "$ref": "urn:forma:schema:v1:design-request" },
+        "snapshot": { "$ref": "urn:forma:schema:v1:authoring-context-snapshot" },
+        "invocationKey": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" }
       }
     },
     "deriveCapabilitiesInput": {
@@ -28,10 +28,10 @@
       "additionalProperties": false,
       "required": ["request", "snapshot", "invocationKey", "experience"],
       "properties": {
-        "request": { "$ref": "urn:designflow:schema:v1:design-request" },
-        "snapshot": { "$ref": "urn:designflow:schema:v1:authoring-context-snapshot" },
-        "invocationKey": { "$ref": "urn:designflow:schema:v1:common#/$defs/identifier" },
-        "experience": { "$ref": "urn:designflow:schema:v1:experience-contract" }
+        "request": { "$ref": "urn:forma:schema:v1:design-request" },
+        "snapshot": { "$ref": "urn:forma:schema:v1:authoring-context-snapshot" },
+        "invocationKey": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "experience": { "$ref": "urn:forma:schema:v1:experience-contract" }
       }
     },
     "entryMutationReport": {
@@ -39,8 +39,8 @@
       "additionalProperties": false,
       "required": ["expectedDigest", "actualDigest", "mutatedRefs", "scope"],
       "properties": {
-        "expectedDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
-        "actualDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
+        "expectedDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+        "actualDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
         "mutatedRefs": {
           "type": "array",
           "minItems": 1,
@@ -53,7 +53,7 @@
               "collection": {
                 "enum": ["tokenDocuments", "components", "patterns", "sourceRefs"]
               },
-              "id": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+              "id": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
             }
           }
         },
@@ -65,8 +65,8 @@
       "additionalProperties": false,
       "required": ["expectedDigest", "actualDigest", "mutatedRefs", "scope"],
       "properties": {
-        "expectedDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
-        "actualDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
+        "expectedDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+        "actualDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
         "mutatedRefs": {
           "type": "array",
           "maxItems": 0
@@ -81,7 +81,7 @@
       "properties": {
         "policy": { "const": "design-system-governance" },
         "action": { "enum": ["extend", "create"] },
-        "targetId": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" },
+        "targetId": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" },
         "reason": {
           "enum": [
             "feature-namespace-required",
@@ -107,7 +107,7 @@
           "properties": {
             "ok": { "const": false },
             "kind": { "const": "schema-invalid" },
-            "detail": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+            "detail": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
           }
         },
         {
@@ -117,7 +117,7 @@
           "properties": {
             "ok": { "const": false },
             "kind": { "const": "trace-broken" },
-            "detail": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+            "detail": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
           }
         },
         {
@@ -127,7 +127,7 @@
           "properties": {
             "ok": { "const": false },
             "kind": { "const": "provenance-invalid" },
-            "detail": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+            "detail": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
           }
         },
         {
@@ -147,7 +147,7 @@
           "properties": {
             "ok": { "const": false },
             "kind": { "const": "ambiguous" },
-            "detail": { "$ref": "urn:designflow:schema:v1:authoring-ambiguity-report" }
+            "detail": { "$ref": "urn:forma:schema:v1:authoring-ambiguity-report" }
           }
         },
         {
@@ -157,7 +157,7 @@
           "properties": {
             "ok": { "const": false },
             "kind": { "const": "provider-unavailable" },
-            "detail": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" }
+            "detail": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
           }
         }
       ]
@@ -170,7 +170,7 @@
           "required": ["ok", "artifact"],
           "properties": {
             "ok": { "const": true },
-            "artifact": { "$ref": "urn:designflow:schema:v1:experience-contract" }
+            "artifact": { "$ref": "urn:forma:schema:v1:experience-contract" }
           }
         },
         { "$ref": "#/$defs/failure" }
@@ -184,7 +184,7 @@
           "required": ["ok", "artifact"],
           "properties": {
             "ok": { "const": true },
-            "artifact": { "$ref": "urn:designflow:schema:v1:design-system-delta" }
+            "artifact": { "$ref": "urn:forma:schema:v1:design-system-delta" }
           }
         },
         { "$ref": "#/$defs/failure" }
@@ -198,7 +198,7 @@
           "required": ["ok", "artifact"],
           "properties": {
             "ok": { "const": true },
-            "artifact": { "$ref": "urn:designflow:schema:v1:capability-requirements" }
+            "artifact": { "$ref": "urn:forma:schema:v1:capability-requirements" }
           }
         },
         { "$ref": "#/$defs/failure" }

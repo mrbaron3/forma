@@ -45,5 +45,5 @@ Human Design Decisionはbundleの外部判断なのでbundle digest入力に含�
 
 ## Conformance fixture
 
-`examples/`のdigest値は規範fixtureである。consumerはDesignflow runtimeを起動せず、同じ値を再計算できなければ
+`examples/`のdigest値は規範fixtureである。consumerはForma runtimeを起動せず、同じ値を再計算できなければ
 ならない。`npm test`はsource、全artifact、token document、bundle、Human Decisionのdigest整合を検証する。

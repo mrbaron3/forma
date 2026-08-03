@@ -9,7 +9,7 @@ const read = (name) => JSON.parse(fs.readFileSync(new URL(`../contracts/v1/examp
 const request = read("design-request.example.json");
 const snapshot = read("authoring-context-snapshot.example.json");
 const experience = read("experience-contract.example.json");
-const failureSchema = "urn:designflow:schema:v1:authoring-port#/$defs/failure";
+const failureSchema = "urn:forma:schema:v1:authoring-port#/$defs/failure";
 const fixtureDirectory = new URL("./fixtures/", import.meta.url);
 
 function valueAtPath(value, dottedPath) {
@@ -51,7 +51,7 @@ test("[PR-INTENT] three synchronous operations are deterministic and artifact-sc
       ...(operation === "deriveCapabilities" ? { experience } : {})
     };
     assert.equal(
-      validateSchema(`urn:designflow:schema:v1:authoring-port#/$defs/${inputDefinition}`, input),
+      validateSchema(`urn:forma:schema:v1:authoring-port#/$defs/${inputDefinition}`, input),
       null
     );
     const first = backend[operation](input);
@@ -59,7 +59,7 @@ test("[PR-INTENT] three synchronous operations are deterministic and artifact-sc
     assert.equal(first.ok, true);
     assert.deepEqual(first, second);
     assert.equal(
-      validateSchema(`urn:designflow:schema:v1:authoring-port#/$defs/${resultDefinition}`, first),
+      validateSchema(`urn:forma:schema:v1:authoring-port#/$defs/${resultDefinition}`, first),
       null
     );
   }
@@ -151,7 +151,7 @@ test("[PR-INTENT] success results reject blocking artifact ambiguities", () => {
       blocks: true
     }];
     assert.notEqual(validateSchema(
-      `urn:designflow:schema:v1:authoring-port#/$defs/${resultDefinition}`,
+      `urn:forma:schema:v1:authoring-port#/$defs/${resultDefinition}`,
       result
     ), null);
   }
@@ -237,7 +237,7 @@ test("[PR-INTENT] deriveCapabilities rejects an Experience from another Design R
   const unrelatedExperience = structuredClone(experience);
   unrelatedExperience.requestId = "request.unrelated";
   assert.equal(
-    validateSchema("urn:designflow:schema:v1:experience-contract", unrelatedExperience),
+    validateSchema("urn:forma:schema:v1:experience-contract", unrelatedExperience),
     null
   );
   const result = createMockAuthoringBackend().deriveCapabilities({
@@ -336,7 +336,7 @@ test("[PR-INTENT] provenance recomputes input and output digests instead of trus
 });
 
 test("[PR-INTENT] manifest schema requires a non-empty invocation-keyed provenance map", () => {
-  const schemaId = "urn:designflow:schema:v1:design-bundle-manifest";
+  const schemaId = "urn:forma:schema:v1:design-bundle-manifest";
   const manifest = read("design-bundle-manifest.example.json");
   assert.equal(validateSchema(schemaId, manifest), null);
   const [invocationKey, record] = Object.entries(manifest.authorInvocationRefs)[0];
@@ -381,12 +381,12 @@ test("[PR-INTENT] provenance requires an exact record-to-artifact set", () => {
 });
 
 test("[PR-INTENT] bundle paths are normalized portable relatives", () => {
-  const schemaId = "urn:designflow:schema:v1:common#/$defs/artifactRef";
+  const schemaId = "urn:forma:schema:v1:common#/$defs/artifactRef";
   const artifactRef = {
     path: "artifacts/example.json",
     digest: `sha256:${"a".repeat(64)}`,
     mediaType: "application/json",
-    schemaRef: "urn:designflow:schema:v1:experience-contract"
+    schemaRef: "urn:forma:schema:v1:experience-contract"
   };
   for (const path of [
     "artifact.json",
@@ -397,7 +397,7 @@ test("[PR-INTENT] bundle paths are normalized portable relatives", () => {
     const delta = read("design-system-delta.example.json");
     delta.tokenDocuments[0].path = path;
     assert.equal(
-      validateSchema("urn:designflow:schema:v1:design-system-delta", delta),
+      validateSchema("urn:forma:schema:v1:design-system-delta", delta),
       null,
       path
     );
@@ -425,7 +425,7 @@ test("[PR-INTENT] bundle paths are normalized portable relatives", () => {
     const delta = read("design-system-delta.example.json");
     delta.tokenDocuments[0].path = path;
     assert.notEqual(
-      validateSchema("urn:designflow:schema:v1:design-system-delta", delta),
+      validateSchema("urn:forma:schema:v1:design-system-delta", delta),
       null,
       path
     );

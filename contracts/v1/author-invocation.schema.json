@@ -1,18 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:designflow:schema:v1:author-invocation",
+  "$id": "urn:forma:schema:v1:author-invocation",
   "title": "Author invocation provenance v1",
   "description": "Provenance value stored under its invocationKey in design-bundle-manifest.authorInvocationRefs.",
   "type": "object",
   "additionalProperties": false,
   "required": ["provider", "toolOrModel", "profileRevision", "inputContextDigest", "instructionDigest", "outputDigest"],
   "properties": {
-    "provider": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" },
-    "toolOrModel": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" },
-    "orchestrator": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" },
-    "profileRevision": { "$ref": "urn:designflow:schema:v1:common#/$defs/nonEmptyString" },
-    "inputContextDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
-    "instructionDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" },
-    "outputDigest": { "$ref": "urn:designflow:schema:v1:common#/$defs/sha256" }
+    "provider": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" },
+    "toolOrModel": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" },
+    "orchestrator": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" },
+    "profileRevision": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" },
+    "inputContextDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+    "instructionDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+    "outputDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" }
   }
 }

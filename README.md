@@ -1,4 +1,4 @@
-# Designflow
+# Forma
 
 ユーザー体験を、実装前に設計・検証・人間承認できる独立ツール。
 
@@ -44,6 +44,6 @@ capability間の参照整合を検査する。
 
 ## リポジトリ状態
 
-正式名称は`Designflow`、private repositoryは
-[`mrbaron3/designflow`](https://github.com/mrbaron3/designflow)。公開contractとDesignflow自身のtaskだけを
+正式名称は`Forma`、public repositoryは
+[`mrbaron3/forma`](https://github.com/mrbaron3/forma)。公開contractとForma自身のtaskだけを
 所有する。consumer固有taskは置かない。

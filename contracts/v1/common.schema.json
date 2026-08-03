@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:designflow:schema:v1:common",
+  "$id": "urn:forma:schema:v1:common",
   "title": "Experience Contract common definitions",
   "$defs": {
     "ambiguity": {
