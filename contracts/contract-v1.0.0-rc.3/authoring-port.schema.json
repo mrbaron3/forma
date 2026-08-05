@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forma:schema:v1:authoring-port",
+  "title": "AuthoringBackend synchronous port v1",
+  "$defs": {
+    "authorExperienceInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request", "snapshot", "invocationKey"],
+      "properties": {
+        "request": { "$ref": "urn:forma:schema:v1:design-request" },
+        "snapshot": { "$ref": "urn:forma:schema:v1:authoring-context-snapshot" },
+        "invocationKey": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" }
+      }
+    },
+    "authorDesignSystemDeltaInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request", "snapshot", "invocationKey"],
+      "properties": {
+        "request": { "$ref": "urn:forma:schema:v1:design-request" },
+        "snapshot": { "$ref": "urn:forma:schema:v1:authoring-context-snapshot" },
+        "invocationKey": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" }
+      }
+    },
+    "deriveCapabilitiesInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request", "snapshot", "invocationKey", "experience"],
+      "properties": {
+        "request": { "$ref": "urn:forma:schema:v1:design-request" },
+        "snapshot": { "$ref": "urn:forma:schema:v1:authoring-context-snapshot" },
+        "invocationKey": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "experience": { "$ref": "urn:forma:schema:v1:experience-contract" }
+      }
+    },
+    "entryMutationReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expectedDigest", "actualDigest", "mutatedRefs", "scope"],
+      "properties": {
+        "expectedDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+        "actualDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+        "mutatedRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["collection", "id"],
+            "properties": {
+              "collection": {
+                "enum": ["tokenDocuments", "components", "patterns", "sourceRefs"]
+              },
+              "id": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
+            }
+          }
+        },
+        "scope": { "const": "entries" }
+      }
+    },
+    "structureMutationReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expectedDigest", "actualDigest", "mutatedRefs", "scope"],
+      "properties": {
+        "expectedDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+        "actualDigest": { "$ref": "urn:forma:schema:v1:common#/$defs/sha256" },
+        "mutatedRefs": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "scope": { "const": "snapshot-structure" }
+      }
+    },
+    "governanceMutationReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "action", "targetId", "reason"],
+      "properties": {
+        "policy": { "const": "design-system-governance" },
+        "action": { "enum": ["extend", "create"] },
+        "targetId": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" },
+        "reason": {
+          "enum": [
+            "feature-namespace-required",
+            "shared-token-redefinition",
+            "base-token-value-duplication"
+          ]
+        }
+      }
+    },
+    "sourceMutationReport": {
+      "oneOf": [
+        { "$ref": "#/$defs/entryMutationReport" },
+        { "$ref": "#/$defs/structureMutationReport" },
+        { "$ref": "#/$defs/governanceMutationReport" }
+      ]
+    },
+    "failure": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "schema-invalid" },
+            "detail": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "trace-broken" },
+            "detail": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "provenance-invalid" },
+            "detail": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "source-mutation" },
+            "detail": { "$ref": "#/$defs/sourceMutationReport" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "ambiguous" },
+            "detail": { "$ref": "urn:forma:schema:v1:authoring-ambiguity-report" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "kind", "detail"],
+          "properties": {
+            "ok": { "const": false },
+            "kind": { "const": "provider-unavailable" },
+            "detail": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
+          }
+        }
+      ]
+    },
+    "authorExperienceResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "artifact"],
+          "properties": {
+            "ok": { "const": true },
+            "artifact": { "$ref": "urn:forma:schema:v1:experience-contract" }
+          }
+        },
+        { "$ref": "#/$defs/failure" }
+      ]
+    },
+    "authorDesignSystemDeltaResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "artifact"],
+          "properties": {
+            "ok": { "const": true },
+            "artifact": { "$ref": "urn:forma:schema:v1:design-system-delta" }
+          }
+        },
+        { "$ref": "#/$defs/failure" }
+      ]
+    },
+    "deriveCapabilitiesResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ok", "artifact"],
+          "properties": {
+            "ok": { "const": true },
+            "artifact": { "$ref": "urn:forma:schema:v1:capability-requirements" }
+          }
+        },
+        { "$ref": "#/$defs/failure" }
+      ]
+    }
+  }
+}

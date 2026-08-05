@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0",
+  "requestId": "request.revision",
+  "revisionId": "revision.1",
+  "bundleDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "status": "valid",
+  "reason": null,
+  "decisionId": null
+}

@@ -5,7 +5,9 @@
   "type": "module",
   "description": "Language-neutral contracts and validation for Forma.",
   "exports": {
-    "./authoring": "./src/authoring/index.js"
+    ".": "./src/index.js",
+    "./authoring": "./src/authoring/index.js",
+    "./revision": "./src/revision/index.js"
   },
   "scripts": {
     "test": "node scripts/check-all.mjs",
@@ -13,7 +15,7 @@
     "test:api": "node --test test/*.test.js",
     "test:all": "npm test"
   },
-  "devDependencies": {
+  "dependencies": {
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1"
   }

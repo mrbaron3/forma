@@ -1,4 +1,8 @@
-# Public contracts v1
+# contract-v1.0.0-rc.3
+
+active v1 inventoryとimmutable revision state contractを凍結した固定releaseである。全schema IDと
+参照は`urn:forma:schema:v1` namespaceを使い、このdirectory内だけで解決できる。rc.1／rc.2は
+変更しない。
 
 このdirectoryがconsumerとのPublished Languageの正本である。runtime実装の型はここへconformし、
 別製品の内部型を公開contractへ追加しない。
@@ -13,9 +17,9 @@
 | `capability-requirements.schema.json` | interactionから導出したbackend能力要求 |
 | `design-bundle-manifest.schema.json` | immutable revisionのartifact一覧とdigest |
 | `human-design-decision.schema.json` | revision digestへ束縛された人間判断 |
-| `design-revision-state.schema.json` | manifest非埋込のrevision lifecycle stateとfeedback参照 |
+| `design-revision-state.schema.json` | immutable revisionのlifecycle stateとfeedback disposition参照 |
 | `approval-validity.schema.json` | approvalのmissing／valid／stale導出結果 |
-| `revision-state-command.schema.json` | pure revision transitionのclosed operation union |
+| `revision-state-command.schema.json` | pure revision state transitionのclosed command union |
 | `revision-state-snapshot.schema.json` | revision／decision監査履歴のcanonical snapshot |
 | `revision-state-error.schema.json` | no-write failureのclosed error record |
 | `authoring-context-snapshot.schema.json` | read-onlyな著述context snapshot |

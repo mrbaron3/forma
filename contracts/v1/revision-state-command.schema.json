@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forma:schema:v1:revision-state-command",
+  "title": "Revision state command v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "operation", "requestId", "revisionId", "manifest"],
+      "properties": {
+        "schemaVersion": { "const": "1.0" },
+        "operation": { "const": "create-revision" },
+        "requestId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "revisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "manifest": { "$ref": "urn:forma:schema:v1:design-bundle-manifest" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "operation", "requestId", "revisionId"],
+      "properties": {
+        "schemaVersion": { "const": "1.0" },
+        "operation": { "const": "propose" },
+        "requestId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "revisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "operation", "requestId", "revisionId", "decision"],
+      "properties": {
+        "schemaVersion": { "const": "1.0" },
+        "operation": { "const": "decide" },
+        "requestId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "revisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "decision": { "$ref": "urn:forma:schema:v1:human-design-decision" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "operation",
+        "requestId",
+        "predecessorRevisionId",
+        "revisionId",
+        "manifest",
+        "feedbackDispositions"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "1.0" },
+        "operation": { "const": "create-successor" },
+        "requestId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "predecessorRevisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "revisionId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        "manifest": { "$ref": "urn:forma:schema:v1:design-bundle-manifest" },
+        "feedbackDispositions": {
+          "type": "array",
+          "items": { "$ref": "urn:forma:schema:v1:design-revision-state#/$defs/feedbackRef" }
+        }
+      }
+    }
+  ]
+}

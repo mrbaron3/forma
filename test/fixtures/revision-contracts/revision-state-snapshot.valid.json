@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "requestId": "request.revision",
+  "revisions": [
+    {
+      "schemaVersion": "1.0",
+      "requestId": "request.revision",
+      "revisionId": "revision.1",
+      "previousRevisionId": null,
+      "status": "draft",
+      "materialFingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "bundleDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "feedbackRefs": [],
+      "createdAt": "2026-08-03T00:00:00.000Z",
+      "stateChangedAt": "2026-08-03T00:00:00.000Z"
+    }
+  ],
+  "decisions": []
+}

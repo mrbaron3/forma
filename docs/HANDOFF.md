@@ -1,8 +1,15 @@
 # Handoff
 
-最終更新: 2026-08-01
+最終更新: 2026-08-03
 
 ## 現在地
+
+DF-002としてimmutable revision／decision state machineを追加した。active v1の5 schema、固定
+`contract-v1.0.0-rc.3`、pure transition、material fingerprint、approval validity、feedback継承、
+canonical snapshot serialize／restoreを実装した。判断は
+[ADR-0009](decisions/ADR-0009-immutable-revision-state.md)を正本とする。永続化とconsumer lifecycleは
+引き続きscope外である。revision stateはmanifest非埋込、commandは`operation` discriminator、
+feedbackは後継revisionの`feedbackRefs`、snapshotはrevision／decisionだけを持つclosed contractである。
 
 ISSUE-0001として同期 `AuthoringBackend` portと決定論的mockを追加した。rc.2では
 `AuthoringContextSnapshot`、`AuthoringAmbiguityReport`、manifest provenanceを公開し、schema／trace／

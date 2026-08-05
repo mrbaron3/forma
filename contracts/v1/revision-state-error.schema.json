@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forma:schema:v1:revision-state-error",
+  "title": "Revision state error v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "code",
+    "operation",
+    "requestId",
+    "revisionId",
+    "decisionId",
+    "message"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "code": { "enum": ["invalid-transition", "conflict", "not-found", "integrity-error"] },
+    "operation": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" },
+    "requestId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+    "revisionId": {
+      "anyOf": [
+        { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        { "type": "null" }
+      ]
+    },
+    "decisionId": {
+      "anyOf": [
+        { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+        { "type": "null" }
+      ]
+    },
+    "message": { "$ref": "urn:forma:schema:v1:common#/$defs/nonEmptyString" }
+  }
+}

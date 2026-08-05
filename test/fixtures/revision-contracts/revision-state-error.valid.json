@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0",
+  "code": "invalid-transition",
+  "operation": "propose",
+  "requestId": "request.revision",
+  "revisionId": "revision.1",
+  "decisionId": null,
+  "message": "only draft revisions may be proposed"
+}

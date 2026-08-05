@@ -11,6 +11,7 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDir, "..");
 const contractDirectory = path.join(repositoryRoot, "contracts", "v1");
 const exampleDirectory = path.join(contractDirectory, "examples");
+const rc3Directory = path.join(repositoryRoot, "contracts", "contract-v1.0.0-rc.3");
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
@@ -94,6 +95,26 @@ addFormats(ajv);
 
 for (const schema of schemas) {
   ajv.addSchema(schema);
+}
+for (const schema of schemas) {
+  assert(
+    ajv.getSchema(schema.$id),
+    `${schema.$id}: active v1 strict compile failed`,
+  );
+}
+
+const rc3Ajv = new Ajv2020({ allErrors: true, strict: true });
+addFormats(rc3Ajv);
+const rc3Schemas = fs.readdirSync(rc3Directory)
+  .filter((name) => name.endsWith(".schema.json")).sort()
+  .map((name) => readJson(path.join(rc3Directory, name)));
+for (const schema of rc3Schemas) {
+  assert(schema.$id.startsWith("urn:forma:schema:v1:"), `rc.3: invalid schema ID ${schema.$id}`);
+  assert(!JSON.stringify(schema).includes("urn:designflow:schema"), `${schema.$id}: legacy reference`);
+  rc3Ajv.addSchema(schema);
+}
+for (const schema of rc3Schemas) {
+  assert(rc3Ajv.getSchema(schema.$id), `${schema.$id}: strict compile failed`);
 }
 
 const examples = {

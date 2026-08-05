@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:forma:schema:v1:revision-state-snapshot",
+  "title": "Revision state snapshot v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "requestId", "revisions", "decisions"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "requestId": { "$ref": "urn:forma:schema:v1:common#/$defs/identifier" },
+    "revisions": { "type": "array", "items": { "$ref": "urn:forma:schema:v1:design-revision-state" } },
+    "decisions": { "type": "array", "items": { "$ref": "urn:forma:schema:v1:human-design-decision" } }
+  }
+}
