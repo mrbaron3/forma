@@ -1,95 +1,154 @@
 # Product Design Principles
 
+## Foundation before screens
+
+画面を最初のdesign primitiveにしない。生成順を次で固定する。
+
+```text
+Purpose / Flow
+  → Design Principle / Token
+  → Component Contract / Component State
+  → UI-facing API / Scenario
+  → Screen / Integrated Mock
+```
+
+screenが新しいliteral value、局所component、未契約stateを必要とする場合、screen内で例外処理せず、前段の
+token、component contract、rule、decisionへ戻す。前段を変更した場合は、そのdigestを参照する後段reviewを
+やり直す。
+
 ## Purpose–Effort–Visibility
 
 ### Purpose
 
-各Page Purpose Contractは次を明示する。
+各pageは次を明示する。
 
-- 対象ユーザーと利用文脈
-- 1つのprimary purpose
-- 観測可能なsuccess outcome
+- 対象userと利用文脈
+- 1つのprimary purposeと観測可能なsuccess outcome
 - secondary purpose
 - safety／audit上必要な目的
 - out of scope
 
-primary purposeが複数ある場合、page、route、modeの分離を検討し、同居させる場合は理由を残す。
+primary purposeが複数ある場合、page、route、modeの分離を検討し、同居させる場合は理由をdesign decisionへ残す。
 
 ### Effort
 
-Effortはclick数だけでなく、次の合計として扱う。
-
-- action count
-- decision count
-- required input
-- context switch
-- memory burden
-- wait
-- recovery steps
-- repeated entry
-
-各primary taskはEffort Budgetを持つ。安全確認、不可逆操作、権限変更などの必要な摩擦は削らず、
-何を保護するための労力かを明示する。
+Effortはclick数だけでなく、action、decision、required input、context switch、memory burden、wait、recovery、
+repeated entryの合計として扱う。各primary taskはEffort Budgetを持つ。安全確認、不可逆操作、権限変更等の
+必要な摩擦は削らず、何を保護するための労力かを明示する。
 
 ### Visibility
 
-PageごとにAttention Hierarchyを定義し、region／elementのprominenceが情報優先度と一致することを
-検証する。詳細・debug情報・rare actionはprogressive disclosureを基本とする。
+PageごとにAttention Hierarchyを定義し、region／elementのprominenceを情報優先度と一致させる。detail、debug、
+rare actionはprogressive disclosureを基本とする。
 
-## Purpose → Task → Region → Element → Placement
+## Purpose → Interaction → Contract
 
-全表示物は次のtraceを持つ。
+全表示物とinteractionは次へtraceする。
 
 ```text
 Requirement
   └─ Page Purpose
-       └─ User Task
-            └─ Layout Region
-                 └─ UI Element
-                      └─ Placement Rationale
+       └─ User Task / Flow
+            └─ Region / Element
+                 └─ Component Contract
+                      └─ Interaction / UI State
+                           └─ Capability
+                                └─ OpenAPI Operation / Scenario
 ```
 
-要素を削除してもpurpose、task、安全性、理解可能性のいずれも変わらない場合、その要素は原則削除する。
-装飾は許容するが、階層理解、ブランド認識、安心感などの寄与を説明できなければならない。
+削除してもpurpose、task、安全性、理解可能性のいずれも変わらないelementは原則削除する。装飾は階層理解、
+brand認識、安心感等の寄与を説明できなければならない。
 
-## UXとBackendの責務境界
+## Design System contracts
 
-Experience Authorは具体endpoint、table、queueを決めない。interactionから必要な能力を記述する。
+正本を役割で分ける。
 
-- user intent
-- inputとsuccess outcome
-- failure semantics
-- authorization
-- latency／freshness
-- concurrency
-- idempotency
-- retry／cancel
-- pagination
-- audit
+| 正本 | 管理するもの | 管理しないもの |
+|---|---|---|
+| `DESIGN.md` | brand／UX principle、user、copy policy、参照map | token値、component stateの複製 |
+| `design/tokens/` | primitive／semantic tokenとalias | component behavior |
+| `design/contracts/` | variant、state、constraint、a11y、token ref | token実値、長い判断理由 |
+| `design/rules.json` | forbid／prefer、severity、検証方法 | 背景説明の複製 |
+| `design/decisions/` | context、trade-off、例外、verification | 現在仕様の複製 |
+| component harness | 実componentと全stateの実行例 | design rationaleの正本 |
 
-API／Domain設計者はこのCapability Requirementを技術契約へ変換する。能力不足や矛盾が残る間は
-implementation issueを確定しない。
+componentは原則semantic tokenだけを参照する。stateは単一配列ではなくinteraction、availability、progress等の
+直交軸へ分け、不正な組合せをconstraintで閉じる。component contractはrequired storyとrequired testを持つ。
 
-## Design System
+## UI-facing API design
 
-Design Systemへの変更は`reuse | extend | create | feature-local`のいずれかとして理由を持つ。
-tokenはprimitive、semantic、componentの層を区別し、alias／group／deprecationを保持する。
-交換形式はDTCG Design Tokens Format 2025.10を基準とし、独自拡張はnamespaced metadataへ閉じる。
+Experience Authorはconcrete endpointを決めず、interactionから必要capabilityを記述する。FormaのAPI Contract
+Designerがcapabilityをtarget productのOpenAPIへ具体化する。
 
-## Human Review
+Formaが決めるもの:
 
-人間はraw JSONではなく、次を同時に確認できる。
+- path、method、operation、request／response schema
+- success、validation、authentication、authorization、conflict、retryable failure
+- pagination、filter、sort、freshness
+- idempotency、optimistic concurrency、retry、cancel
+- example、mock scenario、interaction trace
 
-- annotated preview
-- page purpose
-- task flow
-- effort budget
-- attention hierarchy
-- state matrix
-- token／component／pattern delta
-- backend capability requirements
-- requirement trace
-- previous revisionとの差分
+Formaが決めないもの:
 
-判断は`approve | request-changes | reject`。判断はbundle digestへ束縛し、変更されたrevisionには継承しない。
+- database table、service decomposition
+- queue、cache、cloud provider
+- deployment topology、consumer内部module
+- UIから使用しないinternal-only API
 
+screenはOpenAPIから生成したclient／mock boundaryを利用する。direct fetch、schema外fixture、手書きresponse typeは
+design package内で禁止する。
+
+## Browser review
+
+人間は段階に応じて次を確認する。
+
+### Foundation review
+
+- color、typography、spacing、radius、elevation、motion
+- semantic tokenの用途とcontrast
+- brand／UX principle、copy tone、Do／Don't
+
+### Component review
+
+- variantと全required state
+- loading、disabled、focus-visible、error、permission、long content、narrow viewport、theme
+- keyboard、accessible name、focus order、status announcement
+
+### Integrated mock review
+
+- 主要screen／flowとviewport
+- success、loading、empty、validation、permission、failure、slow response
+- selected interactionからOpenAPI operationとresponse UI stateへのtrace
+- Foundation／Component／OpenAPI／screenの前revisionとの差分
+
+raw JSON／YAMLは補助表示であり、第一review surfaceにしない。
+
+## Approval and export
+
+判断は`approve | request-changes | reject`とし、対象stage revisionまたはpackage manifest digest、actor、time、
+rationaleへ束縛する。前段material changeは依存する後段approvalをstaleにする。後段だけの変更で、参照digestが
+変わらない前段approvalを無効にしない。
+
+reviewで実行したpayloadをapproval後に再生成してはならない。同じpayload file treeをmanifestへ固定し、manifestが
+指すbytesをZIP化する。approvalはmanifest digestを参照するdetached receiptとして加える。ZIP compression差ではなく
+canonical manifest digestをidentityとする。
+
+## Repository handoff
+
+Formaはdraft workspaceとapproved packageを所有する。ZIPを展開してrepository化した後はtarget repositoryが
+唯一のwriterになる。Servo等のintegratorはtarget repositoryのdesign contractとOpenAPIを読み、変更を同じ
+repositoryへのPRとして行う。
+
+Formaとtarget repositoryを同期するdual-writeは行わない。再設計時は特定commitを新しいsource snapshotとして
+importし、新しいstage revisionを作る。
+
+## Review feedback as harness improvement
+
+同じreview指摘が繰り返された場合、注意文を増やすだけで終わらせない。適切な層へ昇格する。
+
+- 値の問題 → token
+- component behavior／state漏れ → component contract、story、test
+- 禁止／推奨pattern → rule、lint
+- product固有trade-off → decision
+- API success／failure不整合 → OpenAPI、example、scenario、contract test
+- generatorの再発問題 → template、eval、conformance vector

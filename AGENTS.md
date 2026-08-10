@@ -5,19 +5,35 @@ particular consumer repository.
 
 ## Non-negotiable boundaries
 
-- Public contracts are language-neutral JSON Schema. Do not expose another product's internal
-  database records, lifecycle enums, filesystem paths, or runtime types.
-- The engine owns design requests, design revisions, design-system deltas, preview artifacts, and
-  human design decisions. Integrators retain ownership of their issues, pull requests, and delivery
-  workflow.
-- Human approval is bound to an immutable design-revision digest. Any material change creates a new
-  revision and invalidates the old approval.
+- Design Seed package/stage contracts and reusable JSON bodies are language-neutral JSON Schema;
+  target product and Forma service HTTP transports are separate OpenAPI documents that reference
+  their schemas. Do not expose another product's internal database records, lifecycle enums, host
+  filesystem paths, or runtime types.
+- The primary output is an executable Design Seed file tree, not an abstract JSON bundle or a
+  separately regenerated preview. Browser review and ZIP export must use the same payload file
+  bytes; export may add only a detached approval receipt that references the payload manifest.
+- The engine owns requirement snapshots, stage revisions, draft workspaces, authoring provenance,
+  preview evidence, package manifests, exports, and human design decisions. Integrators retain
+  ownership of their repositories, issues, pull requests, implementation, and delivery workflow.
+- Human approval is bound to an immutable stage-revision or package-manifest digest. A material
+  upstream-stage change creates a new revision and invalidates dependent downstream approval.
 - A page begins with purpose, effort budget, and attention hierarchy. Every visible region and
   element must trace to a user task, requirement, safety constraint, or explicit product rationale.
-- UX authors describe backend capabilities required by an interaction. They do not invent concrete
-  endpoints, tables, or provider-specific infrastructure.
+- Design foundation precedes components; component contracts and UI-facing API precede integrated
+  screens. Do not introduce screen-local literal tokens, component forks, direct HTTP calls, or
+  schema-external mock fixtures as shortcuts.
+- Experience Authors describe backend capabilities required by an interaction and do not invent
+  concrete endpoints. Forma's API Contract Designer maps those capabilities to the target product's
+  UI-facing OpenAPI. It must not invent tables, service topology, providers, or internal-only APIs.
+- Design Requests never select an agent provider. Versioned operational profiles route
+  application-owned authoring ports; implicit fallback and multiple writers for one generated file
+  are forbidden. Exported visual assets require source, license status, purpose, trace, and exactly
+  one author invocation.
+- Forma Service API, Design Seed target-product OpenAPI, and Servo Control API are distinct contract
+  families. Never copy them into a shared dual-written specification.
 - A live integration must have one authoritative writer. Never introduce database sharing or
-  dual-write as a shortcut for integration.
+  dual-write as a shortcut for integration. After repository handoff, the target repository is the
+  sole writer for its Design Seed files and target OpenAPI.
 - Consumer adapters, consumer issue lifecycles, and consumer-specific dogfood tasks belong to the
   consumer repository. Forma tasks must not depend on a consumer issue or implementation.
 
@@ -27,5 +43,7 @@ particular consumer repository.
   in English.
 - Record durable architectural decisions in `docs/decisions/`; do not silently rewrite their
   rationale.
+- Keep `docs/DESIGN_SEED_PACKAGE.md` authoritative for output layout, stage gates, manifest, review,
+  export, and handoff semantics.
 - Keep `docs/HANDOFF.md` current whenever a milestone, decision, blocker, or next action changes.
 - Run `npm test` after changing schemas, examples, or cross-artifact integrity rules.

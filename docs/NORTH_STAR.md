@@ -1,48 +1,84 @@
 # North Star
 
-人間がプロダクトの意図を示したとき、実装前にユーザー体験が可視化され、目的達成までの労力、
-視認性、全表示物と配置の理由、Design Systemへの影響、Backend Capabilityへの要求が同じ設計revisionに
-束縛される。人間は理解可能なPreviewと差分を確認して承認または差戻しでき、承認済みrevisionだけが
-開発へ渡る。
+人間が新しいproductの要求仕様を示したとき、Formaはdesign intent、token、component、UI-facing API、主要画面mock、
+rule、testを依存順に生成する。人間は途中成果物と統合mockをbrowserで確認し、承認したpayload file treeを
+Design Seed Packageとして受け取る。packageは単独でbuild／preview／testでき、そのまま新しいrepositoryの
+初期状態としてcoding agentと開発者が利用できる。
 
-## 利用想定（hero scenario）
+## Hero scenario
 
-主たる利用は、新サービスを作るときに必要となる基盤 — Design System（token／componentの土台）と
-主要画面のモック一式 — を一度まとめて設計する単発バッチである。featureごとの常設設計ゲートでは
-ない（継続利用と実装後conformanceは将来scopeとして保持する）。
+主たる利用は、新サービス着手時に要求仕様から一度まとめて設計基盤と主要画面を作ることである。
 
-人間の席は承認者である。第一に確認するのはモック状態のpreview —「どのようなデザインになるか」—
-であり、approve、または具体的な要望・やり方の指示を添えたrequest-changesを返す。人間は自分では
-描かない。governance artifact（Effort Budget・Placement Rationale・Attention Hierarchy・
-Capability Requirements）はcontractのrequiredを維持したままauthoring agentが全量著述し、人間へ
-著述コストを求めない（[ADR-0005](decisions/ADR-0005-hero-scenario-mock-first-preview.md)）。
+```text
+要求仕様
+  → Purpose / Flow
+  → Design Foundation
+  → Component Harness
+  → UI-facing OpenAPI
+  → Integrated Mock
+  → Browser Review
+  → Approved ZIP
+  → Target Repository
+```
+
+人間は細かなtoken、component、screen、OpenAPIを手で著述しない。agentがcandidateを作り、人間は段階ごとに
+理解、比較、approve／request-changes／rejectする。各stageの第一確認面は、そのstageの実行可能なvisual projection
+とdiffである。最終統合面のmockは事前に承認されたtoken、component contract、OpenAPI、scenarioから構成し、
+手書きの値やdummy dataでcontractを迂回しない。
+
+## 主成果物
+
+主成果物は抽象的なJSON Bundleやpreview HTMLではなく、次を含む実行可能な
+[Design Seed Package](DESIGN_SEED_PACKAGE.md)である。
+
+- `AGENTS.md`と`DESIGN.md`
+- version固定したDTCG Format Module profileのdesign token
+- component variant／state／a11y contract
+- reusable componentと全stateのstory
+- design rule、decision、例外
+- UI-facing target OpenAPI、参照JSON Schema、example、scenario
+- source／license／purpose／trace／invocationを持つoptional visual asset
+- OpenAPIから生成したclient／mock boundary
+- 主要screen／flowのmock
+- static、interaction、accessibility、visual test
+- stage revisionとpayload file digestを持つpackage manifest
+- manifest digestへ束縛したdetached approval receipt
+
+ZIPはfile treeを渡すtransportであり、approvalはZIP bytesではなくcanonical package manifest digestへ束縛する。
+reviewに使用したpayloadを承認後に再生成せず、同じfile bytesとdetached approval receiptをarchiveする。
 
 ## 守る価値
 
-1. **Purpose** — 各ページは主目的、成功状態、対象外を持つ。
-2. **Effort** — ユーザーが目的へ到達するための操作・判断・記憶・待ち・復旧コストを予算化する。
-3. **Visibility** — 視覚的な強さと情報優先度を一致させる。
-4. **Reasoned Surface** — 全region、element、placementはtask、requirement、安全性、または明示理由へtraceする。
-5. **Human Authority** — product／experience判断は人間がrevision単位で承認する。
-6. **Design Before Decomposition** — UIから必要能力を導出してからfrontend／backendのIssue境界を確定する。
-7. **Independent Product** — 特定の開発ハーネス、provider、デザインツール、DBへ依存しない。
+1. **Design Foundation First** — tokenとdesign principleをcomponentより先に、component contractをscreenより先に
+   固定する。
+2. **Executable Evidence** — proseやschemaだけでなく、実component、story、mock、testで設計が成立することを示す。
+3. **Purpose–Effort–Visibility** — page、flow、elementを目的、労力、attentionへtraceする。
+4. **Contracted Interaction** — UI stateをUI-facing OpenAPIのsuccess／failure semanticsへ対応付ける。
+5. **Human Authority** — 人間はstage revisionとpackage manifest digestへ判断を束縛する。
+6. **Same-tree Review** — browserで確認したfile treeとexportするfile treeを同一にする。
+7. **Repository Handoff** — export後はtarget repositoryを唯一のwriterとし、FormaやServo等のintegratorによる
+   dual-writeを行わない。
+8. **Independent Product** — Formaも出力packageも、特定consumer、agent provider、DB、Git hostなしで利用できる。
+9. **Provider-neutral Authorship** — provider選択を運用profileへ隔離し、全generated fileを一つのinvocationへtraceする。
 
 ## 成功の定義
 
-- 新サービスの基盤（Design System＋主要画面のモック一式）を1回のDesign Requestバッチで生成し、
-  人間がモックpreviewを第一確認面として承認できる。
-- standalone CLIまたはReview UIだけでDesign Request→Proposal→Human Decision→Approved Bundleが完結する。
-- 同じ入力・Design System snapshot・contract versionから、検証可能で比較可能な成果物が得られる。
-- 承認後の変更は新revisionとなり、旧承認を再利用できない。
-- consumerはbundle digestと公開contractだけで統合でき、engineのDBを共有しない。
-- 実装後の画面をApproved Bundleへ照合し、driftを理由付きで報告できる。
+- 要求仕様からDesign Foundation→Component Harness→Product Contract→Integrated Mockを順に生成できる。
+- reviewerがtoken、component state、画面scenario、interactionとAPIの対応、revision diffをraw JSONなしで確認できる。
+- success、loading、empty、validation、permission、failure、slow response等をbrowserで切り替えられる。
+- screenがsemantic token、package component、OpenAPI生成client／mockだけを使っていることを自動検証できる。
+- 承認時のpayloadとexport ZIP内payloadのfile digest集合が完全一致する。
+- ZIPを展開して標準commandだけでapplication、component harness、testを実行できる。
+- target repository化後、Servo等のintegratorはpackage内OpenAPIを別contractへ複製せず実装に利用できる。
+- UI-facing OpenAPIのmaterial changeが既存design approvalを暗黙に再利用しない。
 
 ## 反証サイン
 
-- JSONを直接開かないと人間が設計を確認できない。
-- tokenやcomponentがfeatureごとに複製される。
-- UI実装中に初めてbackend capability不足が発覚する。
-- 目的にtraceできない表示物が「一般的だから」という理由で残る。
-- Design Revisionが変わっても過去の承認が有効なままになる。
-- consumerがengineの内部DB schemaやruntime型をimportする。
-
+- tokenやcomponentを固定する前に画面ごとのCSS／部品が生成される。
+- previewがexport packageとは別のHTMLや別buildから作られる。
+- screenがhandwritten fixtureやdirect fetchでOpenAPIを迂回する。
+- Storybookにはhappy pathしかなく、disabled、loading、focus、error等を確認できない。
+- OpenAPIがmock承認後に初めて作られ、UI stateとfailure semanticsが一致しない。
+- ZIPを展開してもFormaなしではbuild／preview／testできない。
+- FormaとServo等のintegratorが同じtarget OpenAPIのcopyをそれぞれ更新する。
+- JSONを直接読まないと承認対象と変更差分を理解できない。

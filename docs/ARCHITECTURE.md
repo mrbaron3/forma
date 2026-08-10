@@ -2,131 +2,299 @@
 
 ## System boundary
 
-Formaは、Design Requestを受け、設計を著述・検証・preview化し、人間判断を経て
-Approved Design Bundleを公開する独立systemである。
+Formaは要求仕様を受け、design foundation、component harness、UI-facing API、integrated mockを段階的に生成・検証し、
+人間がbrowserで承認したpayload file treeをDesign Seed Packageとして出力する独立systemである。
 
 ```text
-Consumer
-  │ DesignRequest v1
-  ▼
-Request Intake
-  → Experience Authoring
-  → Design System Governance
-  → Capability Requirement Derivation
-  → Revision Assembly / Validation
-  → Preview Rendering
-  → Human Review
-  → Approved Design Bundle
-  │
-  └─ status/event/bundle reference → Consumer
+Requirement Input
+  → Requirements Framing
+  → Design Foundation
+  → Component Harness
+  → Product Contract / OpenAPI
+  → Integrated Mock
+  → Browser Review / Revision
+  → Package Approval
+  → ZIP / Target Repository
 ```
+
+Formaは生成したtarget productのproduction実装、Issue／PR、release、database、service topologyを所有しない。
+
+## Primary output
+
+主成果物はcontent-addressedな[Design Seed Package](DESIGN_SEED_PACKAGE.md)である。preview HTMLや抽象JSON artifactを
+主成果物にしない。review serverはdraft workspaceそのものをsandboxでbuildし、approval前にpayload manifestを
+固定する。approval後はpayloadを再生成せず、detached approval receiptだけを加えてZIP化する。
+
+```text
+Design Seed Package
+├─ intent       normalized requirements / DESIGN.md / requirement trace
+├─ foundation   token / rule / decision
+├─ components   contract / implementation / story / test
+├─ product API  OpenAPI / JSON Schema / example / scenario / trace
+├─ assets        catalog / media / source / license / provenance
+├─ mock          screen / flow / generated client / generated handler
+└─ evidence      payload manifest / detached approval / toolchain provenance
+```
+
+## Stage dependency
+
+```text
+Requirements Revision
+       │
+       ▼
+Foundation Revision ───────────────┐
+       │ foundationDigest          │
+       ▼                           │
+Component Harness Revision         │
+       │ componentHarnessDigest    │
+       ▼                           │
+Product Contract Revision          │
+       │ targetOpenApiDigest       │
+       ▼                           │
+Integrated Mock Revision ◀─────────┘
+       │ integratedMockDigest
+       ▼
+Package Manifest Revision
+```
+
+各revisionはimmutableで、直接入力した前段digestを保持する。前段material changeは依存する後段decisionをstaleに
+する。stageを一つの巨大snapshotへ平坦化せず、どの判断が何に依存したかを保持する。
 
 ## Bounded contexts
 
-### Request Intake
+### Requirements Framing
 
-汎用`DesignRequest`を検証し、source revisionとrequirement identityを版固定する。GitHub Issue、
-task record、手入力brief等のprovider差はadapterが吸収する。
+product purpose、user、flow、success、constraint、effort、attention、viewport、locale、accessibility target、
+out of scopeを所有する。consumer Issueや既存DB recordを公開contractへ持ち込まない。
 
-### Experience Authoring
+### Design Foundation
 
-Page Purpose、User Task、Flow、Effort Budget、Attention Hierarchy、Region、Element、Placement Rationale、
-accessibility requirementを所有する。
+`DESIGN.md`、version固定したDTCG Format Module profileのtoken、design rule、design decision、exceptionを所有する。
+screen固有CSSやcomponent behaviorをtokenへ混在させない。
 
-### Design System Governance
+### Component Harness
 
-Design System snapshotとdelta、token／component／pattern decisionを所有する。feature artifact内への
-共有system複製を禁止し、参照またはdeltaとして表現する。
+component variant、state axis、constraint、a11y、token ref、required story／testと、実行可能component harnessを
+所有する。Foundation digestへ束縛する。
 
-### Capability Requirements
+### Product Contract
 
-interactionからbackendが提供すべき能力を導出する。具体API設計はconsumer側または別systemの責務。
+Experience Authorがinteraction capabilityを著述し、API Contract Designerがtarget productのUI-facing OpenAPIへ
+具体化する。Mock Builderがclient、validator、handler、scenarioを生成する。database、service topology、
+provider-specific infrastructureは所有しない。判断は
+[ADR-0013](decisions/ADR-0013-forma-owned-target-openapi.md)を正本とする。
 
-### Revision Assembly
+### Integrated Mock
 
-全artifactを検証し、content digestを計算してimmutable Design Revisionを作る。material changeは必ず
-新revisionとなる。
+package componentとOpenAPI生成boundaryを使って主要screen／flowを実装する。success、loading、empty、validation、
+permission、failure、slow response等のscenarioをbrowserで再現する。literal token、local component fork、direct
+HTTP、schema外fixtureをfail closedにする。
+
+### Authoring Orchestration
+
+stage／artifact roleごとのapplication-owned port、version固定したAuthoringProfile、route validation、invocation provenanceを
+所有する。deterministic mockとproduction provider adapterへ同じconformanceを適用し、implicit fallback、同一fileへの
+複数writer、source mutationを拒否する。provider固有SDK型、credential、host commandをdomain／packageへ持ち込まない。
+
+Visual Asset Generatorの出力は`assets/catalog.json`と`public/assets/`へ格納し、source、license／usage status、purpose、
+requirement／element、invocationへtraceする。判断は
+[ADR-0014](decisions/ADR-0014-provider-neutral-authoring-and-asset-provenance.md)を正本とする。
 
 ### Human Review
 
-Preview、trace、diffを提示し、Human Design Decisionを記録する。承認はrevision／bundle digestに限定する。
+stage別surface、diff、trace、ambiguity、validation evidenceを投影し、Human Design Decisionをstage revisionまたは
+package manifest digestへ束縛する。raw contract fileを第一review surfaceにしない。
 
-### Conformance
+### Package Assembly
 
-実装artifactをApproved Bundleへ照合し、state coverage、token drift、component contract、
-accessibility、visual evidence、capability contractの差を報告する。
+workspace payloadをnormalized relative path、role、media type、SHA-256でmanifestへ固定する。approval後に再生成せず、
+manifestが指す同じbytesと、そのmanifest digestを参照するdetached approval receiptをZIPへ格納する。archiveを展開して
+payload集合、digest、receipt bindingを再検証できなければならない。
+
+## Implementation architecture
+
+Forma自身は[ADR-0010](decisions/ADR-0010-go-modular-monolith-and-react-spa.md)に従い、Goのモジュラーモノリスと
+React／TypeScript、Vite、React Router Data ModeのSPAで実装する。
+
+```text
+React authoring / review UI
+              │ Forma Service API
+              ▼
+HTTP adapter ─┐
+CLI adapter  ─┼─▶ Application use cases ─▶ Domain
+              │           ▲
+              │           │ application-owned ports
+              └── SQLite / workspace / sandbox / authoring / export adapters
+```
+
+- domainはHTTP、CLI、database、filesystem、sandbox、agent SDK、React、generated protocol typeを知らない。
+- applicationはstage use caseと必要なportを所有する。
+- adapterはcontract DTOをapplication command／queryへ変換する。
+- composition rootだけが具体adapterを組み立てる。
+- generated codeをdomain modelとして使わない。
+- bounded contextを初期段階で別serviceへ分割しない。
+
+初期directory境界は次を基準とする。
+
+```text
+cmd/forma/
+internal/domain/
+internal/application/
+internal/adapter/inbound/{http,cli}/
+internal/adapter/outbound/{sqlite,workspace,sandbox,authoring,export}/
+internal/platform/
+internal/generated/
+web/
+contracts/
+templates/design-seed/
+```
+
+`utils`、`services`、巨大な共通`models` packageを作らない。template内のsourceとForma runtime sourceを同じpackage
+またはmoduleへ混在させない。
+
+## Contract families
+
+契約を用途で分離する。
+
+| Contract family | 正本 | 用途 |
+|---|---|---|
+| Design Seed Package | JSON Schema Draft 2020-12 | manifest、stage、decision、trace、rule／component format |
+| Target Product API | package内OpenAPI 3.1系＋外部JSON Schema | mock UIと将来backendのconsumer contract |
+| Forma Service API | Forma側OpenAPI 3.1系＋外部JSON Schema | Formaのrequest、stage、review、export操作 |
+| Behavioral conformance | executable vector | digest、dependency invalidation、generation、mock、export |
+
+公開済み`contract-v1.0.0-rc.*`はimmutableな履歴として維持するが、新実装はv1互換adapterを持たない。
+replacement contractは`contracts/next`で開発し、新しいmajorへ固定する。
+
+```text
+contracts/next/
+├─ schemas/
+│  ├─ package/
+│  ├─ stage/
+│  ├─ design/
+│  └─ errors/
+├─ forma-service/
+│  └─ openapi.yaml
+├─ conformance/
+└─ examples/
+```
+
+Target Product APIは各draft workspace／Design Seed Package内の`api/openapi.yaml`と`api/schemas/`を正本setとし、
+Forma repositoryのService API contractへ混在させない。Target Product APIをGo domain modelから生成しない。
+
+JSON body shape、OpenAPIとの責務分離、format assertion、release-local reference等の共通profileは
+[ADR-0011](decisions/ADR-0011-json-schema-and-openapi-contract-authority.md)を適用する。
+
+## Target OpenAPI and mock generation
+
+```text
+Interaction
+  → Capability
+  → api/openapi.yaml
+       ├─ api/schemas/*.schema.json
+       ├─ generated TypeScript client
+       ├─ generated validator
+       ├─ generated mock handler
+       └─ schema-valid examples / scenarios
+              ↓
+         Integrated Mock Screen
+```
+
+export gateは次を検証する。
+
+- 全UI capabilityが一つ以上の`operationId`へtraceする。
+- 全target operationがscreen／flowまたは明示的product rationaleへtraceする。
+- mock responseとscenarioがOpenAPI schemaへ適合する。
+- generated sourceの再生成差分がない。
+- screenがgenerated client／conformant adapterを迂回しない。
+- OpenAPI diffで影響するscreen、state、componentを列挙できる。
 
 ## Public ports
 
-### Contract port
-
-- `DesignRequest v1`
-- `DesignBundleManifest v1`
-- `ExperienceContract v1`
-- `DesignSystemDelta v1`
-- `CapabilityRequirements v1`
-- `HumanDesignDecision v1`
-
-正本は`contracts/v1/*.schema.json`。特定言語の型はそこから生成またはconformする。
-
-### Local CLI port
+### Local CLI
 
 目標形:
 
 ```text
-forma propose --request request.json
-forma serve
+forma create --requirements requirements.md
+forma generate foundation <request-id>
+forma generate components <request-id>
+forma generate contract <request-id>
+forma generate mock <request-id>
+forma serve <request-id>
 forma status <request-id>
-forma decide <revision-id> --verdict ...
-forma export <revision-id>
-forma verify --bundle ... --implementation ...
+forma decide <stage-revision-id> --verdict ...
+forma export <package-revision-id> --format zip
+forma verify <design-seed.zip>
 ```
 
-### Service port
+具体command名はCLI contract策定時に固定する。CLIとHTTPは同じapplication use caseを呼び、別のstage semanticsを
+持たない。
 
-目標形:
+### Forma Service API
 
-```text
-POST /v1/design-requests
-GET  /v1/design-requests/{requestId}
-GET  /v1/design-revisions/{revisionId}
-GET  /v1/design-revisions/{revisionId}/bundle
-POST /v1/design-revisions/{revisionId}/decisions
-```
+request intake、stage generation、status／artifact projection、decision、exportを提供する。具体pathはOpenAPI策定時に
+決め、planning proseへ先に固定しない。Webhook、MCP、Git provider integrationはoptional adapterである。
 
-Webhook／MCP／GitHub Appはoptional adapterであり、core contractではない。
+### Package handoff
+
+Design Seed ZIPとpackage manifestがconsumer boundaryである。Formaはconsumer repositoryへ継続的に書き込まず、
+GitHub Issue／PR／release lifecycleを公開package contractへ含めない。
 
 ## State ownership
 
-Engineが所有:
+Formaが所有:
 
-- DesignRequest
-- DesignRevision
-- DesignSystemSnapshot／Delta
-- PreviewArtifact
-- HumanDesignDecision
+- requirement source snapshot
+- stage revisionとdependency digest
+- draft workspace
+- authoring provenanceとambiguity
+- sandbox preview evidence
+- Human Design Decision
+- approved package manifestとexport artifact
 
-Consumerが所有:
+Target repositoryがexport後に所有:
 
-- product backlog
-- Issue／PR
-- implementation state
-- deployment／release
-- concrete API／DB設計
+- Design Seed file tree
+- target `api/openapi.yaml`と参照先`api/schemas/`
+- production implementation
+- Issue／PR／release
+- packageを起点とした後続design decision
 
-Consumerは`provider, requestId, revisionId, bundleDigest, status, reviewUrl`だけを投影する。内部DB共有、
-consumer DBへのdual-write、consumer lifecycle enumの流入は禁止する。
+authority transfer後にFormaとtarget repositoryが同じfileをdual-writeしない。再設計はtarget commitを新source
+snapshotとしてimportする新revisionで行う。seed commit後のmanifest／receiptは承認baselineとしてimmutableに保ち、
+現在treeとの完全一致を装わない。再承認candidateはtarget repositoryへの通常のPRとして反映する。
 
-## Deployment independence
+## Storage and deployment
 
-最初はlocal file／SQLite相当の単体modeを成立させ、その上にservice storeを追加する。storage、
-agent provider、preview renderer、source providerはport化する。runtime言語はこの境界を満たす実装詳細であり、
-contract-first milestone完了前に固定しない。
+最初は単一Go process、SQLite metadata store、workspace／content filesystemで動作させる。SQLite record、host path、
+sandbox identifierは公開contractへ出さない。approved immutable contentはdigestでaddressし、metadata transactionと
+content finalizeの失敗境界を明示する。
+
+React review UIはGo binaryへembedしても独立static hostへ配置してもよい。Design Seed workspaceのapplication／
+component harnessはuntrusted generated sourceとして別sandboxでbuild、serve、testする。Forma processと同じruntime
+権限で実行しない。
+
+## Validation strategy
+
+速い境界から順に検証する。
+
+1. Go domain／applicationのtargeted unit test
+2. JSON Schema／OpenAPI／example／scenario validation
+3. dependency、digest、approval invalidationのconformance vector
+4. template static check、generated-file drift check
+5. sandbox内component harness／application buildとtest
+6. CLI／HTTP parity test
+7. headless browserでfoundation、component、screen、API scenario、export E2E
+8. browser lifecycle、支援技術、device固有境界だけを最小headed／実deviceで確認
 
 ## Security
 
-- Source textはuntrusted product dataとして扱う。
-- authoring agentは明示されたcontextとartifact output以外へ書き込まない。
-- Previewはuntrusted scriptを実行しない隔離境界でrenderする。
-- Human Decisionのactor、time、revision、digest、rationaleを監査可能にする。
-- credential、host path、shell commandをDesign Requestから注入できない。
+- requirement text、agent output、template inputをuntrusted dataとして扱う。
+- generated workspaceはnetwork、credential、host filesystem、Forma databaseへ既定で到達できないsandboxで実行する。
+- package pathはnormalized relative pathに限定し、archive traversal、symlink escape、absolute pathを拒否する。
+- browser previewはsandbox originへ隔離し、Forma session credentialを渡さない。
+- authoring agentは明示されたsnapshotとworkspace以外へ書き込まない。
+- secret、host path、shell command、provider credential／internal configurationをDesign Seed Packageへ混入させない。
+- generated file／assetをexactly one author invocationへtraceし、license status不明のassetをexportしない。
+- decisionのactor、time、stage revision、manifest digest、rationaleを監査可能にする。
