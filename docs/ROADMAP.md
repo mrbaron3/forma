@@ -27,7 +27,8 @@ Package contract / template
 
 ## Version and historical assets
 
-- 公開済み`contract-v1.0.0-rc.*`、release tag、既存ADRを変更しない。
+- 公開済み`contract-v1.0.0-rc.*`、release tag、ADRのrationaleを変更しない。陳腐化したADRはstatusを更新して
+  `decisions/archive/`へ移す。
 - replacement contractは開発中`contracts/next`、公開時に新しいmajorへ固定する。
 - v1 document、runtime API、npm package exportsのcompatibility adapterは実装しない。
 - 既存fixtureからcanonicalization、negative validation、immutable decision等の検証意図だけを新conformance vectorへ移す。
@@ -189,17 +190,8 @@ Exit:
 
 ## Validation order
 
-各Phaseで速い検証から実境界へ進む。
-
-1. targeted domain／schema／generator test
-2. template static checkとgenerated drift check
-3. workspace／SQLite integration
-4. package build／component harness test
-5. CLI／HTTP black-box parity
-6. headless browser review／export E2E
-7. sandbox isolation、browser lifecycle、支援技術、device固有の最小headed／実device確認
-
-headlessで代替できない境界をheadless結果だけで完了扱いにしない。
+検証順序の正本は[Architecture](ARCHITECTURE.md)のValidation strategyとする。各Phaseはその順序に従い、
+速い検証から実境界へ進み、headlessで代替できない境界をheadless結果だけで完了扱いにしない。
 
 ## Existing implementation removal
 
@@ -211,7 +203,8 @@ headlessで代替できない境界をheadless結果だけで完了扱いにし�
 - immutable revision／decision
 - authoring provenance／mutation／trace violation
 
-公開済みcontract directory、release tag、ADRは削除・変更しない。
+公開済みcontract directory、release tagは削除・変更しない。ADRはrationaleを保ったまま`decisions/archive/`へ
+移す場合を除き変更しない。
 
 ## Task key
 

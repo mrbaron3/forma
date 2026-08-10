@@ -1,9 +1,10 @@
 # ADR-0007: MCPはcore contractにせず、DF-008後のoptional authoring adapterとする
 
-- Status: Accepted
+- Status: Archived — v1のDF-008／Phase 4を前提とした判断（2026-08-10）。「MCPはoptional adapterでありcore
+  contractではない」という方針は現行[ARCHITECTURE](../../ARCHITECTURE.md) Public portsが継承する
 - Date: 2026-07-31
-- 関連: [ARCHITECTURE](../ARCHITECTURE.md)（Public ports）、[ROADMAP](../ROADMAP.md) Phase 4、
-  [ADR-0001](ADR-0001-standalone-repository-and-open-contract.md)、
+- 関連: [ARCHITECTURE](../../ARCHITECTURE.md)（Public ports）、[ROADMAP](../../ROADMAP.md) Phase 4、
+  [ADR-0001](../ADR-0001-standalone-repository-and-open-contract.md)、
   [ADR-0002](ADR-0002-content-addressed-design-bundle.md)、
   [ADR-0005](ADR-0005-hero-scenario-mock-first-preview.md)、
   [DF-008 #6](https://github.com/mrbaron3/designflow/issues/6)

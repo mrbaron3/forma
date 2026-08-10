@@ -68,9 +68,9 @@ Design Seed Packageは少なくとも次を含む。
 
 ## 参照
 
-- [ADR-0002: content-addressed Design Bundle](ADR-0002-content-addressed-design-bundle.md)
+- [ADR-0002: content-addressed Design Bundle（archived）](archive/ADR-0002-content-addressed-design-bundle.md)
 - [ADR-0003: Human Design Decision](ADR-0003-human-design-authority.md)
-- [ADR-0005: mock-first hero scenario](ADR-0005-hero-scenario-mock-first-preview.md)
+- [ADR-0005: mock-first hero scenario（archived）](archive/ADR-0005-hero-scenario-mock-first-preview.md)
 - [デザインハーネスまとめ](https://zenn.dev/012/scraps/0a19814b00d4e4)
 - [Design Tokens Format Module](https://tr.designtokens.org/format/)
 - [ADR-0014: provider-neutral authoring](ADR-0014-provider-neutral-authoring-and-asset-provenance.md)

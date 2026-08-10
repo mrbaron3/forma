@@ -1,6 +1,7 @@
 # ADR-0008: 同期artifact単位のAuthoringBackend port
 
-- 状態: Accepted
+- 状態: Superseded — [ADR-0014](../ADR-0014-provider-neutral-authoring-and-asset-provenance.md)のstage別
+  authoring portとinvocation provenanceが置換（2026-08-10）
 - 日付: 2026-07-31
 
 ## 決定

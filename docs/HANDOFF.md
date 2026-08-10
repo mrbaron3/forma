@@ -100,7 +100,10 @@ handler、scenarioを生成する。database、service topology、cloud等のbac
 
 ### Historical boundary
 
-- 公開済み`contract-v1.0.0-rc.*`と既存ADRを変更しない。
+- 公開済み`contract-v1.0.0-rc.*`とADRのrationaleを変更しない。
+- v1前提で陳腐化したADR-0002／0004／0005／0007／0008／0009（immutable revision state）はstatusを更新して
+  [decisions/archive/](decisions/archive/README.md)へ移した。現役はADR-0001／0003／0009（name Forma）と
+  ADR-0010以降。
 - 新実装はv1 compatibility adapterを持たない。
 - replacement contractは`contracts/next`から新majorへ固定する。
 - 既存JavaScript codeは移植せず、検証意図をconformance vectorへ移してから削除する。

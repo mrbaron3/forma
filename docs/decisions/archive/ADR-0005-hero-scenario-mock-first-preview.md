@@ -1,9 +1,9 @@
 # ADR-0005: 利用想定をhero scenario（一括基盤設計・モック先行preview）として固定する
 
-- Status: Accepted
+- Status: Superseded — [ADR-0012](../ADR-0012-executable-design-seed-package.md)がmock-firstを段階型stage modelへ拡張（2026-08-10）
 - Date: 2026-07-30
 - 関連: [Issue #11](https://github.com/mrbaron3/designflow/issues/11)、
-  [NORTH_STAR](../NORTH_STAR.md)、[ROADMAP](../ROADMAP.md)
+  [NORTH_STAR](../../NORTH_STAR.md)、[ROADMAP](../../ROADMAP.md)
 
 ## Context
 

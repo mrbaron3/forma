@@ -1,6 +1,6 @@
 # ADR-0002: 設計成果物をcontent-addressed Design Bundleとして配布する
 
-- 状態: 採択
+- 状態: Superseded — 配布単位は[ADR-0012](../ADR-0012-executable-design-seed-package.md)のDesign Seed Packageが置換（2026-08-10）
 - 日付: 2026-07-25
 
 ## 文脈

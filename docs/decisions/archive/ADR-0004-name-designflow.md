@@ -1,6 +1,6 @@
 # ADR-0004: 製品名とrepository名をDesignflowへ統一する
 
-- 状態: 採択
+- 状態: Superseded — [ADR-0009](../ADR-0009-name-forma.md)が製品名をFormaへ変更（2026-08-01）
 - 日付: 2026-07-25
 
 ## 文脈

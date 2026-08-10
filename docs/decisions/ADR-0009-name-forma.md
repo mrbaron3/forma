@@ -2,7 +2,7 @@
 
 - 状態: 採択
 - 日付: 2026-08-01
-- 置換対象: [ADR-0004](ADR-0004-name-designflow.md)
+- 置換対象: [ADR-0004](archive/ADR-0004-name-designflow.md)
 
 ## 文脈
 

@@ -85,7 +85,6 @@ templates/design-seed/
 ## 参照
 
 - [ADR-0001: 独立repositoryと公開contract](ADR-0001-standalone-repository-and-open-contract.md)
-- [ADR-0009: immutable revision state](ADR-0009-immutable-revision-state.md)
 - [Go `net/http` ServeMux](https://pkg.go.dev/net/http#ServeMux)
 - [Vite Guide](https://vite.dev/guide/)
 - [React Router: Picking a Mode](https://reactrouter.com/start/modes)

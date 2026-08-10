@@ -2,7 +2,9 @@
 
 ## Status
 
-Accepted — 2026-08-03
+Accepted — 2026-08-03。Superseded — 2026-08-10、immutable revisionとdigest-bound decisionの現行modelは
+[ADR-0012](../ADR-0012-executable-design-seed-package.md)のstage revisionが置換する。v1 contractの検証意図は
+conformance vectorへ移してから既存実装を削除する（Roadmap）。
 
 ## Context
 

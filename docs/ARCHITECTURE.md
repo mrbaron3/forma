@@ -277,16 +277,19 @@ component harnessはuntrusted generated sourceとして別sandboxでbuild、serv
 
 ## Validation strategy
 
-速い境界から順に検証する。
+検証順序の正本。速い境界から順に検証する。
 
 1. Go domain／applicationのtargeted unit test
 2. JSON Schema／OpenAPI／example／scenario validation
 3. dependency、digest、approval invalidationのconformance vector
 4. template static check、generated-file drift check
-5. sandbox内component harness／application buildとtest
-6. CLI／HTTP parity test
-7. headless browserでfoundation、component、screen、API scenario、export E2E
-8. browser lifecycle、支援技術、device固有境界だけを最小headed／実deviceで確認
+5. workspace／SQLite integration test
+6. sandbox内component harness／application buildとtest
+7. CLI／HTTP parity test
+8. headless browserでfoundation、component、screen、API scenario、export E2E
+9. sandbox isolation、browser lifecycle、支援技術、device固有境界だけを最小headed／実deviceで確認
+
+headlessで代替できない境界をheadless結果だけで完了扱いにしない。
 
 ## Security
 

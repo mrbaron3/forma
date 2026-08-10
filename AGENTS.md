@@ -42,7 +42,8 @@ particular consumer repository.
 - Product and planning prose is written in Japanese; schema identifiers and protocol fields remain
   in English.
 - Record durable architectural decisions in `docs/decisions/`; do not silently rewrite their
-  rationale.
+  rationale. Move superseded or obsolete ADRs to `docs/decisions/archive/` with an updated status
+  line and intact rationale.
 - Keep `docs/DESIGN_SEED_PACKAGE.md` authoritative for output layout, stage gates, manifest, review,
   export, and handoff semantics.
 - Keep `docs/HANDOFF.md` current whenever a milestone, decision, blocker, or next action changes.
