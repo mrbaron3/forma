@@ -2,167 +2,221 @@
 
 ## 進め方
 
-契約→決定論core→人間review→authoring→配布→conformanceの順で進める。Formaはconsumerの
-adapter、Issue、API設計、dogfood実装を所有しない。外部consumerは固定されたcontract releaseとfixtureだけを
-入力にして、Formaの実装完了を待たずに並行開発できる。
-
-力点はhero scenario（新サービス基盤の一括設計とモック先行preview —
-[ADR-0005](decisions/ADR-0005-hero-scenario-mock-first-preview.md)）に置き、
-DF-006→DF-007→preview renderer（受け皿はDF-004／DF-005）を優先経路とする。
-conformance（DF-009／Phase 5）は将来scopeとしてroadmapに残すが、v0完了条件に含めない。
-
-## 並行開発境界
-
-- 公開境界: `contracts/v1`、example bundle、negative fixture、contract release tag
-- Formaが所有: bundle生成・revision・preview・decision・authoring・conformance
-- consumerが所有: contract取得、adapter、product planning、API、Issue、実装、release
-- 禁止: cross-repository Issue dependency、共有DB、内部型import、相手repositoryへの書込み
-- 互換性確認: 各repositoryが同じtagのfixtureを独立実行し、統合時はblack-box conformanceだけを行う
-
-最初の固定境界は`contract-v1.0.0-rc.1`とする。RC内のbreaking changeは新しいRC tagで公開し、
-既存tagを書き換えない。
-
-## Phase 0 — Contract bootstrap
-
-目的: 別team／別言語が同じ意味で実装できる境界を固定する。
-
-- [x] standalone repository
-- [x] 製品／repository／CLI／現行schema namespaceをFormaへ統一（ADR-0009）
-- [x] North Star／Purpose–Effort–Visibility
-- [x] bounded contextsとstate ownership
-- [x] Design Request／Experience／Design System Delta／Capability／Bundle／Decision schema v1 draft
-- [x] valid exampleとcross-artifact integrity check
-- [x] ADR-0001..0004
-- [x] canonicalizationとdigest fixture
-- [x] `contract-v1.0.0-rc.1` tagを公開
-
-Exit:
-
-- `npm test`がgreen
-- consumer固有型をimportせずexample bundleを検証可能
-- immutable contract RCをremoteから取得可能
-
-## Phase 1 — Deterministic revision core
-
-目的: agentなしでrequest→revision→decision→approved bundleが成立する。
-
-- Request validation
-- artifact reference integrity
-- canonical serialization／SHA-256 digest
-- immutable revision state machine
-- approval invalidation
-- local repository store
-- CLI import／status／decide／export
-
-Exit:
-
-- process restart後も同じrevision／decisionを復元
-- bundle変更で旧approvalがstale
-- file modeだけで一巡可能
-
-## Phase 2 — Human review surface
-
-目的: raw JSONを開かず設計を理解・比較・判断できる。
-
-- purpose／flow／effort／attention view
-- 視覚モックとして成立するsafe HTML preview（annotated wireframeは補助表示であり、単独ではexitを満たさない）
-- token／component／pattern delta
-- capability requirements
-- requirement trace
-- revision diff
-- approve／request-changes／reject
-
-Exit:
-
-- reviewerがモックpreviewを第一確認面として「どのようなデザインになるか」を判断できる
-- reviewerが1画面から判断根拠と変更差分を確認
-- decisionがrevision digestへ束縛
-- keyboard／focus／status announcementを含むWCAG 2.2 AA相当のreview UI
-
-## Phase 3 — Authoring adapters
-
-目的: provider非依存にExperience／Design System／Capability artifactを生成する。
-
-- `AuthoringBackend` port
-- Experience Author persona
-- Design System Steward persona
-- ambiguity／revision feedback loop
-- read-only context snapshot
-- output schema／provenance validation
-
-Exit:
-
-- mock backendと少なくとも1 real providerで同じcontractを満たす
-- malformed／misrouted／source-mutating authoringをfail closed
-
-## Phase 4 — Distribution and black-box API
-
-目的: consumerを知らずにCLI／HTTPの同じ意味論を提供する。
-
-- versioned CLI
-- OpenAPI service contract
-- local file mode
-- status／bundle export
-- health／readiness
-- conformance fixture distribution
-
-Exit:
-
-- CLIとHTTPが同じrequest/revision/digest/decision semanticsを持つ
-- consumer repositoryなしでE2Eを実行可能
-- packageまたはrelease artifactからcontractとfixtureを取得可能
-
-## Phase 5 — Conformance and reuse（将来scope — v0完了条件に含めない）
-
-目的: 設計を作って終わらず、任意の実装をApproved Bundleへ照合できる。hero scenario（ADR-0005）の
-確定により本Phaseはv0の力点から外すが、North Starの価値としてroadmapに保持する。
-
-- token resolver／drift lint
-- component／state coverage
-- browser state evidence input
-- visual evidence input
-- accessibility evidence input
-- capability contract evidence input
-
-Exit:
-
-- implementation driftを理由付きで検出
-- 固有consumerのlifecycleをimportせずconformance reportを生成
-
-## 独立task DAG
+Formaは既存JavaScript実装との互換性を持たない全面再実装を行う。backendはGo、authoring／review UIは
+React／TypeScriptとする。ただしruntime skeletonから先に広げず、人間が受け取るDesign Seed Packageを最小の
+end-to-end sliceとして成立させる。
 
 ```text
-contract-v1.0.0-rc.1（DF-001 canonical digest完了）
-  ├─ DF-002 revision state ─────▶ DF-003 local store / CLI
-  ├─ DF-004 review projection ─▶ DF-005 human decision UI
-  └─ DF-006 authoring port ─────▶ DF-007 provider adapters
-
-DF-003 + DF-005 ─▶ DF-008 distribution API
-DF-003 + DF-004 ─▶ DF-009 conformance
+Package contract / template
+  → Design Foundation
+  → Component Harness
+  → UI-facing OpenAPI / generated mock
+  → Production Authoring / Visual Assets
+  → Integrated Mock / browser approval
+  → Exact-payload ZIP export
+  → Target repository / Integrator handoff
 ```
 
-DF-002、DF-004、DF-006は同時着手できる。
+判断の正本:
 
-`DF-NNN`は改名前に割り当てた安定IDとして維持する。改名後の新規taskは`FM-NNN`を使う。
+- [ADR-0010: GoモジュラーモノリスとReact SPA](decisions/ADR-0010-go-modular-monolith-and-react-spa.md)
+- [ADR-0011: JSON SchemaとOpenAPIの契約責務](decisions/ADR-0011-json-schema-and-openapi-contract-authority.md)
+- [ADR-0012: 実行可能なDesign Seed Package](decisions/ADR-0012-executable-design-seed-package.md)
+- [ADR-0013: Forma-owned UI-facing target OpenAPI](decisions/ADR-0013-forma-owned-target-openapi.md)
+- [Design Seed Package specification](DESIGN_SEED_PACKAGE.md)
 
-| Key | Issue | Work | Depends on | Completion evidence |
-|---|---|---|---|---|
-| DF-001 | 完了 | Canonical bundle digest | contract draft | source/artifact/token/bundle fixture検証 |
-| DF-002 | [#8](https://github.com/mrbaron3/forma/issues/8) | Revision／decision state machine | DF-001 | stale approval／supersede test |
-| DF-003 | [#3](https://github.com/mrbaron3/forma/issues/3) | Local repository and CLI | DF-002 | restart recovery E2E |
-| DF-004 | [#9](https://github.com/mrbaron3/forma/issues/9) | Review projection | contract RC | purpose／effort／attention／trace表示 |
-| DF-005 | [#2](https://github.com/mrbaron3/forma/issues/2) | Human decision UI | DF-004 | request-changes→new revision→approve |
-| DF-006 | [#4](https://github.com/mrbaron3/forma/issues/4) | AuthoringBackend port | contract RC | mock backend contract test |
-| DF-007 | [#5](https://github.com/mrbaron3/forma/issues/5) | Provider adapters | DF-006 | malformed／mutation fail-closed |
-| DF-008 | [#6](https://github.com/mrbaron3/forma/issues/6) | CLI／HTTP distribution | DF-003, DF-005 | black-box parity E2E |
-| DF-009 | [#7](https://github.com/mrbaron3/forma/issues/7) | Implementation conformance | DF-003, DF-004 | drift reason fixture |
+## Version and historical assets
 
-## 未決事項
+- 公開済み`contract-v1.0.0-rc.*`、release tag、既存ADRを変更しない。
+- replacement contractは開発中`contracts/next`、公開時に新しいmajorへ固定する。
+- v1 document、runtime API、npm package exportsのcompatibility adapterは実装しない。
+- 既存fixtureからcanonicalization、negative validation、immutable decision等の検証意図だけを新conformance vectorへ移す。
+- Design Seed Package format、target template、Forma Service APIを別versionとして扱う。
 
-- reference runtime言語とUI stack
-- local storeをdirectory log／SQLiteのどちらにするか
-- preview rendererの隔離方式
-- human reviewer identityをlocal／GitHub／OIDCのどこまで扱うか
-- design-system sourceをgit、registry、serviceのどれとして始めるか
+## Phase R0 — Package baseline
 
-これらはconsumerの実装計画とは独立に、Forma内のADRとして決める。
+目的: 何を生成し、何をbrowserで承認し、何をZIPへ含めるかを実行可能な最小templateで固定する。
+
+- [x] Go／React runtime ADR
+- [x] JSON Schema／OpenAPI authority ADR
+- [x] Design Seed Package ADR／specification
+- [x] UI-facing target OpenAPI ownership ADR
+- [ ] `contracts/next`のpackage manifest／stage revision／decision schema
+- [ ] Design Seed最小template
+- [ ] templateの`AGENTS.md`、`DESIGN.md`、package manifest
+- [ ] payload file inventory／canonical manifest digest／detached approval receipt／ZIP round-trip prototype
+- [ ] package verify CLI prototype
+- [ ] repository共通validation command
+
+Exit:
+
+- fixture packageをnetwork accessなしでvalidateできる
+- browser review対象payloadとexport payloadのdigest集合が一致する
+- ZIPのtimestamp／compression差でpackage identityが変わらない
+- absolute path、traversal、symlink escape、未列挙fileを拒否する
+- packageを展開してdocumented commandでbuild／testできる
+
+## Phase R1 — Design Foundation vertical slice
+
+目的: 要求仕様からtokenとdesign ruleを生成し、人間がbrowserで理解・修正・承認できる。
+
+- Go module、CLI、SQLite、workspace storeの最小skeleton
+- application-owned stage authoring portとdeterministic mock adapter
+- Forma Service APIの最小OpenAPI／JSON Schema contract
+- OpenAPI生成TypeScript clientとCLI／HTTP application parity
+- React review shellの最小skeleton
+- Requirements Framing contract
+- `DESIGN.md` authoring
+- version固定したDTCG Format Module profileによるbase／semantic token authoring
+- rule／decision／exception authoring
+- Foundation preview: palette、type scale、spacing、radius、elevation、motion、theme、copy
+- Foundation revision／digest／decision
+
+Exit:
+
+- requirement→Foundation candidate→request-changes→new revision→approveを一巡する
+- token reference、rule／decision reference、contrastを検証する
+- approved Foundation fileを変更せず次stageへ渡す
+- process restart後もrevision、decision、workspace provenanceを復元する
+- ReactとCLIが同じapplication semanticsをForma Service API／port経由で利用する
+
+## Phase R2 — Component Harness
+
+目的: approved Foundationから再利用可能componentと全stateの実行証拠を作る。
+
+- component contract schema
+- variant、state axis、constraint、a11y、token ref、required test
+- React component template
+- component harness／Storybook default adapter
+- required state story generation
+- keyboard、focus、accessible name、interaction、visual test
+- component diff／review projection
+- Foundation digestへの依存とstale propagation
+
+Exit:
+
+- Button、form control、navigation等の最小component setがsemantic tokenだけを使う
+- loading、disabled、focus、error、permission、long content、narrow viewport等の該当stateをreviewできる
+- component contractとstory／test coverageの欠落をfail closedにする
+- Foundation変更で依存するComponent Harness approvalがstaleになる
+
+## Phase R3 — Product Contract and generated mock boundary
+
+目的: UI interactionをconcrete OpenAPIへ写し、schema-validなmockを生成する。
+
+- Experience Authorのcapability contract
+- API Contract Designer authoring port
+- target `api/openapi.yaml`と`api/schemas/*.schema.json`
+- capability／interaction／`operationId` trace
+- OpenAPI lint、example／scenario validation
+- TypeScript client／validator／mock handler generation
+- success、empty、validation、unauthorized、forbidden、conflict、retryable failure、slow response scenario
+- OpenAPI diff projection
+
+Exit:
+
+- 全UI capabilityがoperationへ完全traceする
+- target operationにscreen／flowまたは明示的rationaleがある
+- example／scenarioがrequest／response schemaへ適合する
+- generated sourceを再生成して差分がない
+- Forma Service API、Target Product API、Servo Control APIを混在させない
+
+## Phase R4 — Integrated Mock and package approval
+
+目的: component harnessとtarget OpenAPIを使う主要screen／flowをbrowserで確認し、同じpayloadをZIP出力する。
+
+- screen／route／flow authoring
+- version固定したAuthoringProfileとroute validation
+- 少なくとも一つのreal production authoring adapter
+- generated fileごとのexactly-one invocation provenance
+- optional visual asset catalog、source／license／purpose／trace、binary digest
+- generated client／mock handlerだけを使うdata boundary
+- scenario、viewport、theme、locale switcher
+- element→component→interaction→operation→response UI state trace
+- screen／flow／OpenAPI／component diff
+- sandbox build／serve／test
+- package manifest／detached approval receipt assembly
+- digest-bound Package Approval
+- exact-payload ZIP export／verify
+
+Exit:
+
+- 主要flowをsuccessと主要failure scenarioでheadless browser実行できる
+- fixture requirementからreal providerでFoundation→Component→Product Contract→Integrated Mockを生成できる
+- provider unavailable、wrong route、implicit fallback、source mutation、unknown asset licenseをfail closedにする
+- literal token、local component fork、direct fetch、schema外fixtureを検出する
+- reviewerがraw JSONなしでFoundation、component、screen、API差分を判断できる
+- approval後のworkspace mutationを拒否する
+- browserで確認したpayload digest集合とZIP展開後のpayload集合が完全一致する
+
+## Phase R5 — Repository and integrator handoff
+
+目的: Design Seed Packageをtarget repositoryの初期authorityとして安全に引き渡す。
+
+- repository seed metadataとimport provenance
+- target commitをsource snapshotとして再importするrevision path
+- provider／consumer非依存のpackage manifest／digest integrator fixture
+- target `api/openapi.yaml`と参照schemaを単一contract setとして検証するhandoff test
+- material API change→Forma re-review policy
+- package format／template release artifact
+
+Exit:
+
+- Forma runtimeなしでtarget repositoryをbuild／preview／testできる
+- generic integratorがTarget Product APIを複製せずtarget contract setから実装を開始できる
+- target repository化後、Formaが同じfile treeを継続writeしない
+- 特定target commitから新しいForma revisionを再現可能に開始できる
+- seed後のrepository diffを旧approvalのstale状態として検出し、manifest／receiptを書き換えない
+- consumer Issue／PR／release lifecycleをForma contractへ流入させない
+
+Servo等のlive adapter、consumer固有dogfood、consumer repositoryのIssue／PRは各consumerが所有し、本Phaseの
+dependencyやcompletion evidenceにしない。
+
+## Future — Production implementation conformance
+
+v0完了後の独立scopeとして、target repositoryのimplementation evidenceを承認baselineへ照合する。Package archiveの
+完全性、seed後のstale diff、production implementation conformanceを同一概念にしない。
+
+- token／component／state／accessibility／visual evidence coverage
+- Target Product API implementation conformance
+- approved baseline、current commit、evidence revisionの明示
+- consumer lifecycleをimportしないgeneric report
+
+Exit:
+
+- 任意のtarget implementation driftをmissing／stale／wrong revisionへ理由付きで分類できる
+- consumer repositoryへ書き込まず、提供されたsnapshot／evidenceだけでreportを再現できる
+
+## Validation order
+
+各Phaseで速い検証から実境界へ進む。
+
+1. targeted domain／schema／generator test
+2. template static checkとgenerated drift check
+3. workspace／SQLite integration
+4. package build／component harness test
+5. CLI／HTTP black-box parity
+6. headless browser review／export E2E
+7. sandbox isolation、browser lifecycle、支援技術、device固有の最小headed／実device確認
+
+headlessで代替できない境界をheadless結果だけで完了扱いにしない。
+
+## Existing implementation removal
+
+既存`src/*.js`、Node runtime test、`package.json` exportsは新runtimeの互換対象ではない。Phase R0で次の検証意図を
+新conformanceへ移し、共通validation入口が成立した後に削除する。
+
+- canonical JSON／digest
+- positive／negative schema fixture
+- immutable revision／decision
+- authoring provenance／mutation／trace violation
+
+公開済みcontract directory、release tag、ADRは削除・変更しない。
+
+## Task key
+
+旧roadmapの`DF-NNN` issueは履歴として扱い、新しい依存関係には使用しない。全面再実装taskは`FM-NNN`を使用し、
+Phase R0から新しいDAGを作る。consumer固有task、cross-repository Issue dependency、共有DB、dual-writeを作らない。
+
+keyは`FM-RPP`（`R`はPhase、`PP`はPhase内連番）を基準とし、全taskは`FM-000` Epicへ属する。Future scopeは
+`FM-9PP`を使う。具体issue linkと現在の次taskは[HANDOFF](HANDOFF.md)で管理する。

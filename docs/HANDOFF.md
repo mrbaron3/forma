@@ -1,108 +1,138 @@
 # Handoff
 
-最終更新: 2026-08-03
+最終更新: 2026-08-10
 
 ## 現在地
 
-DF-002としてimmutable revision／decision state machineを追加した。active v1の5 schema、固定
-`contract-v1.0.0-rc.3`、pure transition、material fingerprint、approval validity、feedback継承、
-canonical snapshot serialize／restoreを実装した。判断は
-[ADR-0009](decisions/ADR-0009-immutable-revision-state.md)を正本とする。永続化とconsumer lifecycleは
-引き続きscope外である。revision stateはmanifest非埋込、commandは`operation` discriminator、
-feedbackは後継revisionの`feedbackRefs`、snapshotはrevision／decisionだけを持つclosed contractである。
+Formaのproduct outputを全面的に再定義した。主成果物は抽象JSON Bundleではなく、要求仕様から段階的に生成され、
+人間がbrowserで承認したpayload file treeをそのままZIP／target repositoryへ渡す、実行可能な
+**Design Seed Package**である。
 
-ISSUE-0001として同期 `AuthoringBackend` portと決定論的mockを追加した。rc.2では
-`AuthoringContextSnapshot`、`AuthoringAmbiguityReport`、manifest provenanceを公開し、schema／trace／
-provenance／source mutationをrevision化前に閉じて拒否する。判断は
-[ADR-0008](decisions/ADR-0008-synchronous-authoring-port.md)を正本とする。
+生成順はRequirements Framing→Design Foundation→Component Harness→UI-facing OpenAPI→Integrated Mock→
+Package Approval／Exportとする。tokenとdesign principleをcomponentより先に、component contractとOpenAPIを
+screenより先に固定する。
 
-レビュー修正では、公開artifact全体（`invocationKey` と共通形式の `ambiguities` を含む）を
-field削除なしでschema検証する。不正なDesign Requestも例外ではなく `schema-invalid` に閉じ、
-snapshot entry全体の変化、artifact側invocation key重複、manifestとの集合不一致、および
-experience内参照切れを検出する。rc.2の新規schemaは固定release directory内で参照解決できる。
-標準 `npm test` はcontract checkerとAPI testの両方を実行する。
-API contract修正では、manifestにpreviewやtokenなどauthoring対象外のartifactが併存しても、
-著述したartifactとprovenance recordの集合だけを過不足なく照合する。またmutation fixtureは
-呼出し元のread-only snapshotを変更せず、source refの差分をexternal id単位で報告する。
-current-headレビューでは、snapshot digestを内容から再計算するprovenance検証、kind別に閉じた
-failure detail、`[PR-INTENT]`へ直接束縛したAPI testを追加した。1 file = 1 violationの
-fixtureはkindだけでなく固有のerror evidenceまで持つ実行ベクトルとして全件をtestから消費する。
-rc.2は完全なmanifest schemaとrelease-local参照だけでcompileするtestを持つ。
-`deriveCapabilities` は明示された `experience` だけをinteraction traceの入力に使う。
-[#16](https://github.com/mrbaron3/forma/issues/16)として、その `requestId` がDesign Requestと
-一致しない別lineageのExperienceも `trace-broken` として拒否する。
-snapshotのaddressable collectionではentry ID（source refは `externalId`）を一意に保ち、
-`validateSnapshotEntryIds` が内容の異なる重複も `schema-invalid` として拒否する。
-[#15](https://github.com/mrbaron3/forma/issues/15)としてmanifest provenanceを
-`invocationKey` keyed objectにし、1件以上をschemaで必須化してruntime helperに依存せず
-欠落と重複をcontract境界で閉じる。
-[#14](https://github.com/mrbaron3/forma/issues/14)としてbundle pathをplatform-neutralな
-正規化済み相対pathに限定し、consumer側のroot内resolve確認も公開contract文書へ固定した。
+Formaはtarget productのUI-facing OpenAPIまで出力する。Experience Authorはcapabilityを記述し、Forma内の
+API Contract Designerがconcrete operationへ変換する。Mock BuilderはOpenAPIからTypeScript client、validator、
+handler、scenarioを生成する。database、service topology、cloud等のbackend内部設計はscope外である。
 
-2026-08-01、製品名・repository名を`Forma`／`forma`へ変更した
-（[ADR-0009](decisions/ADR-0009-name-forma.md)）。現行schema namespaceは
-`urn:forma:schema:*`とし、固定release `contract-v1.0.0-rc.2`以前の
-`urn:designflow:schema:*`はimmutableな履歴として維持する。既存の`DF-NNN` task keyも維持し、
-新規taskには`FM-NNN`を使う。Phase 0 Contract bootstrapは完了し、
-公開contract draft、North Star、設計原則、architecture、roadmap、ADR、contract検証scriptがある。
-remoteはpublicの`https://github.com/mrbaron3/forma`、現在の固定境界は
-`contract-v1.0.0-rc.2`（rc.1は不変）。
-tracking Epicは[#1](https://github.com/mrbaron3/forma/issues/1)。
+## 新しい正本
 
-2026-07-30、利用想定をhero scenarioとして固定した
-（[ADR-0005](decisions/ADR-0005-hero-scenario-mock-first-preview.md)、
-[#11](https://github.com/mrbaron3/forma/issues/11)）: 新サービス基盤の一括設計・人間は承認者・
-モック先行preview。優先経路はDF-006→DF-007→preview renderer（受け皿DF-004／DF-005）、
-conformance（DF-009）は将来scope。
+- [North Star](NORTH_STAR.md)
+- [Design Seed Package](DESIGN_SEED_PACKAGE.md)
+- [Product Design Principles](PRINCIPLES.md)
+- [Architecture](ARCHITECTURE.md)
+- [Roadmap](ROADMAP.md)
+- [ADR-0010: GoモジュラーモノリスとReact SPA](decisions/ADR-0010-go-modular-monolith-and-react-spa.md)
+- [ADR-0011: JSON SchemaとOpenAPIの契約責務](decisions/ADR-0011-json-schema-and-openapi-contract-authority.md)
+- [ADR-0012: 実行可能なDesign Seed Package](decisions/ADR-0012-executable-design-seed-package.md)
+- [ADR-0013: Forma-owned target OpenAPI](decisions/ADR-0013-forma-owned-target-openapi.md)
+- [ADR-0014: provider-neutral production authoring](decisions/ADR-0014-provider-neutral-authoring-and-asset-provenance.md)
 
-このrepositoryはForma自身のtaskだけを所有する。特定consumerのadapter、Issue、API設計、
-Dashboard実装を待たず、固定contract releaseに対して単独で進める。
+新実装のGo／React skeleton、`contracts/next`、Design Seed templateはまだ作成していない。現在の次工程は
+Roadmap Phase R0である。
 
 ## 確定した判断
 
-- integrationはJSON contract／content-addressed bundle／CLIまたはHTTPだけを通す。
-- Purpose–Effort–Visibilityと全element／placementの理由traceを設計上位契約とする。
-- UXはBackend Capability Requirementを著述し、具体API設計はconsumer側へ残す。
-- Human Design Decisionをrevision digestへ束縛する。
-- DB共有、dual-write、cross-repository Issue dependencyを禁止する。
-- `ExperienceContract`はartifact名、`Forma`は製品名とする。
-- 現行schema namespaceは`urn:forma:schema:*`。固定releaseの旧namespaceは変更しない（ADR-0009）。
-- 既存task keyは`DF-NNN`を維持し、新規taskには`FM-NNN`を使う。
-- hero scenarioは一括基盤設計＋モック先行preview。governance artifactはrequiredを維持したまま
-  authoring agentが全量著述し、人間へ著述コストを求めない（ADR-0005）。
+### Product output
 
-## 再開点
+- 主成果物は単独でbuild、preview、testできるDesign Seed file treeである。
+- ZIPはtransportであり、approval identityはcanonical package manifest digestである。
+- reviewしたpayloadをapproval後に再生成せず、同じfile bytesとdetached approval receiptをarchiveする。
+- stage revisionは前段digestを持ち、前段material changeは依存する後段approvalをstaleにする。
+- packageは`AGENTS.md`、`DESIGN.md`、token、component contract／implementation／story／test、rule、decision、
+  normalized requirements／trace、target OpenAPI／JSON Schema、scenario、generated client／mock、optional visual asset、
+  screen、manifestを含む。
 
-1. `contract-v1.0.0-rc.2`の追加契約と`npm test`を確認する。
-2. `docs/ROADMAP.md`の独立task DAGを読む。
-3. DF-002、DF-004、DF-006から最大3件を並行着手する。
-4. consumer固有要求を見つけた場合、このrepositoryへ実装せず公開contractで表現可能かだけを判断する。
+### OpenAPI
+
+- Forma Service API、Target Product API、Servo Control APIを別contractとして扱う。
+- Target Product APIはDesign Seed Package内`api/openapi.yaml`と参照先`api/schemas/`を正本setとする。
+- Go domain modelからTarget Product APIを生成しない。
+- screenはOpenAPI生成client／mock boundaryを迂回しない。
+- target repository化後はtarget repositoryが唯一のwriterになり、Servoは同じcontract setを実装入力として使う。
+- ServoへOpenAPIのcopyを置かず、変更はtarget repositoryへのPRで行う。
+- approved UI-facing operation／schemaのmaterial changeはFormaの新revisionとして再reviewする。
+
+### Runtime
+
+- Forma backendはGoのモジュラーモノリスとする。
+- authoring／review UIはReact／TypeScript、Vite、React Router Data ModeのSPAとする。
+- HTTP adapterは標準`net/http`／`ServeMux`から開始する。
+- metadataはSQLite、draft／approved contentはworkspace／content storeから開始する。
+- generated Design Seed workspaceはuntrusted sourceとして別sandboxでbuild／serve／testする。
+- frontend／contract buildはNode.js／npmへ固定し、production backend runtimeには含めない。
+- TypeSpec、Go web framework、full-stack frontend framework、SSR、Bun runtime／lockfile、microserviceは初期構成に
+  採用しない。
+
+### Authoring
+
+- stage／artifact roleごとのapplication-owned portをprovider adapterが実装する。
+- Design Requestはproviderを指定せず、version固定したAuthoringProfileがrouteを所有する。
+- deterministic mockと少なくとも一つのproduction adapterを同じconformance suiteへ通す。
+- generated fileはexactly one invocationへtraceし、implicit fallbackと複数writerを禁止する。
+- optional visual assetはsource、license／usage status、purpose、requirement／element、invocationへtraceする。
+
+### Historical boundary
+
+- 公開済み`contract-v1.0.0-rc.*`と既存ADRを変更しない。
+- 新実装はv1 compatibility adapterを持たない。
+- replacement contractは`contracts/next`から新majorへ固定する。
+- 既存JavaScript codeは移植せず、検証意図をconformance vectorへ移してから削除する。
+
+## 次のアクション
+
+1. `contracts/next`にpackage manifest、stage revision、decisionの最小schemaを作る。
+2. `templates/design-seed`にnormalized requirements、target API schema directoryを含む最小の独立実行可能templateを作る。
+3. canonical payload manifest digest、detached approval receipt、ZIP round-trip verifierを実装する。
+4. `go.mod`、`cmd/forma`、`internal/{domain,application,adapter}`の最小skeletonを作る。
+5. Forma Service APIの最小OpenAPI／JSON Schemaと生成TypeScript clientを作る。
+6. `web`へFoundation reviewだけを行う最小React SPAを作る。
+7. fixture requirementからFoundation candidateを生成し、request-changes→approve→ZIP exportを通す。
+8. 既存canonicalization／revision fixtureを新conformance vectorへ移す。
+
+最初のvertical sliceではcomponent、OpenAPI、screenを同時実装しない。まずRequirements→Foundation Review→
+開発用partial ZIPの細い経路で、stage revision、decision、manifest、sandbox preview、exportの骨格を証明する。
+これは最終Design Seed Packageのapproval完了とは扱わない。
+
+## 継承するproduct invariant
+
+- Formaと出力packageは特定consumer repositoryなしで利用できる。
+- material changeは新しいimmutable revisionを作る。
+- human decisionはstage revisionまたはpackage manifest digestへ束縛する。
+- page／element／interactionはpurpose、task、requirement、safety、rationaleへtraceする。
+- live integrationのauthoritative writerは一つとし、DB共有とdual-writeを行わない。
+- consumer Issue、PR、production implementation、releaseをFormaが所有しない。
 
 ## 再開時の確認
 
+移行期間中は既存contract／fixtureを次で確認する。
+
 ```bash
 git status --short --branch
-git remote -v
-npm install
 npm test
 ```
 
-読む順:
+Go／React／`contracts/next`追加後はrepository共通commandをここへ追記し、`npm test`単独を標準入口にしない。
 
-1. `docs/NORTH_STAR.md`
-2. `docs/PRINCIPLES.md`
-3. `docs/ARCHITECTURE.md`
-4. `docs/ROADMAP.md`
-5. `docs/decisions/`
-6. `contracts/v1/`
+## 読む順
+
+1. [North Star](NORTH_STAR.md)
+2. [Design Seed Package](DESIGN_SEED_PACKAGE.md)
+3. [ADR-0012](decisions/ADR-0012-executable-design-seed-package.md)
+4. [ADR-0013](decisions/ADR-0013-forma-owned-target-openapi.md)
+5. [Principles](PRINCIPLES.md)
+6. [Architecture](ARCHITECTURE.md)
+7. [Roadmap](ROADMAP.md)
 
 ## 意図的に未着手
 
-- production runtime
-- agent provider integration
-- Review UI
-- DB選定
-- consumer adapter
-- consumer product dogfood
-
-これらのうちconsumer側の項目はFormaのblockerではない。
+- Go／React repository skeleton
+- `contracts/next`
+- Design Seed template
+- sandbox selection／implementation
+- concrete Forma Service API paths
+- authentication／reviewer identity
+- production authoring provider（Roadmap R4）
+- Servo live adapter
+- v1 compatibility layer（実装しない）
