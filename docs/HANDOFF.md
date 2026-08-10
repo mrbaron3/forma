@@ -29,8 +29,33 @@ handler、scenarioを生成する。database、service topology、cloud等のbac
 - [ADR-0013: Forma-owned target OpenAPI](decisions/ADR-0013-forma-owned-target-openapi.md)
 - [ADR-0014: provider-neutral production authoring](decisions/ADR-0014-provider-neutral-authoring-and-asset-provenance.md)
 
-新実装のGo／React skeleton、`contracts/next`、Design Seed templateはまだ作成していない。現在の次工程は
-Roadmap Phase R0である。
+新実装のGo／React skeleton、`contracts/next`、Design Seed templateはまだ作成していない。新Roadmapの実装DAGは
+[FM-000 Epic #27](https://github.com/mrbaron3/forma/issues/27)へ固定した。現在の次工程はRoadmap Phase R0の
+[FM-001 #28](https://github.com/mrbaron3/forma/issues/28)である。
+
+## Issue DAG
+
+- Epic: [FM-000 #27](https://github.com/mrbaron3/forma/issues/27)
+- R0 Package baseline: [FM-001 #28](https://github.com/mrbaron3/forma/issues/28)〜
+  [FM-004 #31](https://github.com/mrbaron3/forma/issues/31)
+- R1 Design Foundation: [FM-101 #33](https://github.com/mrbaron3/forma/issues/33)、
+  [FM-102 #32](https://github.com/mrbaron3/forma/issues/32)、
+  [FM-103 #34](https://github.com/mrbaron3/forma/issues/34)、
+  [FM-104 #35](https://github.com/mrbaron3/forma/issues/35)
+- R2 Component Harness: [FM-201 #37](https://github.com/mrbaron3/forma/issues/37)、
+  [FM-202 #36](https://github.com/mrbaron3/forma/issues/36)、
+  [FM-203 #38](https://github.com/mrbaron3/forma/issues/38)
+- R3 Product Contract: [FM-301 #41](https://github.com/mrbaron3/forma/issues/41)、
+  [FM-302 #40](https://github.com/mrbaron3/forma/issues/40)、
+  [FM-303 #39](https://github.com/mrbaron3/forma/issues/39)
+- R4 Production Authoring／Integrated Mock／Approval: [FM-401 #42](https://github.com/mrbaron3/forma/issues/42)〜
+  [FM-404 #45](https://github.com/mrbaron3/forma/issues/45)
+- R5 Repository Handoff: [FM-501 #46](https://github.com/mrbaron3/forma/issues/46)〜
+  [FM-503 #48](https://github.com/mrbaron3/forma/issues/48)
+- Future implementation conformance: [FM-901 #49](https://github.com/mrbaron3/forma/issues/49)（v0完了条件外）
+
+旧open issue #1、#2、#3、#5、#6、#7、#9、#10は、後継FM issueへのlinkを残して`not planned`でcloseした。
+旧実装の完了履歴と既存ADRは変更せず保持する。
 
 ## 確定した判断
 
