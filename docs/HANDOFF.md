@@ -1,6 +1,6 @@
 # Handoff
 
-最終更新: 2026-08-10
+最終更新: 2026-08-18
 
 ## 現在地
 
@@ -71,13 +71,22 @@ handler、scenarioを生成する。database、service topology、cloud等のbac
 
 ### OpenAPI
 
-- Forma Service API、Target Product API、Servo Control APIを別contractとして扱う。
+- Forma Service API、Target Product API、integrator Control APIを別contractとして扱う。
 - Target Product APIはDesign Seed Package内`api/openapi.yaml`と参照先`api/schemas/`を正本setとする。
 - Go domain modelからTarget Product APIを生成しない。
 - screenはOpenAPI生成client／mock boundaryを迂回しない。
-- target repository化後はtarget repositoryが唯一のwriterになり、Servoは同じcontract setを実装入力として使う。
-- ServoへOpenAPIのcopyを置かず、変更はtarget repositoryへのPRで行う。
+- target repository化後はtarget repositoryが唯一のwriterになり、integratorは同じcontract setを実装入力として使う。
+- integrator側へOpenAPIのcopyを置かず、変更はtarget repositoryへのPRで行う。
 - approved UI-facing operation／schemaのmaterial changeはFormaの新revisionとして再reviewする。
+
+### Integrator boundary
+
+- downstreamはgeneric integratorとして記述し、特定のintegrator productを文書の正本にしない。
+- integrationのcontact surfaceはtarget repositoryのfileであり、Forma側のin-process結合やAPI依存ではない。
+- integratorはtarget repository commitへpinしたdesign contractとOpenAPIを読み、変更を同じrepositoryへのPRとして
+  行う。
+- Formaは特定integratorのIssue形式、runtime topology、実装計画へ依存しない。integrator側にFormaへの参照が無くても
+  handoffが成立することをintegration成立条件とする。
 
 ### Runtime
 
@@ -162,5 +171,5 @@ Go／React／`contracts/next`追加後はrepository共通commandをここへ追�
 - concrete Forma Service API paths
 - authentication／reviewer identity
 - production authoring provider（Roadmap R4）
-- Servo live adapter
+- integrator live adapter
 - v1 compatibility layer（実装しない）

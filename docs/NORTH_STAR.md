@@ -56,7 +56,7 @@ reviewに使用したpayloadを承認後に再生成せず、同じfile bytesと
 4. **Contracted Interaction** — UI stateをUI-facing OpenAPIのsuccess／failure semanticsへ対応付ける。
 5. **Human Authority** — 人間はstage revisionとpackage manifest digestへ判断を束縛する。
 6. **Same-tree Review** — browserで確認したfile treeとexportするfile treeを同一にする。
-7. **Repository Handoff** — export後はtarget repositoryを唯一のwriterとし、FormaやServo等のintegratorによる
+7. **Repository Handoff** — export後はtarget repositoryを唯一のwriterとし、Formaやintegratorによる
    dual-writeを行わない。
 8. **Independent Product** — Formaも出力packageも、特定consumer、agent provider、DB、Git hostなしで利用できる。
 9. **Provider-neutral Authorship** — provider選択を運用profileへ隔離し、全generated fileを一つのinvocationへtraceする。
@@ -69,7 +69,7 @@ reviewに使用したpayloadを承認後に再生成せず、同じfile bytesと
 - screenがsemantic token、package component、OpenAPI生成client／mockだけを使っていることを自動検証できる。
 - 承認時のpayloadとexport ZIP内payloadのfile digest集合が完全一致する。
 - ZIPを展開して標準commandだけでapplication、component harness、testを実行できる。
-- target repository化後、Servo等のintegratorはpackage内OpenAPIを別contractへ複製せず実装に利用できる。
+- target repository化後、integratorはpackage内OpenAPIを別contractへ複製せず実装に利用できる。
 - UI-facing OpenAPIのmaterial changeが既存design approvalを暗黙に再利用しない。
 
 ## 反証サイン
@@ -80,5 +80,5 @@ reviewに使用したpayloadを承認後に再生成せず、同じfile bytesと
 - Storybookにはhappy pathしかなく、disabled、loading、focus、error等を確認できない。
 - OpenAPIがmock承認後に初めて作られ、UI stateとfailure semanticsが一致しない。
 - ZIPを展開してもFormaなしではbuild／preview／testできない。
-- FormaとServo等のintegratorが同じtarget OpenAPIのcopyをそれぞれ更新する。
+- Formaとintegratorが同じtarget OpenAPIのcopyをそれぞれ更新する。
 - JSONを直接読まないと承認対象と変更差分を理解できない。

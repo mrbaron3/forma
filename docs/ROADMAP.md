@@ -120,7 +120,7 @@ Exit:
 - target operationにscreen／flowまたは明示的rationaleがある
 - example／scenarioがrequest／response schemaへ適合する
 - generated sourceを再生成して差分がない
-- Forma Service API、Target Product API、Servo Control APIを混在させない
+- Forma Service API、Target Product API、integrator Control APIを混在させない
 
 ## Phase R4 — Integrated Mock and package approval
 
@@ -170,7 +170,7 @@ Exit:
 - seed後のrepository diffを旧approvalのstale状態として検出し、manifest／receiptを書き換えない
 - consumer Issue／PR／release lifecycleをForma contractへ流入させない
 
-Servo等のlive adapter、consumer固有dogfood、consumer repositoryのIssue／PRは各consumerが所有し、本Phaseの
+integratorのlive adapter、consumer固有dogfood、consumer repositoryのIssue／PRは各consumerが所有し、本Phaseの
 dependencyやcompletion evidenceにしない。
 
 ## Future — Production implementation conformance

@@ -230,7 +230,7 @@ Package Approval前に最低限、次をすべて通す。
 
 Formaはdraft workspaceとapproved packageを所有するが、consumerの継続開発を所有しない。ZIPを展開して
 repository化した時点から、target repositoryがfile treeとTarget Product API contract set
-（`api/openapi.yaml`、`api/schemas/`、example、scenario、trace）の唯一のauthoritative writerになる。Servo等の
+（`api/openapi.yaml`、`api/schemas/`、example、scenario、trace）の唯一のauthoritative writerになる。
 integratorは同じcontract setを参照し、変更はtarget repositoryへのPRとして行う。
 
 Formaへ戻して再設計する場合は、target repositoryの特定commitを新しいsource snapshotとしてimportし、新しい
@@ -247,5 +247,5 @@ seed commit以後にtarget repositoryへfileを追加・変更した場合、同
 - database／service／cloud architectureの決定
 - consumerのIssue／PR／release管理
 - Figma等の特定design toolを正本にすること
-- Forma／ServoのControl APIをpackageへ埋め込むこと
+- Forma／integratorのControl APIをpackageへ埋め込むこと
 - approval後のtarget repositoryをFormaが継続的に書き換えること

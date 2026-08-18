@@ -29,7 +29,7 @@ particular consumer repository.
   application-owned authoring ports; implicit fallback and multiple writers for one generated file
   are forbidden. Exported visual assets require source, license status, purpose, trace, and exactly
   one author invocation.
-- Forma Service API, Design Seed target-product OpenAPI, and Servo Control API are distinct contract
+- Forma Service API, Design Seed target-product OpenAPI, and integrator Control API are distinct contract
   families. Never copy them into a shared dual-written specification.
 - A live integration must have one authoritative writer. Never introduce database sharing or
   dual-write as a shortcut for integration. After repository handoff, the target repository is the

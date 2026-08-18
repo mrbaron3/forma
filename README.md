@@ -54,10 +54,10 @@ Formaは生成対象productのUI-facing OpenAPIをDesign Seed Packageへ出力�
 capabilityを定義し、API Contract Designerがconcrete operationへ変換する。database、service topology、cloud等の
 backend内部設計は決めない。
 
-Forma自身のService API、package内のTarget Product API、ServoのControl APIは別contractである。Servoは、export
-されたpackageからtarget productを実装する別repositoryのintegrator productであり、Formaと出力packageはServoなしでも
-利用できる。repository化後はtarget repositoryが`api/openapi.yaml`と参照先`api/schemas/`の唯一のwriterになり、
-Servo等のintegratorは同じcontract setを実装入力として利用する。
+Forma自身のService API、package内のTarget Product API、integrator自身のControl APIは別contractである。
+integratorは、exportされたpackageからtarget productを実装する別repositoryのproductであり、Formaと出力package
+はintegratorなしでも利用できる。repository化後はtarget repositoryが`api/openapi.yaml`と参照先`api/schemas/`の
+唯一のwriterになり、integratorは同じcontract setを実装入力として利用する。
 
 ## 実装方針
 

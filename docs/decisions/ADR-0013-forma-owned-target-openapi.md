@@ -11,7 +11,7 @@ HTTP operation、status、concurrency、idempotency等のsemanticsに依存す�
 初めてOpenAPIを作ると、承認済みinteractionが実装可能な契約へ写らない、またはAPI都合で画面状態が変わる。
 
 一方、Experience Authorがdatabaseやservice topologyまで決めると、UX設計とbackend内部設計の責務が混ざる。
-Forma自身を操作するService API、生成対象productのAPI、Servo自身のControl APIも同じ「OpenAPI」と呼ばれるため、
+Forma自身を操作するService API、生成対象productのAPI、integrator自身のControl APIも同じ「OpenAPI」と呼ばれるため、
 所有対象を分けなければならない。
 
 ## 決定
@@ -41,7 +41,7 @@ OpenAPIを次の3種類に分離する。
 |---|---|---|
 | Forma Service API | Forma repository | request、stage、review、exportを操作する |
 | Target Product API | Design Seed／target repository | `api/openapi.yaml`と参照schemaから成るUI／backend契約 |
-| Servo Control API | Servo repository | Servo自身を操作する |
+| Integrator Control API | 各integrator repository | integrator自身を操作する |
 
 これらを参照、生成、versionのどの面でも同一contractとして扱わない。
 
@@ -50,12 +50,13 @@ Target Product APIのauthoritative writerはlifecycleで移る。
 1. 生成・review中はForma draft workspaceがwriterである。
 2. approval後はpackage manifestが指すimmutable Target Product API contract setが承認対象になる。
 3. repository化後はtarget repositoryが唯一のwriterになる。
-4. Servoはtarget repositoryの同じcontract setを読み、実装または変更をそのrepositoryへのPRとして行う。
+4. integratorはtarget repositoryの同じcontract setを読み、実装または変更をそのrepositoryへのPRとして行う。
 5. approved operation／schemaのmaterial changeは新しいForma revisionとして再reviewする。
 
-FormaとServoへTarget Product APIを複製してdual-writeしない。ServoとのhandoffはDesign Seed Packageのmanifest、digest、
-repository revisionを介し、Servo固有fieldをtarget OpenAPIへ必須化しない。capabilityとoperationのtraceは標準
-`operationId`とpackage内のtrace metadataで検証し、必要なvendor extensionはoptional annotationに限定する。
+FormaとintegratorへTarget Product APIを複製してdual-writeしない。integratorとのhandoffはDesign Seed Packageの
+manifest、digest、repository revisionを介し、integrator固有fieldをtarget OpenAPIへ必須化しない。capabilityと
+operationのtraceは標準`operationId`とpackage内のtrace metadataで検証し、必要なvendor extensionはoptional
+annotationに限定する。
 
 Goのdomain modelからTarget Product APIを生成しない。Target Product APIは生成対象productのcontractであり、
 Forma backendのruntime typeとは無関係である。Forma Service APIについてもADR-0011のcontract-first境界を守る。
@@ -64,7 +65,7 @@ Forma backendのruntime typeとは無関係である。Forma Service APIにつ�
 
 - 人間はUIと、それを成立させるAPI success／failure semanticsを同じreviewで判断できる。
 - mock client／handler／scenarioをOpenAPIから生成し、見た目だけ成立するmockを防げる。
-- Servoはcapabilityから別OpenAPIを再発明せず、target repositoryの承認済みcontractに対して実装できる。
+- integratorはcapabilityから別OpenAPIを再発明せず、target repositoryの承認済みcontractに対して実装できる。
 - UI-facing contract変更はdesign approvalへtraceでき、backend内部変更はFormaのscope外に保てる。
 - FormaにはOpenAPI lint、example validation、operation coverage、mock conformance、API diff projectionが必要になる。
 
@@ -72,4 +73,3 @@ Forma backendのruntime typeとは無関係である。Forma Service APIにつ�
 
 - [ADR-0011: JSON SchemaとOpenAPIの契約責務](ADR-0011-json-schema-and-openapi-contract-authority.md)
 - [ADR-0012: Design Seed Package](ADR-0012-executable-design-seed-package.md)
-- [Servo ADR-0012: external design provider](https://github.com/mrbaron3/servo/blob/main/docs/decisions/ADR-0012-external-designflow-provider.md)

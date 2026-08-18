@@ -136,7 +136,7 @@ canonical manifest digestをidentityとする。
 ## Repository handoff
 
 Formaはdraft workspaceとapproved packageを所有する。ZIPを展開してrepository化した後はtarget repositoryが
-唯一のwriterになる。Servo等のintegratorはtarget repositoryのdesign contractとOpenAPIを読み、変更を同じ
+唯一のwriterになる。integratorはtarget repositoryのdesign contractとOpenAPIを読み、変更を同じ
 repositoryへのPRとして行う。
 
 Formaとtarget repositoryを同期するdual-writeは行わない。再設計時は特定commitを新しいsource snapshotとして
