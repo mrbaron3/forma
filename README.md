@@ -92,7 +92,6 @@ dual-writeしない。
 9. [ADR-0014: provider-neutral authoring](docs/decisions/ADR-0014-provider-neutral-authoring-and-asset-provenance.md)
 10. [ADR-0015: seed同梱baseline drift check](docs/decisions/ADR-0015-seed-owned-baseline-drift-check.md)
 11. [実行計画](docs/ROADMAP.md)
-12. [現在の引き継ぎ地点](docs/HANDOFF.md)
 
 ## 現在の検証
 

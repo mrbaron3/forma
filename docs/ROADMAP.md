@@ -219,4 +219,4 @@ Exit:
 Phase R0から新しいDAGを作る。consumer固有task、cross-repository Issue dependency、共有DB、dual-writeを作らない。
 
 keyは`FM-RPP`（`R`はPhase、`PP`はPhase内連番）を基準とし、全taskは`FM-000` Epicへ属する。Future scopeは
-`FM-9PP`を使う。具体issue linkと現在の次taskは[HANDOFF](HANDOFF.md)で管理する。
+`FM-9PP`を使う。具体issue linkと現在の次taskはGitHub issueで管理し、repositoryの文書へ複製しない。

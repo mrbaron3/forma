@@ -46,5 +46,6 @@ particular consumer repository.
   line and intact rationale.
 - Keep `docs/DESIGN_SEED_PACKAGE.md` authoritative for output layout, stage gates, manifest, review,
   export, and handoff semantics.
-- Keep `docs/HANDOFF.md` current whenever a milestone, decision, blocker, or next action changes.
+- Commit settled decisions only. Progress snapshots, current-position summaries, next-action lists,
+  and issue backlogs do not belong in the repository; the issue tracker and git history own them.
 - Run `npm test` after changing schemas, examples, or cross-artifact integrity rules.

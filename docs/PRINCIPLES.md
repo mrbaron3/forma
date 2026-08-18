@@ -139,6 +139,10 @@ Formaはdraft workspaceとapproved packageを所有する。ZIPを展開してre
 唯一のwriterになる。integratorはtarget repositoryのdesign contractとOpenAPIを読み、変更を同じ
 repositoryへのPRとして行う。
 
+integrationのcontact surfaceはtarget repositoryのfileであり、Forma側のin-process結合やAPI依存ではない。
+downstreamはgeneric integratorとして記述し、特定のintegrator productを文書の正本にしない。integrator側にForma
+への参照が無くてもhandoffが成立することを、integrationの成立条件とする。
+
 Formaとtarget repositoryを同期するdual-writeは行わない。再設計時は特定commitを新しいsource snapshotとして
 importし、新しいstage revisionを作る。
 
