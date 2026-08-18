@@ -158,6 +158,10 @@ Exit:
 - target commitをsource snapshotとして再importするrevision path
 - provider／consumer非依存のpackage manifest／digest integrator fixture
 - target `api/openapi.yaml`と参照schemaを単一contract setとして検証するhandoff test
+- authority domainごとの単一entry point（token index、decision indexを含む）
+- integratorのIssue／task記述がそのまま参照する標準検証commandの固定
+- generated directoryの再生成差分checkとseed同梱baseline drift check（ADR-0015）
+- `AGENTS.md`を単一authority referenceとして指せる構造
 - material API change→Forma re-review policy
 - package format／template release artifact
 
@@ -168,6 +172,9 @@ Exit:
 - target repository化後、Formaが同じfile treeを継続writeしない
 - 特定target commitから新しいForma revisionを再現可能に開始できる
 - seed後のrepository diffを旧approvalのstale状態として検出し、manifest／receiptを書き換えない
+- driftのgenerated差分／approved payload差分／baseline外追加をForma runtimeなしで分類し、generated差分だけを
+  failureにする
+- integratorがauthority referenceをdirectory列挙なしに単一pathで解決できる
 - consumer Issue／PR／release lifecycleをForma contractへ流入させない
 
 integratorのlive adapter、consumer固有dogfood、consumer repositoryのIssue／PRは各consumerが所有し、本Phaseの

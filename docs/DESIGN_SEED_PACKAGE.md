@@ -99,6 +99,8 @@ Foundation、Component Harness、Target Product APIを統合して主要screen�
 
 ```text
 design-seed/
+├─ .github/
+│  └─ workflows/
 ├─ AGENTS.md
 ├─ DESIGN.md
 ├─ README.md
@@ -136,7 +138,8 @@ design-seed/
 
 `forma.approval.json`はapproval前のdraft workspaceには存在せず、export時に追加するdetached receiptである。
 `AGENTS.md`は作業方法と参照先の短いmapに留め、値や仕様を複製しない。generated directoryは手編集禁止とし、
-source contractからの再生成差分が空であることをCIで検査する。
+source contractからの再生成差分が空であることをCIで検査する。同じCIがbaseline driftのcheckも実行する
+（[ADR-0015](decisions/ADR-0015-seed-owned-baseline-drift-check.md)）。
 
 初期templateはNode.js／npmでtoolchainを固定し、`npm ci`で再現する。Bunをpackageの必須runtimeやlockfile writerには
 しない。toolchainを変更する場合はtemplate versionを上げ、build、test、code generation、lockfileの再現性を
@@ -238,7 +241,8 @@ stage revisionを作る。Forma workspaceとtarget repositoryを同期するdual
 
 seed commit以後にtarget repositoryへfileを追加・変更した場合、同梱manifest／receiptは初期承認baselineの履歴になる。
 既存manifestやreceiptを書き換えて現在commitも承認済みに見せてはならない。repository検証はarchiveの完全一致検証と
-分け、baselineからのdiffとapproval stale状態を報告する。Formaで再承認したcandidateはtarget repositoryへ直接同期せず、
+分け、baselineからのdiffとapproval stale状態を報告する。この検証はseedが同梱するcheckとしてtarget repositoryが
+所有し、Forma runtimeもintegrator側の実装も必要としない（[ADR-0015](decisions/ADR-0015-seed-owned-baseline-drift-check.md)）。Formaで再承認したcandidateはtarget repositoryへ直接同期せず、
 同repositoryの通常のPRとして適用する。
 
 ## Non-goals
